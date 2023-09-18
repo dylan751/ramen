@@ -3,29 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
-
-const dbHostname = process.env.DB_HOSTNAME;
-const dbUsername = process.env.DB_USERNAME;
-const dbPassword = process.env.DB_PASSWORD;
-const dbPort = process.env.DB_PORT;
-const dbSynchronize = process.env.DB_SYNCHRONIZE;
-// const loggingEnabled = process.env.DATABASE_LOGGING === 'true';
+import { dataSourceOptions } from './db/data-source';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: dbHostname,
-      port: parseInt(dbPort),
-      password: dbPassword,
-      username: dbUsername,
-      entities: [User],
-      synchronize: dbSynchronize.toLowerCase() === 'true',
-      logging: true,
-    }),
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forRoot(dataSourceOptions), UserModule],
   controllers: [AppController],
   providers: [AppService],
 })

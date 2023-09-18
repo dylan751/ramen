@@ -37,3 +37,6 @@ lerna-debug.log*
 # env
 .env
 .env.*
+
+# Notes
+MIGRATIONS.md
