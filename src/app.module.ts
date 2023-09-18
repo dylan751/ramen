@@ -9,6 +9,7 @@ const dbHostname = process.env.DB_HOSTNAME;
 const dbUsername = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
 const dbPort = process.env.DB_PORT;
+const dbSynchronize = process.env.DB_SYNCHRONIZE;
 // const loggingEnabled = process.env.DATABASE_LOGGING === 'true';
 
 @Module({
@@ -20,7 +21,7 @@ const dbPort = process.env.DB_PORT;
       password: dbPassword,
       username: dbUsername,
       entities: [User],
-      synchronize: true,
+      synchronize: dbSynchronize.toLowerCase() === 'true',
       logging: true,
     }),
     UserModule,
