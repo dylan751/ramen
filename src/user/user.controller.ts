@@ -16,7 +16,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
  * whatever the string pass in controller decorator it will be appended to
  * API URL. to call any API from this controller you need to add prefix which is
  * passed in controller decorator.
- * in our case our base URL is http://localhost:3000/user
+ * in our case our base URL is http://localhost:3000/users
  */
 @Controller('users')
 export class UserController {
@@ -26,7 +26,7 @@ export class UserController {
    * Post decorator represents method of request as we have used post decorator the method
    * of this API will be post.
    * so the API URL to create User will be
-   * POST http://localhost:3000/user
+   * POST http://localhost:3000/users
    */
   @Post()
   @ApiOperation({
@@ -41,7 +41,7 @@ export class UserController {
   /**
    * we have used get decorator to get all the user's list
    * so the API URL will be
-   * GET http://localhost:3000/user
+   * GET http://localhost:3000/users
    */
   @Get()
   @ApiOperation({
@@ -56,7 +56,7 @@ export class UserController {
   /**
    * we have used get decorator with id param to get id from request
    * so the API URL will be
-   * GET http://localhost:3000/user/:id
+   * GET http://localhost:3000/users/:id
    */
   @Get(':id')
   @ApiOperation({
@@ -71,7 +71,7 @@ export class UserController {
   /**
    * we have used patch decorator with id param to get id from request
    * so the API URL will be
-   * PATCH http://localhost:3000/user/:id
+   * PATCH http://localhost:3000/users/:id
    */
   @Patch(':id')
   @ApiOperation({
@@ -86,7 +86,7 @@ export class UserController {
   /**
    * we have used Delete decorator with id param to get id from request
    * so the API URL will be
-   * DELETE http://localhost:3000/user/:id
+   * DELETE http://localhost:3000/users/:id
    */
   @Delete(':id')
   @ApiOperation({
