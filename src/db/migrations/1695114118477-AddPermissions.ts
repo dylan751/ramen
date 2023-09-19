@@ -15,22 +15,13 @@ export class AddPermissions1695114118477 implements MigrationInterface {
             generationStrategy: 'increment', // auto increment
           },
           {
-            name: 'name',
-            type: 'varchar',
-            isNullable: false,
-            isUnique: true,
+            name: 'action',
+            type: 'enum',
+            enum: ['create', 'read', 'update', 'delete'],
           },
           {
-            name: 'slug',
-            type: 'varchar',
-            isNullable: false,
-            isUnique: true,
-          },
-          {
-            name: 'description',
-            type: 'varchar',
-            isNullable: true,
-            isUnique: false,
+            name: 'permissionObjectId',
+            type: 'int',
           },
           {
             name: 'createdAt',

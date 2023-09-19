@@ -4,9 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Role } from './role.entity';
+import { Permission } from './permission.entity';
 
 @Entity('role_permissions')
 export class RolePermission extends BaseEntity {
@@ -26,4 +30,12 @@ export class RolePermission extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => Role, (role) => role.rolePermissions)
+  @JoinColumn({ name: 'roleId' })
+  role: Role;
+
+  @ManyToOne(() => Permission, (permission) => permission.rolePermissions)
+  @JoinColumn({ name: 'permissionId' })
+  permission: Permission;
 }

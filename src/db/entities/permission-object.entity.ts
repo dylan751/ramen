@@ -27,7 +27,7 @@ export class PermissionObject extends BaseEntity {
   @IsNotEmpty()
   name: PermissionSubject;
 
-  //   @OneToMany(() => Permission, (permission) => permission.permissionObject)
-  //   @JoinColumn({ name: 'id' })
-  //   permissions: Permission[];
+  @OneToMany(() => Permission, (permission) => permission.permissionObject)
+  @JoinColumn({ name: 'id' })
+  permissions: Permission[];
 }
