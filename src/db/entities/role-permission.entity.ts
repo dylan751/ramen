@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -8,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity('role_permissions')
-export class RolePermission {
+export class RolePermission extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

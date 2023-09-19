@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -6,19 +7,19 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('users')
-export class User {
+@Entity('permissions')
+export class Permission extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 30 })
+  @Column({ type: 'varchar', length: 40 })
   name: string;
 
-  @Column({ type: 'varchar', length: 40 })
-  email: string;
+  @Column({ type: 'varchar', length: 30 })
+  slug: string;
 
   @Column({ type: 'varchar' })
-  password: string;
+  description: string;
 
   @CreateDateColumn()
   createdAt: Date;
