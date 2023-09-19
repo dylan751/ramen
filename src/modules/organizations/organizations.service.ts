@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOrganizationDto } from './dto/create-organization.dto';
-import { UpdateOrganizationDto } from './dto/update-organization.dto';
+import { CreateOrganizationRequestDto } from './dto/create-organization-request.dto';
+import { UpdateOrganizationRequestDto } from './dto/update-organization-request.dto';
 
 @Injectable()
 export class OrganizationsService {
-  create(createOrganizationDto: CreateOrganizationDto) {
+  create(createOrganizationRequestDto: CreateOrganizationRequestDto) {
     return 'This action adds a new organization';
   }
 
@@ -16,7 +16,10 @@ export class OrganizationsService {
     return `This action returns a #${id} organization`;
   }
 
-  update(id: number, updateOrganizationDto: UpdateOrganizationDto) {
+  update(
+    id: number,
+    updateOrganizationRequestDto: UpdateOrganizationRequestDto,
+  ) {
     return `This action updates a #${id} organization`;
   }
 

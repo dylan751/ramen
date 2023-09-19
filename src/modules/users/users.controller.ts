@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserRequestDto } from './dto/create-user-request.dto';
+import { UpdateUserRequestDto } from './dto/update-user-request.dto';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -34,8 +34,8 @@ export class UsersController {
     summary: 'Create user',
     description: 'Create user',
   })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  create(@Body() createUserRequestDto: CreateUserRequestDto) {
+    return this.userService.createUser(createUserRequestDto);
   }
 
   /**
@@ -79,8 +79,11 @@ export class UsersController {
     summary: 'Update user',
     description: 'Update user',
   })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.updateUser(+id, updateUserDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateUserRequestDto: UpdateUserRequestDto,
+  ) {
+    return this.userService.updateUser(+id, updateUserRequestDto);
   }
 
   /**

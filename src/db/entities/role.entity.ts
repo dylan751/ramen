@@ -28,10 +28,6 @@ export class Role extends BaseEntity {
   @IsNotEmpty()
   slug: string;
 
-  @Column()
-  @IsNotEmpty()
-  description: string;
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 

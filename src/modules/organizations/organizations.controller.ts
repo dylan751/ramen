@@ -8,16 +8,16 @@ import {
   Delete,
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
-import { CreateOrganizationDto } from './dto/create-organization.dto';
-import { UpdateOrganizationDto } from './dto/update-organization.dto';
+import { CreateOrganizationRequestDto } from './dto/create-organization-request.dto';
+import { UpdateOrganizationRequestDto } from './dto/update-organization-request.dto';
 
 @Controller('organizations')
 export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post()
-  create(@Body() createOrganizationDto: CreateOrganizationDto) {
-    return this.organizationsService.create(createOrganizationDto);
+  create(@Body() createOrganizationRequestDto: CreateOrganizationRequestDto) {
+    return this.organizationsService.create(createOrganizationRequestDto);
   }
 
   @Get()
@@ -33,9 +33,9 @@ export class OrganizationsController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateOrganizationDto: UpdateOrganizationDto,
+    @Body() updateOrganizationRequestDto: UpdateOrganizationRequestDto,
   ) {
-    return this.organizationsService.update(+id, updateOrganizationDto);
+    return this.organizationsService.update(+id, updateOrganizationRequestDto);
   }
 
   @Delete(':id')

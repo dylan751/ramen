@@ -27,12 +27,6 @@ export class AddRoles1695112619270 implements MigrationInterface {
             isUnique: true,
           },
           {
-            name: 'description',
-            type: 'varchar',
-            isNullable: true,
-            isUnique: false,
-          },
-          {
             name: 'createdAt',
             type: 'timestamp',
             default: 'NOW()',

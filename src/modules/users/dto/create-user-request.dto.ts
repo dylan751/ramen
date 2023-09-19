@@ -1,35 +1,41 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateUserDto } from './create-user.dto';
-import { IsEmail, IsOptional, Matches, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  Matches,
+  MinLength,
+} from 'class-validator';
 
 const passwordRegEx =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,20}$/;
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class CreateUserRequestDto {
   @ApiProperty({
     type: String,
     example: 'John Doe',
-    required: false,
+    required: true,
   })
-  @IsOptional()
   @MinLength(2)
-  readonly name?: string;
+  @IsString()
+  @IsNotEmpty()
+  readonly name: string;
 
   @ApiProperty({
     type: String,
     example: 'foo@gmail.cm',
     required: true,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsEmail()
-  readonly email?: string;
+  readonly email: string;
 
   @ApiProperty({
     type: String,
     example: 'password',
     required: true,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @Matches(passwordRegEx, {
     message: `Password must contain Minimum 8 and maximum 20 characters, 
       at least one uppercase letter, 
@@ -37,5 +43,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
       one number and 
       one special character`,
   })
-  readonly password?: string;
+  readonly password: string;
 }

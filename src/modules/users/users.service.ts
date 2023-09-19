@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserRequestDto } from './dto/create-user-request.dto';
+import { UpdateUserRequestDto } from './dto/update-user-request.dto';
 import { User } from '../../db/entities/user.entity';
 
 @Injectable()
@@ -17,15 +17,15 @@ export class UsersService {
 
   /**
    * this is function is used to create User in User Entity.
-   * @param createUserDto this will type of createUserDto in which
+   * @param createUserRequestDto this will type of createUserRequestDto in which
    * we have defined what are the keys we are expecting from body
    * @returns promise of user
    */
-  createUser(createUserDto: CreateUserDto): Promise<User> {
+  createUser(createUserRequestDto: CreateUserRequestDto): Promise<User> {
     const user: User = new User();
-    user.name = createUserDto.name;
-    user.email = createUserDto.email;
-    user.password = createUserDto.password;
+    user.name = createUserRequestDto.name;
+    user.email = createUserRequestDto.email;
+    user.password = createUserRequestDto.password;
     return this.userRepository.save(user);
   }
 
@@ -50,14 +50,17 @@ export class UsersService {
    * this function is used to updated specific user whose id is passed in
    * parameter along with passed updated data
    * @param id is type of number, which represent the id of user.
-   * @param updateUserDto this is partial type of createUserDto.
+   * @param updateUserRequestDto this is partial type of createUserRequestDto.
    * @returns promise of udpate user
    */
-  updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  updateUser(
+    id: number,
+    updateUserRequestDto: UpdateUserRequestDto,
+  ): Promise<User> {
     const user: User = new User();
-    user.name = updateUserDto.name;
-    user.email = updateUserDto.email;
-    user.password = updateUserDto.password;
+    user.name = updateUserRequestDto.name;
+    user.email = updateUserRequestDto.email;
+    user.password = updateUserRequestDto.password;
     user.id = id;
     return this.userRepository.save(user);
   }
