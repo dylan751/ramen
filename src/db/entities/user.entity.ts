@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from './role.entity';
+import { Organization } from './organization.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -27,6 +28,9 @@ export class User extends BaseEntity {
   @Column()
   roleId: number;
 
+  @Column()
+  organizationId: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -36,4 +40,8 @@ export class User extends BaseEntity {
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'roleId' })
   role: Role;
+
+  @ManyToOne(() => Organization, (organization) => organization.users)
+  @JoinColumn({ name: 'organizationId' })
+  organization: Organization;
 }

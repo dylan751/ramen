@@ -1,19 +1,17 @@
 import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
 
-export class AddPermissionObjectToPermission1695117773300
-  implements MigrationInterface
-{
+export class AddOrganizationToUser1695121779685 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn(
-      'permissons',
+      'users',
       new TableColumn({
-        name: 'permissionObjectId',
+        name: 'organizationId',
         type: 'int',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropColumn('permissons', 'permissionObjectId');
+    await queryRunner.dropColumn('users', 'organizationId');
   }
 }
