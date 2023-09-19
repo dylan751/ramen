@@ -1,8 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsAlphanumeric,
   IsEmail,
-  IsEnum,
-  IsInt,
   IsNotEmpty,
   IsString,
   Matches,
@@ -13,29 +11,30 @@ const passwordRegEx =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,20}$/;
 
 export class CreateUserDto {
-  @IsString()
-  @MinLength(2, { message: 'Name must have atleast 2 characters.' })
-  @IsNotEmpty()
-  name: string;
-
-  @IsNotEmpty()
-  @MinLength(3, { message: 'Username must have atleast 3 characters.' })
-  @IsAlphanumeric(null, {
-    message: 'Username does not allow other than alpha numeric chars.',
+  @ApiProperty({
+    type: String,
+    example: 'John Doe',
+    required: true,
   })
-  username: string;
-
-  @IsNotEmpty()
-  @IsEmail(null, { message: 'Please provide valid Email.' })
-  email: string;
-
-  @IsInt()
-  age: number;
-
+  @MinLength(2)
   @IsString()
-  @IsEnum(['f', 'm', 'u'])
-  gender: string;
+  @IsNotEmpty()
+  readonly name: string;
 
+  @ApiProperty({
+    type: String,
+    example: 'foo@gmail.cm',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEmail()
+  readonly email: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'password',
+    required: true,
+  })
   @IsNotEmpty()
   @Matches(passwordRegEx, {
     message: `Password must contain Minimum 8 and maximum 20 characters, 
@@ -44,5 +43,5 @@ export class CreateUserDto {
       one number and 
       one special character`,
   })
-  password: string;
+  readonly password: string;
 }
