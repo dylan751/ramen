@@ -20,7 +20,7 @@ export const dataSourceOptions: DataSourceOptions = {
   synchronize: synchronizeEnabled,
   logging: loggingEnabled,
   entities: ['dist/**/*.entity.js'], // https://stackoverflow.com/a/59607836/5718964
-  migrations: ['dist/src/db/migrations/*.js'],
+  migrations: ['dist/db/migrations/*.js'],
   ssl: enableSSL ? { ca: readFileSync('./aws-global-bundle.cer') } : undefined,
 };
 

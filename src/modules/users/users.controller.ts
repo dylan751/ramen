@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { UserService } from './user.service';
+import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -19,8 +19,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
  * in our case our base URL is http://localhost:3000/users
  */
 @Controller('users')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+export class UsersController {
+  constructor(private readonly userService: UsersService) {}
 
   /**
    * Post decorator represents method of request as we have used post decorator the method

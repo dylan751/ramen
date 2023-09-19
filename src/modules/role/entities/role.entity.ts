@@ -6,22 +6,19 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('users')
-export class User {
-  /**
-   * this decorator will help to auto generate id for the table.
-   */
+@Entity('roles')
+export class Role {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 30 })
+  @Column({ type: 'varchar', length: 40 })
   name: string;
 
-  @Column({ type: 'varchar', length: 40 })
-  email: string;
+  @Column({ type: 'varchar', length: 30 })
+  slug: string;
 
   @Column({ type: 'varchar' })
-  password: string;
+  description: string;
 
   @CreateDateColumn()
   createdAt: Date;
