@@ -1,5 +1,6 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
 import { Organization } from 'src/db/entities';
+import { RoleResponseDto } from 'src/modules/role/dto/role-response.dto';
 import { UserResponseDto } from 'src/modules/users/dto/user-response.dto';
 
 export class OrganizationResponseDto {
@@ -8,6 +9,7 @@ export class OrganizationResponseDto {
     this.name = organization.name;
     this.uniqueName = organization.uniqueName;
     this.users = organization.users;
+    this.roles = organization.roles;
     this.createdAt = organization.createdAt;
   }
 
@@ -33,6 +35,11 @@ export class OrganizationResponseDto {
     type: [UserResponseDto],
   })
   users: UserResponseDto[];
+
+  @ApiResponseProperty({
+    type: [RoleResponseDto],
+  })
+  roles: RoleResponseDto[];
 
   @ApiResponseProperty({
     type: Date,
