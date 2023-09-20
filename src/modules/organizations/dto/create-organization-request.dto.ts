@@ -4,13 +4,17 @@ import { OrganizationUniqueNameValidator } from 'src/modules/common/validators/o
 
 export class CreateOrganizationRequestDto {
   @ApiProperty({
+    type: String,
     example: 'Example organization',
+    required: true,
   })
   @IsNotEmpty()
   readonly name: string;
 
   @ApiProperty({
+    type: String,
     example: 'example-org',
+    required: true,
   })
   @IsNotEmpty()
   @Validate(OrganizationUniqueNameValidator)
