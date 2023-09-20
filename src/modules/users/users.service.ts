@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserRequestDto } from './dto/create-user-request.dto';
 import { UpdateUserRequestDto } from './dto/update-user-request.dto';
 import { User } from '../../db/entities/user.entity';
+import { UserRepository } from 'src/db/repositories';
 
 @Injectable()
 export class UsersService {
@@ -11,9 +12,7 @@ export class UsersService {
    * Here, we have used data mapper approch for this tutorial that is why we
    * injecting repository here. Another approch can be Active records.
    */
-  constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   /**
    * this is function is used to create User in User Entity.
