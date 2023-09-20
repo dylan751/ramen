@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Role } from './role.entity';
 
 @Entity('organizations')
 export class Organization extends BaseEntity {
@@ -33,4 +34,8 @@ export class Organization extends BaseEntity {
   @OneToMany(() => User, (user) => user.organization)
   @JoinColumn({ name: 'id' })
   users: User[];
+
+  @OneToMany(() => Role, (role) => role.organization)
+  @JoinColumn({ name: 'id' })
+  roles: Role[];
 }
