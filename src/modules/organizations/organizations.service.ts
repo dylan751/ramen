@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { CreateOrganizationRequestDto } from './dto/create-organization-request.dto';
 import { UpdateOrganizationRequestDto } from './dto/update-organization-request.dto';
-import { Organization } from 'src/db/entities';
+import { Organization, User } from 'src/db/entities';
 import { OrganizationRepository, UserRepository } from 'src/db/repositories';
+import { OrganizationResponseDto } from './dto/organization-response.dto';
 
 @Injectable()
 export class OrganizationsService {
@@ -18,7 +19,7 @@ export class OrganizationsService {
   async create(
     createRequest: CreateOrganizationRequestDto,
     userId: number,
-  ): Promise<Organization> {
+  ): Promise<OrganizationResponseDto> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new NotFoundException(`User ${userId} doesn't exist`);
@@ -42,40 +43,60 @@ export class OrganizationsService {
       await manager.save(Organization, organization);
     });
 
-    return organization;
+    const organizationDto = new OrganizationResponseDto(organization);
+
+    return organizationDto;
   }
 
-  findAll() {
-    return `This action returns all organizations`;
+  async findAll(): Promise<OrganizationResponseDto[]> {
+    const organizations = await this.orgRepository.find();
+    return organizations.map((organization) => {
+      const organizationDto = new OrganizationResponseDto(organization);
+      return organizationDto;
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} organization`;
+  async findById(orgId: number): Promise<Organization> {
+    return await this.orgRepository.findById(orgId);
   }
 
   async update(
     orgId: number,
     updateRequest: UpdateOrganizationRequestDto,
-  ): Promise<Organization> {
-    const org = await this.orgRepository.findById(orgId);
-    if (!org) {
+  ): Promise<OrganizationResponseDto> {
+    const organization = await this.orgRepository.findById(orgId);
+    if (!organization) {
       throw new NotFoundException(`Organization ${orgId} doesn't exist`);
     }
 
     if (updateRequest.name !== undefined) {
-      org.name = updateRequest.name;
+      organization.name = updateRequest.name;
     }
 
     if (updateRequest.uniqueName !== undefined) {
-      org.uniqueName = updateRequest.uniqueName;
+      organization.uniqueName = updateRequest.uniqueName;
     }
 
-    await org.save();
+    await organization.save();
 
-    return org;
+    const organizationDto = new OrganizationResponseDto(organization);
+    return organizationDto;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} organization`;
+  async delete(organizationId: number): Promise<void> {
+    await this.orgRepository.manager.transaction(
+      async (transactionalManager) => {
+        const deletePromises = [];
+
+        deletePromises.push(
+          transactionalManager.delete(User, { organizationId }),
+        );
+        deletePromises.push(
+          transactionalManager.delete(Organization, { id: organizationId }),
+        );
+
+        await Promise.all(deletePromises);
+      },
+    );
   }
 }

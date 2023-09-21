@@ -9,6 +9,7 @@ import {
   Request,
   HttpStatus,
   ParseIntPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationRequestDto } from './dto/create-organization-request.dto';
@@ -16,6 +17,7 @@ import { UpdateOrganizationRequestDto } from './dto/update-organization-request.
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OrganizationResponseDto } from './dto/organization-response.dto';
 import { AuthenticatedRequest } from '../common/types/authenticated-request';
+import { EmptyResponseDto } from '../common/types/empty-response.dto';
 
 @Controller('organizations')
 export class OrganizationsController {
@@ -36,18 +38,42 @@ export class OrganizationsController {
     @Body() createRequest: CreateOrganizationRequestDto,
     @Request() req: AuthenticatedRequest,
   ): Promise<OrganizationResponseDto> {
-    const org = await this.orgService.create(createRequest, req.user.id);
-    return new OrganizationResponseDto(org);
+    return await this.orgService.create(createRequest, req.user.id);
   }
 
   @Get()
-  findAll() {
-    return this.orgService.findAll();
+  @ApiOperation({
+    tags: ['Organization'],
+    summary: 'Get all organizations',
+    description: 'Get all organizations',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: [OrganizationResponseDto],
+  })
+  async findAll(): Promise<OrganizationResponseDto[]> {
+    return await this.orgService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orgService.findOne(+id);
+  @ApiOperation({
+    tags: ['Organization'],
+    operationId: 'Get organization',
+    summary: 'Get organization',
+    description: 'Get organization',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: OrganizationResponseDto,
+  })
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<OrganizationResponseDto> {
+    const org = await this.orgService.findById(id);
+    if (org === undefined || org === null) {
+      throw new NotFoundException(`Can't find org with id is ${id}`);
+    }
+    return new OrganizationResponseDto(org);
   }
 
   @Patch(':id')
@@ -65,12 +91,24 @@ export class OrganizationsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRequest: UpdateOrganizationRequestDto,
   ): Promise<OrganizationResponseDto> {
-    const org = await this.orgService.update(id, updateRequest);
-    return new OrganizationResponseDto(org);
+    return await this.orgService.update(id, updateRequest);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orgService.remove(+id);
+  @ApiOperation({
+    tags: ['Organization'],
+    operationId: 'Delete an organization',
+    summary: 'Delete an organization',
+    description: 'Delete an organization',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: EmptyResponseDto,
+  })
+  async delete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<EmptyResponseDto> {
+    await this.orgService.delete(id);
+    return new EmptyResponseDto();
   }
 }
