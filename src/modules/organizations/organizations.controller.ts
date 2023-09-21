@@ -8,6 +8,7 @@ import {
   Delete,
   Request,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationRequestDto } from './dto/create-organization-request.dto';
@@ -25,7 +26,7 @@ export class OrganizationsController {
     tags: ['Organization'],
     summary: 'Create new organization',
     description:
-      'Create new organization with organization name (MoneyForward) and global unique name (moneyforward)',
+      'Create new organization with organization name (Example org) and global unique name (example-org)',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -50,11 +51,22 @@ export class OrganizationsController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateOrganizationRequestDto: UpdateOrganizationRequestDto,
-  ) {
-    return this.orgService.update(+id, updateOrganizationRequestDto);
+  @ApiOperation({
+    tags: ['Organization'],
+    operationId: 'Update organization',
+    summary: 'Update organization',
+    description: 'Update organization',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: OrganizationResponseDto,
+  })
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateRequest: UpdateOrganizationRequestDto,
+  ): Promise<OrganizationResponseDto> {
+    const org = await this.orgService.update(id, updateRequest);
+    return new OrganizationResponseDto(org);
   }
 
   @Delete(':id')

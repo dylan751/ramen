@@ -53,11 +53,26 @@ export class OrganizationsService {
     return `This action returns a #${id} organization`;
   }
 
-  update(
-    id: number,
-    updateOrganizationRequestDto: UpdateOrganizationRequestDto,
-  ) {
-    return `This action updates a #${id} organization`;
+  async update(
+    orgId: number,
+    updateRequest: UpdateOrganizationRequestDto,
+  ): Promise<Organization> {
+    const org = await this.orgRepository.findById(orgId);
+    if (!org) {
+      throw new NotFoundException(`Organization ${orgId} doesn't exist`);
+    }
+
+    if (updateRequest.name !== undefined) {
+      org.name = updateRequest.name;
+    }
+
+    if (updateRequest.uniqueName !== undefined) {
+      org.uniqueName = updateRequest.uniqueName;
+    }
+
+    await org.save();
+
+    return org;
   }
 
   remove(id: number) {
