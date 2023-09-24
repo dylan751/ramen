@@ -5,6 +5,7 @@ import { OrganizationUserListResponseDto } from './dto/organization-user-list-re
 import { OrganizationUserResponseDto } from './dto/organization-user-response.dto';
 import { UpdateOrganizationUserRequestDto } from './dto/update-organization-user-request.dto';
 import { RoleRepository } from 'src/db/repositories/role.repository';
+import { Role, User } from 'src/db/entities';
 
 @Injectable()
 export class UsersService {
@@ -72,9 +73,24 @@ export class UsersService {
   //   return this.userRepository.save(user);
   // }
 
-  // removeUser(id: number): Promise<{ affected?: number }> {
-  //   return this.userRepository.delete(id);
-  // }
+  async deleteByIdAndOrgId(
+    organizationId: number,
+    userId: number,
+  ): Promise<void> {
+    const userOrganization = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!userOrganization) {
+      throw new NotFoundException(
+        `User ${userId} doesn't belong to organization ${organizationId}`,
+      );
+    }
+
+    await this.userRepository.manager.transaction(async (manager) => {
+      await manager.delete(User, { id: userId });
+    });
+  }
 
   async findByIdWithOrganizationsAndRoles(
     id: number,

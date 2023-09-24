@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { OrganizationUserListResponseDto } from './dto/organization-user-list-response.dto';
 import { OrganizationUserResponseDto } from './dto/organization-user-response.dto';
 import { UpdateOrganizationUserRequestDto } from './dto/update-organization-user-request.dto';
+import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -79,13 +80,20 @@ export class UsersController {
     return await this.usersService.update(organizationId, userId, request);
   }
 
-  // @Delete(':id')
-  // @ApiOperation({
-  //   tags: ['User'],
-  //   summary: 'Delete user',
-  //   description: 'Delete user',
-  // })
-  // remove(@Param('id') id: string) {
-  //   return this.usersService.removeUser(+id);
-  // }
+  @Delete(':id')
+  @ApiOperation({
+    tags: ['Organization'],
+    summary: 'Delete an organization user',
+    description: 'Delete an organization user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: EmptyResponseDto,
+  })
+  async delete(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Param('id', ParseIntPipe) userId: number,
+  ): Promise<void> {
+    await this.usersService.deleteByIdAndOrgId(organizationId, userId);
+  }
 }

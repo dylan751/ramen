@@ -44,4 +44,9 @@ export class User extends BaseEntity {
   @ManyToOne(() => Organization, (organization) => organization.users)
   @JoinColumn({ name: 'organizationId' })
   organization: Organization;
+
+  isAnAdmin(): boolean {
+    // join roles or fetch relations while querying for this to work
+    return this.roleId === Role.ADMIN_ROLE_ID;
+  }
 }
