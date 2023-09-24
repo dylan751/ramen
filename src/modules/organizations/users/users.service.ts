@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateUserRequestDto } from './dto/create-user-request.dto';
 import { UpdateUserRequestDto } from './dto/update-user-request.dto';
-import { User } from '../../db/entities/user.entity';
+import { User } from '../../../db/entities/user.entity';
 import { UserRepository } from 'src/db/repositories';
+import { ProfileResponseDto } from '../../auth/dto/profile-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -41,7 +40,7 @@ export class UsersService {
    * @param id is type of number, which represent the id of user.
    * @returns promise of user
    */
-  viewUser(id: number): Promise<User> {
+  findUser(id: number): Promise<User> {
     return this.userRepository.findOneBy({ id });
   }
 
@@ -71,5 +70,16 @@ export class UsersService {
    */
   removeUser(id: number): Promise<{ affected?: number }> {
     return this.userRepository.delete(id);
+  }
+
+  async findByIdWithOrganizationsAndRoles(
+    id: number,
+  ): Promise<ProfileResponseDto> {
+    const user = await this.userRepository.findByIdWithOrganizationsAndRoles(
+      id,
+    );
+    const profile = new ProfileResponseDto(user);
+
+    return profile;
   }
 }
