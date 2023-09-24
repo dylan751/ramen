@@ -60,15 +60,22 @@ export class UsersController {
     return await this.usersService.findByOrganization(organizationId);
   }
 
-  // @Get(':id')
-  // @ApiOperation({
-  //   tags: ['User'],
-  //   summary: 'Find user',
-  //   description: 'Find user',
-  // })
-  // findOne(@Param('id') id: string) {
-  //   return this.usersService.findUser(+id);
-  // }
+  @Get(':id')
+  @ApiOperation({
+    tags: ['Organization'],
+    summary: 'Get 1 organization user',
+    description: 'Get 1 organization user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: OrganizationUserResponseDto,
+  })
+  findOne(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Param('id', ParseIntPipe) userId: number,
+  ): Promise<OrganizationUserResponseDto> {
+    return this.usersService.findByUserId(organizationId, userId);
+  }
 
   @Patch(':id')
   @ApiOperation({

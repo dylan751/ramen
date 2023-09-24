@@ -64,6 +64,25 @@ export class UsersService {
     return result;
   }
 
+  async findByUserId(
+    organizationId: number,
+    userId: number,
+  ): Promise<OrganizationUserResponseDto> {
+    const user = await this.userRepository.findByUserIdWithUserOrgRole(
+      organizationId,
+      userId,
+    );
+
+    if (!user) {
+      throw new NotFoundException(
+        `user ${userId} does not belong to the organization ${organizationId}`,
+      );
+    }
+
+    const userDto = new OrganizationUserResponseDto(user);
+    return userDto;
+  }
+
   async update(
     organizationId: number,
     userId: number,

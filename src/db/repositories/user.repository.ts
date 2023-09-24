@@ -100,6 +100,21 @@ export class UserRepository extends Repository<User> {
     return await query.getMany();
   }
 
+  async findByUserIdWithUserOrgRole(
+    organizationId: number,
+    userId: number,
+  ): Promise<User> {
+    const query = this.createQueryBuilder('user')
+      .innerJoinAndSelect('user.organization', 'organization')
+      .innerJoinAndSelect('user.role', 'role')
+      .where('organization.id = :organizationId', {
+        organizationId,
+      })
+      .andWhere('user.id = :userId', { userId });
+
+    return await query.getOne();
+  }
+
   async countUserInOrganization(
     organizationId: number,
     search?: string,
