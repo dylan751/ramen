@@ -15,6 +15,7 @@ import { OrganizationUserListResponseDto } from './dto/organization-user-list-re
 import { OrganizationUserResponseDto } from './dto/organization-user-response.dto';
 import { UpdateOrganizationUserRequestDto } from './dto/update-organization-user-request.dto';
 import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
+import { CreateOrganizationUserRequestDto } from './dto/create-organization-user-request.dto';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -26,15 +27,22 @@ import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Post()
-  // @ApiOperation({
-  //   tags: ['User'],
-  //   summary: 'Create user',
-  //   description: 'Create user',
-  // })
-  // create(@Body() createUserRequestDto: CreateUserRequestDto) {
-  //   return this.usersService.createUser(createUserRequestDto);
-  // }
+  @Post()
+  @ApiOperation({
+    tags: ['Organization'],
+    summary: 'Create organization user',
+    description: 'Create organization user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: OrganizationUserResponseDto,
+  })
+  create(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Body() request: CreateOrganizationUserRequestDto,
+  ) {
+    return this.usersService.create(organizationId, request);
+  }
 
   @Get()
   @ApiOperation({

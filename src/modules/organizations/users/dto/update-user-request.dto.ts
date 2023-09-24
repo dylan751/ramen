@@ -1,11 +1,10 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateUserRequestDto } from './create-user-request.dto';
 import { IsEmail, IsOptional, Matches, MinLength } from 'class-validator';
 
 const passwordRegEx =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,20}$/;
 
-export class UpdateUserRequestDto extends PartialType(CreateUserRequestDto) {
+export class UpdateUserRequestDto {
   @ApiProperty({
     type: String,
     example: 'John Doe',

@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsString,
   Matches,
   MinLength,
@@ -10,7 +11,7 @@ import {
 const passwordRegEx =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,20}$/;
 
-export class CreateUserRequestDto {
+export class CreateOrganizationUserRequestDto {
   @ApiProperty({
     type: String,
     example: 'John Doe',
@@ -44,4 +45,13 @@ export class CreateUserRequestDto {
       one special character`,
   })
   readonly password: string;
+
+  @ApiProperty({
+    type: Number,
+    example: 1,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  readonly roleId: number;
 }
