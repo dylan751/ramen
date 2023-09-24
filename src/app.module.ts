@@ -2,17 +2,22 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './modules/users/users.module';
+import { OrganizationUsersModule } from './modules/organizations/users/users.module';
 import { dataSourceOptions } from './db/data-source';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
-import { RolesModule } from './modules/role/roles.module';
+import { OrganizationRolesModule } from './modules/organizations/roles/roles.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { RouterModule } from '@nestjs/core';
+import { routes } from './route';
 
 @Module({
   imports: [
+    RouterModule.register(routes),
     TypeOrmModule.forRoot(dataSourceOptions),
-    UsersModule,
+    AuthModule,
     OrganizationsModule,
-    RolesModule,
+    OrganizationUsersModule,
+    OrganizationRolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
