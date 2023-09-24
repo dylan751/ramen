@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateOrganizationRequestDto } from './dto/create-organization-request.dto';
 import { UpdateOrganizationRequestDto } from './dto/update-organization-request.dto';
-import { Organization, User } from 'src/db/entities';
+import { Organization, Role, User } from 'src/db/entities';
 import { OrganizationRepository, UserRepository } from 'src/db/repositories';
 import { OrganizationResponseDto } from './dto/organization-response.dto';
 
@@ -90,6 +90,9 @@ export class OrganizationsService {
 
         deletePromises.push(
           transactionalManager.delete(User, { organizationId }),
+        );
+        deletePromises.push(
+          transactionalManager.delete(Role, { organizationId }),
         );
         deletePromises.push(
           transactionalManager.delete(Organization, { id: organizationId }),
