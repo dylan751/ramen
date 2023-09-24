@@ -29,7 +29,7 @@ export class UsersController {
 
   @Post()
   @ApiOperation({
-    tags: ['Organization'],
+    tags: ['Organization User'],
     summary: 'Create organization user',
     description: 'Create organization user',
   })
@@ -46,7 +46,7 @@ export class UsersController {
 
   @Get()
   @ApiOperation({
-    tags: ['Organization'],
+    tags: ['Organization User'],
     summary: 'Get all organization users',
     description: 'Get all organization users',
   })
@@ -62,7 +62,7 @@ export class UsersController {
 
   @Get(':id')
   @ApiOperation({
-    tags: ['Organization'],
+    tags: ['Organization User'],
     summary: 'Get 1 organization user',
     description: 'Get 1 organization user',
   })
@@ -79,7 +79,7 @@ export class UsersController {
 
   @Patch(':id')
   @ApiOperation({
-    tags: ['Organization'],
+    tags: ['Organization User'],
     summary: 'Edit organization users role',
     description: 'Edit organization users role',
   })
@@ -97,7 +97,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiOperation({
-    tags: ['Organization'],
+    tags: ['Organization User'],
     summary: 'Delete an organization user',
     description: 'Delete an organization user',
   })
