@@ -57,7 +57,7 @@ export class UserRepository extends Repository<User> {
     // the arguments of skip, take, orderBy can be undefined
     let query = this.createQueryBuilder('user')
       .innerJoinAndSelect('user.organization', 'organization')
-      .innerJoinAndSelect('organization.roles', 'role')
+      .innerJoinAndSelect('user.role', 'role')
       .where('organization.id = :organizationId', {
         organizationId,
       });
@@ -82,7 +82,7 @@ export class UserRepository extends Repository<User> {
                   .select('user.id')
                   .from(User, 'user')
                   .innerJoin('user.organization', 'organization')
-                  .innerJoin('organization.roles', 'role')
+                  .innerJoin('user.role', 'role')
                   .where('role.slug LIKE :search', { search: `%${search}%` })
                   .getQuery();
                 subQb.where('user.id IN ' + userIdsWithRoles);

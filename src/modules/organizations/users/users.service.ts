@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserRequestDto } from './dto/create-user-request.dto';
-import { UpdateUserRequestDto } from './dto/update-user-request.dto';
-import { User } from '../../../db/entities/user.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from 'src/db/repositories';
 import { ProfileResponseDto } from '../../auth/dto/profile-response.dto';
 import { OrganizationUserListResponseDto } from './dto/organization-user-list-response.dto';
 import { OrganizationUserResponseDto } from './dto/organization-user-response.dto';
+import { UpdateOrganizationUserRequestDto } from './dto/update-organization-user-request.dto';
+import { RoleRepository } from 'src/db/repositories/role.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly roleRepository: RoleRepository,
+  ) {}
   async findByOrganization(
     organizationId: number,
   ): Promise<OrganizationUserListResponseDto> {
@@ -24,37 +26,55 @@ export class UsersService {
     return result;
   }
 
-  createUser(createUserRequestDto: CreateUserRequestDto): Promise<User> {
-    const user: User = new User();
-    user.name = createUserRequestDto.name;
-    user.email = createUserRequestDto.email;
-    user.password = createUserRequestDto.password;
-    return this.userRepository.save(user);
+  async update(
+    organizationId: number,
+    userId: number,
+    request: UpdateOrganizationUserRequestDto,
+  ): Promise<OrganizationUserResponseDto> {
+    const userOrganization = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!userOrganization) {
+      throw new NotFoundException(
+        `user ${userId} does not belong to the organization ${organizationId}`,
+      );
+    }
+
+    const roleId = request.roleId;
+    await this.checkRole(organizationId, roleId);
+
+    await this.userRepository.save({ id: userId, roleId });
+
+    const updatedUserOrganization =
+      await this.userRepository.findByIdWithOrganizationsAndRoles(userId);
+
+    return new OrganizationUserResponseDto(updatedUserOrganization);
   }
 
-  findAllUser(): Promise<User[]> {
-    return this.userRepository.find();
-  }
+  // createUser(createUserRequestDto: CreateUserRequestDto): Promise<User> {
+  //   const user: User = new User();
+  //   user.name = createUserRequestDto.name;
+  //   user.email = createUserRequestDto.email;
+  //   user.password = createUserRequestDto.password;
+  //   return this.userRepository.save(user);
+  // }
 
-  findUser(id: number): Promise<User> {
-    return this.userRepository.findOneBy({ id });
-  }
+  // updateUser(
+  //   id: number,
+  //   updateUserRequestDto: UpdateUserRequestDto,
+  // ): Promise<User> {
+  //   const user: User = new User();
+  //   user.name = updateUserRequestDto.name;
+  //   user.email = updateUserRequestDto.email;
+  //   user.password = updateUserRequestDto.password;
+  //   user.id = id;
+  //   return this.userRepository.save(user);
+  // }
 
-  updateUser(
-    id: number,
-    updateUserRequestDto: UpdateUserRequestDto,
-  ): Promise<User> {
-    const user: User = new User();
-    user.name = updateUserRequestDto.name;
-    user.email = updateUserRequestDto.email;
-    user.password = updateUserRequestDto.password;
-    user.id = id;
-    return this.userRepository.save(user);
-  }
-
-  removeUser(id: number): Promise<{ affected?: number }> {
-    return this.userRepository.delete(id);
-  }
+  // removeUser(id: number): Promise<{ affected?: number }> {
+  //   return this.userRepository.delete(id);
+  // }
 
   async findByIdWithOrganizationsAndRoles(
     id: number,
@@ -65,5 +85,19 @@ export class UsersService {
     const profile = new ProfileResponseDto(user);
 
     return profile;
+  }
+
+  async checkRole(organizationId: number, roleId: number): Promise<void> {
+    const role = await this.roleRepository.findOne({ where: { id: roleId } });
+
+    if (!role.belongsToOrg(organizationId)) {
+      throw new NotFoundException(
+        `Role ${role.id} does not belong to organization ${organizationId}`,
+      );
+    }
+
+    if (!role) {
+      throw new NotFoundException(`Role do not exist ${role.id}`);
+    }
   }
 }

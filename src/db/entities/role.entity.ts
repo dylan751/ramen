@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import {
   BaseEntity,
   Column,
@@ -30,6 +30,10 @@ export class Role extends BaseEntity {
   @IsNotEmpty()
   slug: string;
 
+  @Column()
+  @IsNumber()
+  organizationId: number;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
@@ -47,4 +51,9 @@ export class Role extends BaseEntity {
   @OneToMany(() => User, (user) => user.role)
   @JoinColumn({ name: 'id' })
   users: User[];
+
+  belongsToOrg(orgId: number): boolean {
+    if (this.organizationId === 0) return true; // system role
+    return this.organizationId === orgId;
+  }
 }
