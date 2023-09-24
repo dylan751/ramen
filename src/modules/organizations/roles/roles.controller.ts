@@ -14,14 +14,29 @@ import { CreateRoleRequestDto } from './dto/create-role-request.dto';
 import { UpdateRoleRequestDto } from './dto/update-role-request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RoleResponseDto, RoleResponseListDto } from './dto/role-response.dto';
+import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
 
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()
-  create(@Body() createRoleRequestDto: CreateRoleRequestDto) {
-    return this.rolesService.create(createRoleRequestDto);
+  @ApiOperation({
+    tags: ['Organization Role'],
+    operationId: 'Create roles for an organization',
+    summary: 'Create roles for an organization',
+    description: 'Create roles for an organization',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: RoleResponseListDto,
+  })
+  async save(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Body() request: CreateRoleRequestDto,
+  ): Promise<RoleResponseDto> {
+    const role = await this.rolesService.create(organizationId, request);
+    return new RoleResponseDto(role);
   }
 
   @Get()
@@ -71,8 +86,22 @@ export class RolesController {
     return this.rolesService.update(+id, updateRoleRequestDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rolesService.remove(+id);
+  @Delete('/:id')
+  @ApiOperation({
+    tags: ['Organization Role'],
+    operationId: 'Delete a role for an organization',
+    summary: 'Delete a role for an organization',
+    description: 'Delete a role for an organization',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: EmptyResponseDto,
+  })
+  async delete(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<EmptyResponseDto> {
+    await this.rolesService.delete(organizationId, id);
+    return new EmptyResponseDto();
   }
 }

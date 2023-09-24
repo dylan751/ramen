@@ -8,6 +8,10 @@ export class RoleRepository extends Repository<Role> {
     super(Role, dataSource.createEntityManager());
   }
 
+  async findBySlug(slug: string): Promise<Role> {
+    return await this.findOne({ where: { slug: slug } });
+  }
+
   async findRolesForOrganization(organizationId: number): Promise<Role[]> {
     return await this.createQueryBuilder('role')
       .where('role.organizationId = :organizationId', { organizationId }) // custom roles

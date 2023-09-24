@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateRoleRequestDto } from './dto/create-role-request.dto';
 import { UpdateRoleRequestDto } from './dto/update-role-request.dto';
 import { RoleRepository } from 'src/db/repositories/role.repository';
@@ -8,8 +12,25 @@ import { Role } from 'src/db/entities';
 export class RolesService {
   constructor(private readonly roleRepository: RoleRepository) {}
 
-  create(createRoleRequestDto: CreateRoleRequestDto) {
-    return 'This action adds a new role';
+  async create(
+    organizationId: number,
+    request: CreateRoleRequestDto,
+  ): Promise<Role> {
+    const { name, slug } = request;
+    const role = new Role();
+    role.name = name;
+    role.slug = slug;
+    role.organizationId = organizationId;
+
+    // Check if role already exists
+    const isRoleExisted = await this.roleRepository.findBySlug(request.slug);
+    if (isRoleExisted) {
+      throw new BadRequestException('An role with that slug already exists!');
+    }
+
+    const createdRole = await this.roleRepository.save(role);
+
+    return createdRole;
   }
 
   async findAll(organizationId: number): Promise<Role[]> {
@@ -26,18 +47,30 @@ export class RolesService {
     });
     if (!role) {
       throw new NotFoundException(
-        `role ${roleId} does not belong to the organization ${organizationId}`,
+        `Role ${roleId} does not belong to the organization ${organizationId}`,
       );
     }
 
     return role;
   }
 
-  update(id: number, updateRoleRequestDto: UpdateRoleRequestDto) {
+  async update(id: number, updateRoleRequestDto: UpdateRoleRequestDto) {
     return `This action updates a #${id} role`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  async delete(organizationId: number, roleId: number): Promise<void> {
+    const role = await this.roleRepository.findOne({
+      where: { id: roleId, organizationId },
+    });
+
+    if (!role) {
+      throw new NotFoundException(
+        `Role ${roleId} doesn't belong to organization ${organizationId}`,
+      );
+    }
+
+    await this.roleRepository.manager.transaction(async (manager) => {
+      await manager.delete(Role, { id: roleId });
+    });
   }
 }

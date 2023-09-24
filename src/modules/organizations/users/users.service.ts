@@ -75,7 +75,7 @@ export class UsersService {
 
     if (!user) {
       throw new NotFoundException(
-        `user ${userId} does not belong to the organization ${organizationId}`,
+        `User ${userId} does not belong to the organization ${organizationId}`,
       );
     }
 
@@ -94,7 +94,7 @@ export class UsersService {
 
     if (!userOrganization) {
       throw new NotFoundException(
-        `user ${userId} does not belong to the organization ${organizationId}`,
+        `User ${userId} does not belong to the organization ${organizationId}`,
       );
     }
 
