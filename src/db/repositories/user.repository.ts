@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Brackets, DataSource, Repository } from 'typeorm';
 import { Role, User } from 'src/db/entities';
+import { PaginationOptions } from 'src/modules/common/interfaces/pagination-options';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -47,6 +48,58 @@ export class UserRepository extends Repository<User> {
       .getOne();
   }
 
+  async findByOrganizationWithUserOrgRole(
+    organizationId: number,
+    options?: PaginationOptions,
+    search?: string,
+    disableRoleSearch = false,
+  ): Promise<User[]> {
+    // the arguments of skip, take, orderBy can be undefined
+    let query = this.createQueryBuilder('user')
+      .innerJoinAndSelect('user.organization', 'organization')
+      .innerJoinAndSelect('organization.roles', 'role')
+      .where('organization.id = :organizationId', {
+        organizationId,
+      });
+
+    if (search) {
+      // FIXME: this query will become slow in the future
+      query = query.andWhere(
+        new Brackets((qb) => {
+          qb.where('user.name LIKE :search', { search: `%${search}%` }).orWhere(
+            'user.email LIKE :search',
+            {
+              search: `%${search}%`,
+            },
+          );
+          if (!disableRoleSearch) {
+            // TODO: replace with role filter from FE
+            // get roles that match the search and get userIds that have these roles
+            qb.orWhere(
+              new Brackets((subQb) => {
+                const userIdsWithRoles = query
+                  .subQuery()
+                  .select('user.id')
+                  .from(User, 'user')
+                  .innerJoin('user.organization', 'organization')
+                  .innerJoin('organization.roles', 'role')
+                  .where('role.slug LIKE :search', { search: `%${search}%` })
+                  .getQuery();
+                subQb.where('user.id IN ' + userIdsWithRoles);
+              }),
+            );
+          }
+        }),
+      );
+    }
+
+    if (options) {
+      query = query.skip(options?.offset).take(options?.limit);
+    }
+
+    return await query.getMany();
+  }
+
   async countUserInOrganization(
     organizationId: number,
     search?: string,
@@ -54,7 +107,7 @@ export class UserRepository extends Repository<User> {
     let query = this.createQueryBuilder('user')
       .leftJoinAndSelect('user.organization', 'organization')
       .leftJoinAndSelect('user.role', 'role')
-      .where('organization.organizationId = :organizationId', {
+      .where('organization.id = :organizationId', {
         organizationId,
       });
 
@@ -77,7 +130,7 @@ export class UserRepository extends Repository<User> {
       .leftJoinAndSelect(
         'user.organization',
         'organization',
-        'organization.organizationId = :organizationId',
+        'organization.id = :organizationId',
       )
       .leftJoin('user.role', 'role')
       .where('role.id = :adminId');
@@ -90,9 +143,9 @@ export class UserRepository extends Repository<User> {
     const query = this.createQueryBuilder('user')
       .leftJoinAndSelect('user.organization', 'organization')
       .leftJoin('user.role', 'role')
-      .where('organization.organizationId = :organizationId')
+      .where('organization.id = :organizationId')
       .andWhere('role.id = :adminId')
-      .orderBy('userOrganization.createdAt', 'ASC');
+      .orderBy('user.createdAt', 'ASC');
     return query
       .setParameters({ organizationId, adminId: Role.ADMIN_ROLE_ID })
       .getOne();

@@ -3,7 +3,7 @@ import { User } from 'src/db/entities';
 import { OrganizationResponseDto } from 'src/modules/organizations/dto/organization-response.dto';
 import { RoleResponseDto } from 'src/modules/organizations/roles/dto/role-response.dto';
 
-export class UserResponseDto {
+export class OrganizationUserResponseDto {
   constructor(user: User) {
     this.id = user.id;
     this.name = user.name;
@@ -50,11 +50,11 @@ export class UserResponseDto {
 
 export class UserResponseListDto {
   constructor(users: User[]) {
-    this.items = users.map((user) => new UserResponseDto(user));
+    this.items = users.map((user) => new OrganizationUserResponseDto(user));
   }
 
   @ApiResponseProperty({
-    type: [UserResponseDto],
+    type: [OrganizationUserResponseDto],
   })
-  items: UserResponseDto[];
+  items: OrganizationUserResponseDto[];
 }

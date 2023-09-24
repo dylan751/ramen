@@ -4,21 +4,26 @@ import { UpdateUserRequestDto } from './dto/update-user-request.dto';
 import { User } from '../../../db/entities/user.entity';
 import { UserRepository } from 'src/db/repositories';
 import { ProfileResponseDto } from '../../auth/dto/profile-response.dto';
+import { OrganizationUserListResponseDto } from './dto/organization-user-list-response.dto';
+import { OrganizationUserResponseDto } from './dto/organization-user-response.dto';
 
 @Injectable()
 export class UsersService {
-  /**
-   * Here, we have used data mapper approch for this tutorial that is why we
-   * injecting repository here. Another approch can be Active records.
-   */
   constructor(private readonly userRepository: UserRepository) {}
+  async findByOrganization(
+    organizationId: number,
+  ): Promise<OrganizationUserListResponseDto> {
+    const users = await this.userRepository.findByOrganizationWithUserOrgRole(
+      organizationId,
+    );
 
-  /**
-   * this is function is used to create User in User Entity.
-   * @param createUserRequestDto this will type of createUserRequestDto in which
-   * we have defined what are the keys we are expecting from body
-   * @returns promise of user
-   */
+    const userDtos = users.map((user) => new OrganizationUserResponseDto(user));
+
+    const result = new OrganizationUserListResponseDto();
+    result.users = userDtos;
+    return result;
+  }
+
   createUser(createUserRequestDto: CreateUserRequestDto): Promise<User> {
     const user: User = new User();
     user.name = createUserRequestDto.name;
@@ -27,30 +32,14 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  /**
-   * this function is used to get all the user's list
-   * @returns promise of array of users
-   */
   findAllUser(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  /**
-   * this function used to get data of use whose id is passed in parameter
-   * @param id is type of number, which represent the id of user.
-   * @returns promise of user
-   */
   findUser(id: number): Promise<User> {
     return this.userRepository.findOneBy({ id });
   }
 
-  /**
-   * this function is used to updated specific user whose id is passed in
-   * parameter along with passed updated data
-   * @param id is type of number, which represent the id of user.
-   * @param updateUserRequestDto this is partial type of createUserRequestDto.
-   * @returns promise of udpate user
-   */
   updateUser(
     id: number,
     updateUserRequestDto: UpdateUserRequestDto,
@@ -63,11 +52,6 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  /**
-   * this function is used to remove or delete user from database.
-   * @param id is the type of number, which represent id of user
-   * @returns nuber of rows deleted or affected
-   */
   removeUser(id: number): Promise<{ affected?: number }> {
     return this.userRepository.delete(id);
   }

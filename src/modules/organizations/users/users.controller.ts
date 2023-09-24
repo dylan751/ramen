@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserRequestDto } from './dto/create-user-request.dto';
 import { UpdateUserRequestDto } from './dto/update-user-request.dto';
+import { OrganizationUserListResponseDto } from './dto/organization-user-list-response.dto';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -20,7 +23,7 @@ import { UpdateUserRequestDto } from './dto/update-user-request.dto';
  */
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   /**
    * Post decorator represents method of request as we have used post decorator the method
@@ -35,22 +38,23 @@ export class UsersController {
     description: 'Create user',
   })
   create(@Body() createUserRequestDto: CreateUserRequestDto) {
-    return this.userService.createUser(createUserRequestDto);
+    return this.usersService.createUser(createUserRequestDto);
   }
 
-  /**
-   * we have used get decorator to get all the user's list
-   * so the API URL will be
-   * GET http://localhost:3000/users
-   */
   @Get()
   @ApiOperation({
-    tags: ['User'],
-    summary: 'Find all users',
-    description: 'Find all users',
+    tags: ['Organization'],
+    summary: 'Get all organization users',
+    description: 'Get all organization users',
   })
-  findAll() {
-    return this.userService.findAllUser();
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: [OrganizationUserListResponseDto],
+  })
+  async findAll(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+  ): Promise<OrganizationUserListResponseDto> {
+    return await this.usersService.findByOrganization(organizationId);
   }
 
   /**
@@ -65,7 +69,7 @@ export class UsersController {
     description: 'Find user',
   })
   findOne(@Param('id') id: string) {
-    return this.userService.findUser(+id);
+    return this.usersService.findUser(+id);
   }
 
   /**
@@ -83,7 +87,7 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updateUserRequestDto: UpdateUserRequestDto,
   ) {
-    return this.userService.updateUser(+id, updateUserRequestDto);
+    return this.usersService.updateUser(+id, updateUserRequestDto);
   }
 
   /**
@@ -98,6 +102,6 @@ export class UsersController {
     description: 'Delete user',
   })
   remove(@Param('id') id: string) {
-    return this.userService.removeUser(+id);
+    return this.usersService.removeUser(+id);
   }
 }
