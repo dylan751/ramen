@@ -87,8 +87,51 @@ export class RolesService {
     return role;
   }
 
-  async update(id: number, updateRoleRequestDto: UpdateRoleRequestDto) {
-    return `This action updates a #${id} role`;
+  async update(
+    organizationId: number,
+    roleId: number,
+    req: UpdateRoleRequestDto,
+  ) {
+    const { name, slug, permissionConfigs } = req;
+    const role = await this.roleRepository.findOneOrFail({
+      where: { id: roleId, organizationId },
+    });
+
+    if (name) role.name = name;
+    if (slug) role.slug = slug;
+
+    if (permissionConfigs) {
+      // Find permission ids inside db
+      const permissionIds = await Promise.all(
+        permissionConfigs.map(async (permissionConfig) => {
+          const permission =
+            await this.permissionRepository.findByPermissionConfig(
+              permissionConfig.action,
+              permissionConfig.object,
+            );
+          return permission.id;
+        }),
+      );
+
+      await this.roleRepository.manager.transaction(async (manager) => {
+        // Delete previous ids inside role_permissions table
+        await manager.delete(RolePermission, { roleId });
+
+        // Save ids into role_permissions table
+        const rolesPermissions: RolePermission[] = [];
+
+        permissionIds.forEach((permissionId) => {
+          const rolePermission = new RolePermission();
+          rolePermission.roleId = role.id;
+          rolePermission.permissionId = permissionId;
+          rolesPermissions.push(rolePermission);
+        });
+        await manager.save(RolePermission, rolesPermissions);
+        role.rolePermissions = rolesPermissions;
+      });
+    }
+
+    return await role.save();
   }
 
   async delete(organizationId: number, roleId: number): Promise<void> {
@@ -103,6 +146,7 @@ export class RolesService {
     }
 
     await this.roleRepository.manager.transaction(async (manager) => {
+      await manager.delete(RolePermission, { roleId });
       await manager.delete(Role, { id: roleId });
     });
   }

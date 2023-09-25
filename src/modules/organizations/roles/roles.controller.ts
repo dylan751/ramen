@@ -78,12 +78,24 @@ export class RolesController {
     );
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateRoleRequestDto: UpdateRoleRequestDto,
-  ) {
-    return this.rolesService.update(+id, updateRoleRequestDto);
+  @Patch('/:id')
+  @ApiOperation({
+    tags: ['Organization Role'],
+    operationId: 'Update a role for an organization',
+    summary: 'Update a role for an organization',
+    description: 'Update a role for an organization',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: RoleResponseDto,
+  })
+  async update(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() req: UpdateRoleRequestDto,
+  ): Promise<RoleResponseDto> {
+    const role = await this.rolesService.update(organizationId, id, req);
+    return new RoleResponseDto(role);
   }
 
   @Delete('/:id')
