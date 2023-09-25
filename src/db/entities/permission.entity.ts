@@ -12,7 +12,7 @@ import {
 import { RolePermission } from './role-permission.entity';
 
 export enum PermissionAction {
-  // MANAGE = 'manage', // Not have enum in table yet
+  MANAGE = 'manage',
   CREATE = 'create',
   READ = 'read',
   UPDATE = 'update',
