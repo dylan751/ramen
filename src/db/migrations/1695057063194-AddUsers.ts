@@ -34,6 +34,14 @@ export class AddUsers1695057063194 implements MigrationInterface {
             isUnique: false,
           },
           {
+            name: 'roleId',
+            type: 'int',
+          },
+          {
+            name: 'organizationId',
+            type: 'int',
+          },
+          {
             name: 'createdAt',
             type: 'timestamp',
             default: 'NOW()',

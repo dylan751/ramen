@@ -4,7 +4,7 @@ export class AddPermissions1695114118477 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'permissons',
+        name: 'permissions',
         columns: [
           {
             name: 'id',
@@ -17,11 +17,11 @@ export class AddPermissions1695114118477 implements MigrationInterface {
           {
             name: 'action',
             type: 'enum',
-            enum: ['create', 'read', 'update', 'delete'],
+            enum: ['create', 'read', 'update', 'delete', 'manage'],
           },
           {
-            name: 'permissionObjectId',
-            type: 'int',
+            name: 'object',
+            type: 'varchar',
           },
           {
             name: 'createdAt',

@@ -5,20 +5,27 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { PermissionObject } from './permission-object.entity';
 import { RolePermission } from './role-permission.entity';
 
 export enum PermissionAction {
-  MANAGE = 'manage',
+  // MANAGE = 'manage', // Not have enum in table yet
   CREATE = 'create',
   READ = 'read',
   UPDATE = 'update',
   DELETE = 'delete',
+}
+
+export enum PermissionObject {
+  ALL = 'ALL',
+  ORGANIZATION = 'Organization',
+  PEOPLE = 'People',
+  ACCOUNT = 'Account',
+  USER = 'User',
+  ROLE = 'Role',
 }
 
 @Entity('permissions')
@@ -33,9 +40,12 @@ export class Permission extends BaseEntity {
   @IsNotEmpty()
   action: PermissionAction;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: PermissionObject,
+  })
   @IsNotEmpty()
-  permissionObjectId: number;
+  object: PermissionObject;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -49,11 +59,4 @@ export class Permission extends BaseEntity {
   )
   @JoinColumn({ name: 'id' })
   rolePermissions: RolePermission[];
-
-  @ManyToOne(
-    () => PermissionObject,
-    (permissionObject) => permissionObject.permissions,
-  )
-  @JoinColumn({ name: 'permissionObjectId' })
-  permissionObject: PermissionObject;
 }
