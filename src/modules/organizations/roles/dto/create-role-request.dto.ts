@@ -6,6 +6,7 @@ import {
   MaxLength,
   ValidateNested,
 } from 'class-validator';
+import { PermissionConfigDto } from './permission-config.dto';
 
 export class CreateRoleRequestDto {
   @ApiProperty({
@@ -25,6 +26,15 @@ export class CreateRoleRequestDto {
   @MaxLength(24)
   @IsNotEmpty()
   readonly slug: string;
+
+  @ApiProperty({
+    type: [PermissionConfigDto],
+    required: true,
+  })
+  @IsNotEmpty()
+  @Type(() => PermissionConfigDto)
+  @ValidateNested({ each: true })
+  readonly permissionConfigs: PermissionConfigDto[];
 }
 
 export class CreateRolesRequestDto {

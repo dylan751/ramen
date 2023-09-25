@@ -6,31 +6,64 @@ import {
 import { CreateRoleRequestDto } from './dto/create-role-request.dto';
 import { UpdateRoleRequestDto } from './dto/update-role-request.dto';
 import { RoleRepository } from 'src/db/repositories/role.repository';
-import { Role } from 'src/db/entities';
+import { Role, RolePermission } from 'src/db/entities';
+import { PermissionRepository } from 'src/db/repositories/permission.repository';
 
 @Injectable()
 export class RolesService {
-  constructor(private readonly roleRepository: RoleRepository) {}
+  constructor(
+    private readonly roleRepository: RoleRepository,
+    private readonly permissionRepository: PermissionRepository,
+  ) {}
 
   async create(
     organizationId: number,
     request: CreateRoleRequestDto,
   ): Promise<Role> {
-    const { name, slug } = request;
+    const { name, slug, permissionConfigs } = request;
+
+    // Check if role already exists
+    const isRoleExisted = await this.roleRepository.findBySlug(request.slug);
+    if (isRoleExisted) {
+      throw new BadRequestException('A role with that slug already exists!');
+    }
+
+    // Create role
     const role = new Role();
     role.name = name;
     role.slug = slug;
     role.organizationId = organizationId;
 
-    // Check if role already exists
-    const isRoleExisted = await this.roleRepository.findBySlug(request.slug);
-    if (isRoleExisted) {
-      throw new BadRequestException('An role with that slug already exists!');
-    }
+    // Find permission ids inside db
+    const permissionIds = await Promise.all(
+      permissionConfigs.map(async (permissionConfig) => {
+        const permission =
+          await this.permissionRepository.findByPermissionConfig(
+            permissionConfig.action,
+            permissionConfig.object,
+          );
+        return permission.id;
+      }),
+    );
 
-    const createdRole = await this.roleRepository.save(role);
+    // Save ids into role_permissions table
+    await this.roleRepository.manager.transaction(async (manager) => {
+      await manager.save(Role, role);
 
-    return createdRole;
+      // Create role_permissions
+      const rolesPermissions: RolePermission[] = [];
+
+      permissionIds.forEach((permissionId) => {
+        const rolePermission = new RolePermission();
+        rolePermission.roleId = role.id;
+        rolePermission.permissionId = permissionId;
+        rolesPermissions.push(rolePermission);
+      });
+      await manager.save(RolePermission, rolesPermissions);
+      role.rolePermissions = rolesPermissions;
+    });
+
+    return role;
   }
 
   async findAll(organizationId: number): Promise<Role[]> {
