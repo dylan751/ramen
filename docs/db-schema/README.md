@@ -1,14 +1,14 @@
-# database
+# Database
 
 ## Tables
 
-| Name                                    | Columns | Comment | Type       |
-| --------------------------------------- | ------- | ------- | ---------- |
-| [organizations](organizations.md)       | 5       |         | BASE TABLE |
-| [roles](roles.md)                       | 6       |         | BASE TABLE |
-| [users](users.md)                       | 8       |         | BASE TABLE |
-| [permissions](permissions.md)           | 5       |         | BASE TABLE |
-| [role_permissions](role_permissions.md) | 5       |         | BASE TABLE |
+| Name             | Columns | Comment | Type       |
+| ---------------- | ------- | ------- | ---------- |
+| organizations    | 5       |         | BASE TABLE |
+| roles            | 6       |         | BASE TABLE |
+| users            | 8       |         | BASE TABLE |
+| permissions      | 5       |         | BASE TABLE |
+| role_permissions | 5       |         | BASE TABLE |
 
 ## Relations
 
