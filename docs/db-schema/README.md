@@ -36,8 +36,15 @@ erDiagram
         name varchar
         email varchar
         password varchar
-        roleId int
+        createdAt timestamp
+        updatedAt timestamp
+    }
+
+    user_organizations {
+        id int pk
+        userId int
         organizationId int
+        roleId int
         createdAt timestamp
         updatedAt timestamp
     }
@@ -58,9 +65,10 @@ erDiagram
         updatedAt timestamp
     }
 
-    users }|--|| organizations : "belongs to"
     roles }|--|| organizations : "belongs to"
-    users }|--|| roles : has
+    user_organizations }|--|| users : "belongs to"
+    user_organizations }|--|| organizations : "belongs to"
+    user_organizations }|--|| roles : "belongs to"
     role_permissions }|--|| roles : "belongs to"
     role_permissions }|--|| permissions : "belongs to"
 ```
