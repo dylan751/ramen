@@ -12,6 +12,21 @@ export class RoleRepository extends Repository<Role> {
     return await this.findOne({ where: { slug: slug } });
   }
 
+  async findyByUserIdAndOrganizationId(
+    userId: number,
+    organizationId: number,
+  ): Promise<Role[]> {
+    return await this.createQueryBuilder('role')
+      .innerJoin('role.userOrganizationRoles', 'userOrganizationRoles')
+      .innerJoin('userOrganizationRoles.userOrganization', 'userOrganization')
+      .innerJoin('userOrganization.user', 'user')
+      .where('user.id = :userId', { userId })
+      .andWhere('userOrganizationRoles.organizationId = :organizationId', {
+        organizationId,
+      })
+      .getMany();
+  }
+
   async findRolesForOrganization(organizationId: number): Promise<Role[]> {
     return await this.createQueryBuilder('role')
       .where('organizationId = :organizationId', { organizationId }) // custom roles

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Brackets, DataSource, Repository } from 'typeorm';
 import { Role, User } from 'src/db/entities';
 import { PaginationOptions } from 'src/modules/common/interfaces/pagination-options';
+import { UserSortField } from 'src/modules/organizations/users/dto/user-pagination-request.dto';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -29,23 +30,56 @@ export class UserRepository extends Repository<User> {
 
   async findByIdWithOrganizations(id: number): Promise<User> {
     const user = await this.createQueryBuilder('user')
-      .leftJoinAndSelect('user.organization', 'organization')
+      .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
+      .leftJoinAndSelect('userOrganization.organization', 'organization')
+      .leftJoinAndSelect('userOrganization.roles', 'roles')
       .where('user.id = :userId')
       .setParameters({ userId: id })
       .getOne();
+
+    if (user) {
+      user.organizations = user.userOrganizations.map(
+        (userOrg) => userOrg.organization,
+      );
+    }
 
     return user;
   }
 
   async findByIdWithOrganizationsAndRoles(id: number): Promise<User> {
     return await this.createQueryBuilder('user')
-      .leftJoinAndSelect('user.organization', 'organization')
-      .leftJoinAndSelect('user.role', 'role')
+      .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
+      .leftJoinAndSelect('userOrganization.organization', 'organization')
+      .leftJoinAndSelect('userOrganization.roles', 'roles')
       .where('user.id = :userId')
       .setParameters({
         userId: id,
       })
       .getOne();
+  }
+
+  async findByOrganizationWithOrganizations(
+    organizationId: number,
+  ): Promise<User[]> {
+    const query = this.createQueryBuilder('user')
+      .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
+      .where('userOrganization.organizationId = :organizationId', {
+        organizationId,
+      });
+    const users = await query.getMany();
+    return await Promise.all(
+      users.map(async (user) => {
+        const userWithOrganizations = await this.createQueryBuilder('user')
+          .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
+          .leftJoinAndSelect('userOrganization.organization', 'organization')
+          .where('user.id = :userId', { userId: user.id })
+          .getOne();
+        user.organizations = userWithOrganizations.userOrganizations.map(
+          (userOrg) => userOrg.organization,
+        );
+        return user;
+      }),
+    );
   }
 
   async findByOrganizationWithUserOrgRole(
@@ -56,9 +90,9 @@ export class UserRepository extends Repository<User> {
   ): Promise<User[]> {
     // the arguments of skip, take, orderBy can be undefined
     let query = this.createQueryBuilder('user')
-      .innerJoinAndSelect('user.organization', 'organization')
-      .innerJoinAndSelect('user.role', 'role')
-      .where('organization.id = :organizationId', {
+      .innerJoinAndSelect('user.userOrganizations', 'userOrganization')
+      .innerJoinAndSelect('userOrganization.roles', 'role')
+      .where('userOrganization.organizationId = :organizationId', {
         organizationId,
       });
 
@@ -81,9 +115,9 @@ export class UserRepository extends Repository<User> {
                   .subQuery()
                   .select('user.id')
                   .from(User, 'user')
-                  .innerJoin('user.organization', 'organization')
-                  .innerJoin('user.role', 'role')
-                  .where('role.slug LIKE :search', { search: `%${search}%` })
+                  .innerJoin('user.userOrganizations', 'userOrganization')
+                  .innerJoin('userOrganization.roles', 'role')
+                  .where('role.name LIKE :search', { search: `%${search}%` })
                   .getQuery();
                 subQb.where('user.id IN ' + userIdsWithRoles);
               }),
@@ -94,25 +128,22 @@ export class UserRepository extends Repository<User> {
     }
 
     if (options) {
-      query = query.skip(options?.offset).take(options?.limit);
+      let sortExpression: string;
+      if (options.sortField === UserSortField.ROLE) {
+        sortExpression = 'role.name';
+      } else if (options.sortField === UserSortField.STATUS) {
+        sortExpression = 'userOrganization.status';
+      } else {
+        sortExpression = `user.${options.sortField}`;
+      }
+
+      query = query
+        .skip(options?.offset)
+        .take(options?.limit)
+        .orderBy(sortExpression, options?.order);
     }
 
     return await query.getMany();
-  }
-
-  async findByUserIdWithUserOrgRole(
-    organizationId: number,
-    userId: number,
-  ): Promise<User> {
-    const query = this.createQueryBuilder('user')
-      .innerJoinAndSelect('user.organization', 'organization')
-      .innerJoinAndSelect('user.role', 'role')
-      .where('organization.id = :organizationId', {
-        organizationId,
-      })
-      .andWhere('user.id = :userId', { userId });
-
-    return await query.getOne();
   }
 
   async countUserInOrganization(
@@ -120,9 +151,9 @@ export class UserRepository extends Repository<User> {
     search?: string,
   ): Promise<number> {
     let query = this.createQueryBuilder('user')
-      .leftJoinAndSelect('user.organization', 'organization')
-      .leftJoinAndSelect('user.role', 'role')
-      .where('organization.id = :organizationId', {
+      .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
+      .leftJoinAndSelect('userOrganization.roles', 'role')
+      .where('userOrganization.organizationId = :organizationId', {
         organizationId,
       });
 
@@ -160,11 +191,11 @@ export class UserRepository extends Repository<User> {
   async findActiveAdmin(organizationId: number): Promise<User[]> {
     const query = this.createQueryBuilder('user')
       .leftJoinAndSelect(
-        'user.organization',
-        'organization',
-        'organization.id = :organizationId',
+        'user.userOrganizations',
+        'userOrganization',
+        'userOrganization.organizationId = :organizationId',
       )
-      .leftJoin('user.role', 'role')
+      .leftJoin('userOrganization.roles', 'role')
       .where('role.id = :adminId');
     return query
       .setParameters({ organizationId, adminId: Role.ADMIN_ROLE_ID })
@@ -173,11 +204,11 @@ export class UserRepository extends Repository<User> {
 
   async findOrganizationFirstAdmin(organizationId: number): Promise<User> {
     const query = this.createQueryBuilder('user')
-      .leftJoinAndSelect('user.organization', 'organization')
-      .leftJoin('user.role', 'role')
-      .where('organization.id = :organizationId')
+      .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
+      .leftJoin('userOrganization.roles', 'role')
+      .where('userOrganization.organizationId = :organizationId')
       .andWhere('role.id = :adminId')
-      .orderBy('user.createdAt', 'ASC');
+      .orderBy('userOrganization.createdAt', 'ASC');
     return query
       .setParameters({ organizationId, adminId: Role.ADMIN_ROLE_ID })
       .getOne();
