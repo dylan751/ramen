@@ -5,14 +5,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { RolePermission } from './role-permission.entity';
-import { User } from './user.entity';
-import { Organization } from './organization.entity';
+import { UserOrganizationRole } from './user-organization-role.entity';
 
 @Entity('roles')
 export class Role extends BaseEntity {
@@ -44,13 +42,12 @@ export class Role extends BaseEntity {
   @JoinColumn({ name: 'id' })
   rolePermissions: RolePermission[];
 
-  @ManyToOne(() => Organization, (organization) => organization.roles)
-  @JoinColumn({ name: 'organizationId' })
-  organization: Organization;
-
-  @OneToMany(() => User, (user) => user.role)
+  @OneToMany(
+    () => UserOrganizationRole,
+    (userOrganizationRole) => userOrganizationRole.role,
+  )
   @JoinColumn({ name: 'id' })
-  users: User[];
+  userOrganizationRoles: UserOrganizationRole[];
 
   belongsToOrg(orgId: number): boolean {
     if (this.organizationId === 0) return true; // system role

@@ -40,6 +40,14 @@ erDiagram
         updatedAt timestamp
     }
 
+    user_organizations {
+        id int pk
+        userId int
+        organizationId int
+        createdAt timestamp
+        updatedAt timestamp
+    }
+
     user_organization_roles {
         id int pk
         userId int
@@ -65,9 +73,9 @@ erDiagram
         updatedAt timestamp
     }
 
-    roles }|--|| organizations : "belongs to"
-    user_organization_roles }|--|| users : "belongs to"
-    user_organization_roles }|--|| organizations : "belongs to"
+    user_organizations }|--|| users : "belongs to"
+    user_organizations }|--|| organizations : "belongs to"
+    user_organization_roles }|--|| user_organizations : "belongs to"
     user_organization_roles }|--|| roles : "belongs to"
     role_permissions }|--|| roles : "belongs to"
     role_permissions }|--|| permissions : "belongs to"

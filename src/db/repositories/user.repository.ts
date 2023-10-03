@@ -140,6 +140,23 @@ export class UserRepository extends Repository<User> {
     return await query.getCount();
   }
 
+  async findManyWithUserOrganization(
+    organizationId: number,
+    emails?: string[],
+  ): Promise<User[]> {
+    const queryBuilder = this.createQueryBuilder('user').leftJoinAndSelect(
+      'user.userOrganizations',
+      'userOrganization',
+      'userOrganization.organizationId = :organizationId',
+    );
+
+    if (emails) {
+      queryBuilder.where('user.email IN (:emails)');
+    }
+
+    return queryBuilder.setParameters({ organizationId, emails }).getMany();
+  }
+
   async findActiveAdmin(organizationId: number): Promise<User[]> {
     const query = this.createQueryBuilder('user')
       .leftJoinAndSelect(

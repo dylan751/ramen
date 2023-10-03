@@ -3,13 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from './role.entity';
 import { Organization } from './organization.entity';
+import { UserOrganization } from './user-organization.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -37,13 +38,14 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Role, (role) => role.users)
-  @JoinColumn({ name: 'roleId' })
-  role: Role;
+  @ManyToMany(() => Organization, (organization) => organization.users)
+  organizations: Organization[];
 
-  @ManyToOne(() => Organization, (organization) => organization.users)
-  @JoinColumn({ name: 'organizationId' })
-  organization: Organization;
+  @OneToMany(
+    () => UserOrganization,
+    (userOrganization) => userOrganization.user,
+  )
+  userOrganizations: UserOrganization[];
 
   isAnAdmin(): boolean {
     // join roles or fetch relations while querying for this to work

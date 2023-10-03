@@ -1,4 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsOptional, Matches, MinLength } from 'class-validator';
 
 const passwordRegEx =

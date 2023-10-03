@@ -6,12 +6,14 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Role } from './role.entity';
+import { UserOrganization } from './user-organization.entity';
 
 @Entity('organizations')
 export class Organization extends BaseEntity {
@@ -31,11 +33,20 @@ export class Organization extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => User, (user) => user.organization)
-  @JoinColumn({ name: 'id' })
+  @ManyToMany(() => User, (user) => user.organizations, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: 'user_organizations',
+    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
+    joinColumn: { name: 'organizationId', referencedColumnName: 'id' },
+  })
   users: User[];
 
-  @OneToMany(() => Role, (role) => role.organization)
+  @OneToMany(
+    () => UserOrganization,
+    (userOrganization) => userOrganization.organization,
+  )
   @JoinColumn({ name: 'id' })
-  roles: Role[];
+  userOrganizations: UserOrganization[];
 }

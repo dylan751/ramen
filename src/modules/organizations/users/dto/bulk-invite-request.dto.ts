@@ -1,7 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
+import { ArrayMaxSize, ArrayNotEmpty, IsArray, IsEmail } from 'class-validator';
 
-export class UpdateOrganizationUserRequestDto {
+export class BulkInviteRequestDto {
+  @ApiProperty({
+    type: [String],
+    example: ['hoge@i.moneyforward.com', 'fuga@i.moneyforward.com'],
+  })
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMaxSize(100)
+  @IsEmail({}, { each: true })
+  emails: string[];
+
   @ApiProperty({
     type: [Number],
     example: [2, 3],

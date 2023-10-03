@@ -12,10 +12,12 @@ import {
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { OrganizationUserListResponseDto } from './dto/organization-user-list-response.dto';
-import { OrganizationUserResponseDto } from './dto/organization-user-response.dto';
+import { OrganizationUserResponseDto } from '../../common/dto/organization-user-response.dto';
 import { UpdateOrganizationUserRequestDto } from './dto/update-organization-user-request.dto';
 import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
-import { CreateOrganizationUserRequestDto } from './dto/create-organization-user-request.dto';
+import { TotalAdminResponseDto } from './dto/total-admin-response.dto';
+import { BulkInviteRequestDto } from './dto/bulk-invite-request.dto';
+import { BulkInviteResponseDto } from './dto/bulk-invite-response.dto';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -26,23 +28,6 @@ import { CreateOrganizationUserRequestDto } from './dto/create-organization-user
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  @ApiOperation({
-    tags: ['Organization User'],
-    summary: 'Create organization user',
-    description: 'Create organization user',
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: OrganizationUserResponseDto,
-  })
-  create(
-    @Param('organizationId', ParseIntPipe) organizationId: number,
-    @Body() request: CreateOrganizationUserRequestDto,
-  ) {
-    return this.usersService.create(organizationId, request);
-  }
 
   @Get()
   @ApiOperation({
@@ -60,28 +45,44 @@ export class UsersController {
     return await this.usersService.findByOrganization(organizationId);
   }
 
-  @Get(':id')
+  @Get('admin-count')
   @ApiOperation({
     tags: ['Organization User'],
-    summary: 'Get 1 organization user',
-    description: 'Get 1 organization user',
+    summary: 'Count total admins',
+    description: 'Count total admins',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: OrganizationUserResponseDto,
+    type: TotalAdminResponseDto,
   })
-  findOne(
+  async countAdmin(
     @Param('organizationId', ParseIntPipe) organizationId: number,
-    @Param('id', ParseIntPipe) userId: number,
-  ): Promise<OrganizationUserResponseDto> {
-    return this.usersService.findByUserId(organizationId, userId);
+  ): Promise<TotalAdminResponseDto> {
+    return await this.usersService.countAdmin(organizationId);
+  }
+
+  @Post('bulk-invitations')
+  @ApiOperation({
+    tags: ['Organization User'],
+    summary: 'Bulk invite users',
+    description: 'Bulk invite users',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: BulkInviteResponseDto,
+  })
+  async bulkInvite(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Body() requestDto: BulkInviteRequestDto,
+  ): Promise<BulkInviteResponseDto> {
+    return await this.usersService.bulkInvite(organizationId, requestDto);
   }
 
   @Patch(':id')
   @ApiOperation({
     tags: ['Organization User'],
-    summary: 'Edit organization users role',
-    description: 'Edit organization users role',
+    summary: 'Edit organization users information',
+    description: 'Edit organization users information',
   })
   @ApiResponse({
     status: HttpStatus.OK,

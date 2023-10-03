@@ -1,5 +1,5 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
-import { OrganizationUserResponseDto } from './organization-user-response.dto';
+import { OrganizationUserResponseDto } from '../../../common/dto/organization-user-response.dto';
 
 class MetaData {
   @ApiProperty({

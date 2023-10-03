@@ -1,13 +1,18 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
 import { User } from 'src/db/entities';
-import { OrganizationResponseDto } from 'src/modules/organizations/dto/organization-response.dto';
+import { OrganizationProfileResponseDto } from 'src/modules/organizations/users/dto/organization-profile-response.dto';
 
 export class ProfileResponseDto {
   constructor(user: User) {
     this.id = user.id;
-    this.name = user.name;
     this.email = user.email;
-    this.organization = user.organization;
+    this.organizations = user.userOrganizations.map(
+      (userOrganization) =>
+        new OrganizationProfileResponseDto(
+          userOrganization.organization,
+          userOrganization.roles,
+        ),
+    );
   }
 
   @ApiResponseProperty({
@@ -18,23 +23,25 @@ export class ProfileResponseDto {
 
   @ApiResponseProperty({
     type: String,
-    example: 'foo',
-  })
-  name: string;
-
-  @ApiResponseProperty({
-    type: String,
-    example: 'foo@gmail.com',
+    example: 'robin@moneyforward.co.jp',
   })
   email: string;
 
   @ApiResponseProperty({
-    type: OrganizationResponseDto,
-    example: {
-      id: 1,
-      name: 'First Organization Name',
-      uniqueName: 'first_organization_unique_name',
-    },
+    type: String,
+    example: 'robin',
   })
-  organization: OrganizationResponseDto;
+  name: string;
+
+  @ApiResponseProperty({
+    type: [OrganizationProfileResponseDto],
+    example: [
+      {
+        id: 1,
+        name: 'First Organization Name',
+        uniqueName: 'first_organization_unique_name',
+      },
+    ],
+  })
+  organizations: OrganizationProfileResponseDto[];
 }
