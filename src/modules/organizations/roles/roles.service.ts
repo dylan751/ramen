@@ -6,7 +6,7 @@ import {
 import { CreateRoleRequestDto } from './dto/create-role-request.dto';
 import { UpdateRoleRequestDto } from './dto/update-role-request.dto';
 import { RoleRepository } from 'src/db/repositories/role.repository';
-import { Role, RolePermission } from 'src/db/entities';
+import { Role, RolePermission, UserOrganizationRole } from 'src/db/entities';
 import { PermissionRepository } from 'src/db/repositories/permission.repository';
 
 @Injectable()
@@ -146,8 +146,15 @@ export class RolesService {
     }
 
     await this.roleRepository.manager.transaction(async (manager) => {
-      await manager.delete(RolePermission, { roleId });
-      await manager.delete(Role, { id: roleId });
+      const deletePromises = [];
+
+      deletePromises.push(manager.delete(RolePermission, { roleId }));
+      deletePromises.push(
+        manager.delete(UserOrganizationRole, { organizationId, roleId }),
+      );
+      deletePromises.push(manager.delete(Role, { id: roleId }));
+
+      await Promise.all(deletePromises);
     });
   }
 }
