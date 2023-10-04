@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -47,6 +48,27 @@ export class OrganizationsService {
 
     await this.orgRepository.manager.transaction(async (manager) => {
       await manager.save(Organization, organization);
+
+      try {
+        const orgCreationPromises = [];
+
+        orgCreationPromises.push(manager.save(Organization, organization));
+
+        orgCreationPromises.push(
+          manager.insert(
+            UserOrganizationRole,
+            UserOrganizationRole.create({
+              organizationId: organization.id,
+              userId: user.id,
+              roleId: Role.ADMIN_ROLE_ID,
+            }),
+          ),
+        );
+
+        await Promise.all(orgCreationPromises);
+      } catch (e) {
+        throw new InternalServerErrorException(e);
+      }
     });
 
     const organizationDto = new OrganizationResponseDto(organization);
