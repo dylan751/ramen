@@ -10,16 +10,20 @@ import {
   HttpStatus,
   ParseIntPipe,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationRequestDto } from './dto/create-organization-request.dto';
 import { UpdateOrganizationRequestDto } from './dto/update-organization-request.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OrganizationResponseDto } from './dto/organization-response.dto';
 import { AuthenticatedRequest } from '../common/types/authenticated-request';
 import { EmptyResponseDto } from '../common/types/empty-response.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('organizations')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth('accessToken')
 export class OrganizationsController {
   constructor(private readonly orgService: OrganizationsService) {}
 
@@ -39,20 +43,6 @@ export class OrganizationsController {
     @Request() req: AuthenticatedRequest,
   ): Promise<OrganizationResponseDto> {
     return await this.orgService.create(createRequest, req.user.id);
-  }
-
-  @Get()
-  @ApiOperation({
-    tags: ['Organization'],
-    summary: 'Get all organizations',
-    description: 'Get all organizations',
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: [OrganizationResponseDto],
-  })
-  async findAll(): Promise<OrganizationResponseDto[]> {
-    return await this.orgService.findAll();
   }
 
   @Get(':id')

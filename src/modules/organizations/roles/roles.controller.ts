@@ -8,15 +8,19 @@ import {
   Delete,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleRequestDto } from './dto/create-role-request.dto';
 import { UpdateRoleRequestDto } from './dto/update-role-request.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RoleResponseDto, RoleResponseListDto } from './dto/role-response.dto';
 import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
+import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 
 @Controller('roles')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth('accessToken')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 

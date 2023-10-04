@@ -54,14 +54,6 @@ export class OrganizationsService {
     return organizationDto;
   }
 
-  async findAll(): Promise<OrganizationResponseDto[]> {
-    const organizations = await this.orgRepository.find();
-    return organizations.map((organization) => {
-      const organizationDto = new OrganizationResponseDto(organization);
-      return organizationDto;
-    });
-  }
-
   async findById(orgId: number): Promise<Organization> {
     return await this.orgRepository.findById(orgId);
   }

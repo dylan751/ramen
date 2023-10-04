@@ -10,6 +10,7 @@ import { User } from 'src/db/entities';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { RegisterResponse } from './dto/register-response.dto';
+import * as bcrypt from 'bcrypt';
 
 interface JwtToken {
   token: string;
@@ -23,7 +24,6 @@ export class AuthService {
   ) {}
 
   async login(loginRequest: LoginRequestDto): Promise<JwtToken> {
-    // TODO: Add error handling
     const user = await this.userRepository.findByEmail(loginRequest.email);
 
     if (!user) {
@@ -32,7 +32,8 @@ export class AuthService {
       );
     }
 
-    if (user.password !== loginRequest.password) {
+    const isMatch = await bcrypt.compare(loginRequest.password, user.password);
+    if (!isMatch) {
       throw new UnauthorizedException('Wrong password for this account');
     }
 
@@ -42,7 +43,6 @@ export class AuthService {
   async register(
     registerRequest: RegisterRequestDto,
   ): Promise<RegisterResponse> {
-    // TODO: Add error handling
     const existedUser = await this.userRepository.findByEmail(
       registerRequest.email,
     );
@@ -51,11 +51,13 @@ export class AuthService {
       throw new BadRequestException('An user with that email already exists!');
     }
 
-    // TODO: Hash password before save into DB
+    // Hash password before save into DB
+    const saltOrRounds = 10;
+
     const user = new User();
     user.email = registerRequest.email;
     user.name = registerRequest.name;
-    user.password = registerRequest.password;
+    user.password = await bcrypt.hash(registerRequest.password, saltOrRounds);
 
     await user.save();
 

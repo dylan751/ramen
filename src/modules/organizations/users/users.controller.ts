@@ -8,8 +8,9 @@ import {
   Delete,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { OrganizationUserListResponseDto } from './dto/organization-user-list-response.dto';
 import { OrganizationUserResponseDto } from '../../common/dto/organization-user-response.dto';
@@ -18,6 +19,7 @@ import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
 import { TotalAdminResponseDto } from './dto/total-admin-response.dto';
 import { BulkInviteRequestDto } from './dto/bulk-invite-request.dto';
 import { BulkInviteResponseDto } from './dto/bulk-invite-response.dto';
+import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -26,6 +28,8 @@ import { BulkInviteResponseDto } from './dto/bulk-invite-response.dto';
  * in our case our base URL is http://localhost:3000/users
  */
 @Controller('users')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth('accessToken')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
