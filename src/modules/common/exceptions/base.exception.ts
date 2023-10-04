@@ -3,6 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 
 export enum ErrorId {
   CAN_NOT_DISABLE_LAST_ADMIN = 'can_not_disable_last_admin',
+  INVALID_ACCESS_TOKEN = 'invalid_access_token',
 }
 
 /**
@@ -34,6 +35,12 @@ export class CanNotDisableTheLastAdminException extends BaseException {
       ErrorId.CAN_NOT_DISABLE_LAST_ADMIN,
       HttpStatus.UNPROCESSABLE_ENTITY,
     );
+  }
+}
+
+export class InvalidAccessTokenException extends BaseException {
+  constructor(message: string) {
+    super(message, ErrorId.INVALID_ACCESS_TOKEN, HttpStatus.UNAUTHORIZED);
   }
 }
 

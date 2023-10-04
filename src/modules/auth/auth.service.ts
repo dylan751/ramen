@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -7,6 +8,8 @@ import { LoginRequestDto } from './dto/login-request.dto';
 import { UserRepository } from 'src/db/repositories';
 import { User } from 'src/db/entities';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterRequestDto } from './dto/register-request.dto';
+import { RegisterResponse } from './dto/register-response.dto';
 
 interface JwtToken {
   token: string;
@@ -34,6 +37,29 @@ export class AuthService {
     }
 
     return this.generateToken(user);
+  }
+
+  async register(
+    registerRequest: RegisterRequestDto,
+  ): Promise<RegisterResponse> {
+    // TODO: Add error handling
+    const existedUser = await this.userRepository.findByEmail(
+      registerRequest.email,
+    );
+
+    if (existedUser) {
+      throw new BadRequestException('An user with that email already exists!');
+    }
+
+    // TODO: Hash password before save into DB
+    const user = new User();
+    user.email = registerRequest.email;
+    user.name = registerRequest.name;
+    user.password = registerRequest.password;
+
+    await user.save();
+
+    return user;
   }
 
   private generateToken(user: User): JwtToken {

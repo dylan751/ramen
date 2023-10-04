@@ -265,6 +265,10 @@ export class UsersService {
     );
   }
 
+  async findByIdWithOrganizations(id: number): Promise<User> {
+    return await this.userRepository.findByIdWithOrganizations(id);
+  }
+
   async findByIdWithOrganizationsAndRoles(
     id: number,
   ): Promise<ProfileResponseDto> {

@@ -8,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from './role.entity';
 import { Organization } from './organization.entity';
 import { UserOrganization } from './user-organization.entity';
 
@@ -26,12 +25,6 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar' })
   password: string;
 
-  @Column()
-  roleId: number;
-
-  @Column()
-  organizationId: number;
-
   @CreateDateColumn()
   createdAt: Date;
 
@@ -46,9 +39,4 @@ export class User extends BaseEntity {
     (userOrganization) => userOrganization.user,
   )
   userOrganizations: UserOrganization[];
-
-  isAnAdmin(): boolean {
-    // join roles or fetch relations while querying for this to work
-    return this.roleId === Role.ADMIN_ROLE_ID;
-  }
 }

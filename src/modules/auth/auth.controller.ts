@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Get,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
@@ -13,6 +14,9 @@ import { LoginResponse } from './dto/login-response.dto';
 import { ProfileResponseDto } from './dto/profile-response.dto';
 import { AuthenticatedRequest } from '../common/types/authenticated-request';
 import { UsersService } from '../organizations/users/users.service';
+import { RegisterResponse } from './dto/register-response.dto';
+import { RegisterRequestDto } from './dto/register-request.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,7 +40,25 @@ export class AuthController {
     return await this.authService.login(loginRequest);
   }
 
+  @Post('register')
+  @ApiOperation({
+    tags: ['Auth'],
+    operationId: 'Register',
+    summary: 'Register endpoint for users',
+    description: 'Register with email and password',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: RegisterResponse,
+  })
+  async register(
+    @Body() registerRequest: RegisterRequestDto,
+  ): Promise<RegisterResponse> {
+    return await this.authService.register(registerRequest);
+  }
+
   @Get('profile')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: HttpStatus.OK,
     type: ProfileResponseDto,
