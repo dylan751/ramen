@@ -22,8 +22,6 @@ export enum PermissionAction {
 export enum PermissionObject {
   ALL = 'ALL',
   ORGANIZATION = 'Organization',
-  PEOPLE = 'People',
-  ACCOUNT = 'Account',
   USER = 'User',
   ROLE = 'Role',
 }
