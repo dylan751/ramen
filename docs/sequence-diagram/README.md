@@ -1,3 +1,3 @@
 # Sequence diagrams
 
-[Authentication sequence](./authentication-sequence.md)
+[Auth sequence](./auth-sequence.md)

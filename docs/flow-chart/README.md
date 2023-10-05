@@ -1,3 +1,3 @@
 # Flow charts
 
-[Authentication flow](./authentication-flow.md)
+[Auth flow](./auth-flow.md)
