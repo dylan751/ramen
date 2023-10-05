@@ -1,3 +1,3 @@
 # Flow charts
 
-[Login/Signup flow](./login-flow.md)
+[Authentication flow](./authentication-flow.md)
