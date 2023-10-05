@@ -24,3 +24,25 @@ sequenceDiagram
         Backend->>Login page: user validate error
     end
 ```
+
+# Signup sequence
+
+```mermaid
+sequenceDiagram
+    actor user
+    participant Signup page
+    participant Backend
+    participant Database
+    user->>Signup page: Enter email, name, password
+    Signup page->>Backend: signup()
+    Backend->>Database: retrieve(user)
+
+    alt user exists
+        Backend->>Signup page: duplicate user error
+    else user not found
+        Backend->>Database: create(user)
+    end
+
+    Backend->>Signup page: signup success
+    Signup page ->> Signup page: Redirect to login page
+```
