@@ -20,6 +20,7 @@ import { TotalAdminResponseDto } from './dto/total-admin-response.dto';
 import { BulkInviteRequestDto } from './dto/bulk-invite-request.dto';
 import { BulkInviteResponseDto } from './dto/bulk-invite-response.dto';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
+import { OrganizationMemberGuard } from '../organization-member.guard';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -28,7 +29,7 @@ import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
  * in our case our base URL is http://localhost:3000/users
  */
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, OrganizationMemberGuard)
 @ApiBearerAuth('accessToken')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

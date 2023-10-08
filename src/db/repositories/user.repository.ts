@@ -95,7 +95,6 @@ export class UserRepository extends Repository<User> {
       .where('userOrganization.organizationId = :organizationId', {
         organizationId,
       });
-    console.log(await query.getQuery());
 
     if (search) {
       // FIXME: this query will become slow in the future

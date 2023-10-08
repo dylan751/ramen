@@ -17,9 +17,10 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RoleResponseDto, RoleResponseListDto } from './dto/role-response.dto';
 import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
+import { OrganizationMemberGuard } from '../organization-member.guard';
 
 @Controller('roles')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, OrganizationMemberGuard)
 @ApiBearerAuth('accessToken')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
