@@ -12,7 +12,7 @@ export class RoleRepository extends Repository<Role> {
     return await this.findOne({ where: { slug: slug } });
   }
 
-  async findyByUserIdAndOrganizationId(
+  async findByUserIdAndOrganizationId(
     userId: number,
     organizationId: number,
   ): Promise<Role[]> {
@@ -29,7 +29,8 @@ export class RoleRepository extends Repository<Role> {
 
   async findRolesForOrganization(organizationId: number): Promise<Role[]> {
     return await this.createQueryBuilder('role')
-      .where('organizationId = :organizationId', { organizationId }) // custom roles
+      .where('"organizationId" = :organizationId', { organizationId }) // custom roles
+      .orWhere('"organizationId" = 0') // standard roles: Admin, Member, ...
       .getMany();
   }
 
@@ -38,7 +39,7 @@ export class RoleRepository extends Repository<Role> {
     id: number,
   ): Promise<Role> {
     return await this.createQueryBuilder('role')
-      .where('role.organizationId = :organizationId', { organizationId })
+      .where('"organizationId" = :organizationId', { organizationId })
       .andWhere('id = :id', { id })
       .getOne();
   }
