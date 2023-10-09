@@ -2,13 +2,15 @@
 
 ## Tables
 
-| Name             | Columns | Comment | Type       |
-| ---------------- | ------- | ------- | ---------- |
-| organizations    | 5       |         | BASE TABLE |
-| roles            | 6       |         | BASE TABLE |
-| users            | 8       |         | BASE TABLE |
-| permissions      | 5       |         | BASE TABLE |
-| role_permissions | 5       |         | BASE TABLE |
+| Name                    | Columns | Comment | Type       |
+| ----------------------- | ------- | ------- | ---------- |
+| organizations           | 5       |         | BASE TABLE |
+| permissions             | 5       |         | BASE TABLE |
+| role_permissions        | 5       |         | BASE TABLE |
+| roles                   | 6       |         | BASE TABLE |
+| user_organization_roles | 6       |         | BASE TABLE |
+| user_organizations      | 5       |         | BASE TABLE |
+| users                   | 6       |         | BASE TABLE |
 
 ## Relations
 
