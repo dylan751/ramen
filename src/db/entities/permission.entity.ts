@@ -20,10 +20,10 @@ export enum PermissionAction {
 }
 
 export enum PermissionObject {
-  ALL = 'ALL',
-  ORGANIZATION = 'Organization',
-  USER = 'User',
-  ROLE = 'Role',
+  ALL = 'all',
+  ORGANIZATION = 'organization',
+  USER = 'user',
+  ROLE = 'role',
 }
 
 @Entity('permissions')

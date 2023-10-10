@@ -43,4 +43,12 @@ export class RoleRepository extends Repository<Role> {
       .andWhere('id = :id', { id })
       .getOne();
   }
+
+  async findCustomRolesForOrganization(
+    organizationId: number,
+  ): Promise<Role[]> {
+    return await this.createQueryBuilder('role')
+      .where('"organizationId" = :organizationId', { organizationId }) // custom roles
+      .getMany();
+  }
 }

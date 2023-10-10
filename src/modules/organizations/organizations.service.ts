@@ -9,11 +9,15 @@ import { UpdateOrganizationRequestDto } from './dto/update-organization-request.
 import {
   Organization,
   Role,
-  User,
+  RolePermission,
   UserOrganization,
   UserOrganizationRole,
 } from 'src/db/entities';
-import { OrganizationRepository, UserRepository } from 'src/db/repositories';
+import {
+  OrganizationRepository,
+  RoleRepository,
+  UserRepository,
+} from 'src/db/repositories';
 import { OrganizationResponseDto } from './dto/organization-response.dto';
 
 @Injectable()
@@ -21,6 +25,7 @@ export class OrganizationsService {
   constructor(
     private readonly orgRepository: OrganizationRepository,
     private readonly userRepository: UserRepository,
+    private readonly roleRepository: RoleRepository,
   ) {}
 
   async create(
@@ -104,12 +109,17 @@ export class OrganizationsService {
   }
 
   async delete(organizationId: number): Promise<void> {
+    const organizationRoles =
+      await this.roleRepository.findCustomRolesForOrganization(organizationId);
+
     await this.orgRepository.manager.transaction(
       async (transactionalManager) => {
         const deletePromises = [];
 
-        deletePromises.push(
-          transactionalManager.delete(User, { organizationId }),
+        organizationRoles.forEach((role) =>
+          deletePromises.push(
+            transactionalManager.delete(RolePermission, { roleId: role.id }),
+          ),
         );
         deletePromises.push(
           transactionalManager.delete(Role, { organizationId }),

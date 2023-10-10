@@ -11,7 +11,7 @@ import { PermissionConfigDto } from './permission-config.dto';
 export class CreateRoleRequestDto {
   @ApiProperty({
     type: String,
-    example: 'Admin',
+    example: 'Developer',
     required: true,
   })
   @MaxLength(24)
@@ -20,7 +20,7 @@ export class CreateRoleRequestDto {
 
   @ApiProperty({
     type: String,
-    example: 'admin',
+    example: 'developer',
     required: true,
   })
   @MaxLength(24)
