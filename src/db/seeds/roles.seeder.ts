@@ -25,7 +25,7 @@ export default class RoleSeeder extends Seeder {
         .createQueryBuilder()
         .delete()
         .from(Role, 'role')
-        .where('"organizationId" = 0') // standard roles: Admin, Member, ...
+        .where('organizationId = 0') // standard roles: Admin, Member, ...
         .execute();
       await batchInsertWithoutEntityReload(transactionalEntityManager, roles);
     });

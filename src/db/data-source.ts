@@ -12,7 +12,7 @@ const enableSSL = process.env.DB_ENABLE_SSL === 'true';
 
 export const dataSourceOptions: DataSourceOptions = {
   host: dbHostname,
-  type: 'postgres',
+  type: 'mysql',
   port: parseInt(dbPort),
   username: dbUsername,
   password: dbPassword,

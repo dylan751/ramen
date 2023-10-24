@@ -27,8 +27,8 @@ export default class RolePermissionSeeder extends Seeder {
         .createQueryBuilder()
         .delete()
         .from(RolePermission, 'role_permission')
-        .where('"roleId" = 1') // standard roles: Admin, Member, ...
-        .orWhere('"roleId" = 2')
+        .where('roleId = 1') // standard roles: Admin, Member, ...
+        .orWhere('roleId = 2')
         .execute();
       await batchInsertWithoutEntityReload(
         transactionalEntityManager,

@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  ramen_mysql:
+    image: mysql:8.0
+    container_name: ramen_mysql
+    environment:
+      MYSQL_USER: 'ramen_dev'
+      MYSQL_PASSWORD: 'ramen_dev'
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '33063:3306'
+    expose:
+      - '33063'
+    volumes:
+      - ./docker/database:/var/lib/mysql
+      - ./docker/mysql_init:/docker-entrypoint-initdb.d
+  ramen:
+    container_name: ramen
+    build:
+      context: .
+      dockerfile: ./docker/ramen/Dockerfile
+    # command: [ "yarn", "start:dev" ]
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./:/ramen/
+      - /ramen/node_modules/
+    environment:
+      DB_TYPE: 'mysql'
+      DB_HOSTNAME: 'ramen_mysql'
+      DB_USERNAME: 'ramen_dev'
+      DB_PASSWORD: 'ramen_dev'
+      DB_NAME: 'ramen_db'
+      DB_PORT: '3306'
+      NODE_ENV: 'development'
+      JWT_SECRET: 'ramen_jwt_secret'

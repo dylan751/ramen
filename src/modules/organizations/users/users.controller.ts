@@ -26,7 +26,7 @@ import { OrganizationMemberGuard } from '../organization-member.guard';
  * whatever the string pass in controller decorator it will be appended to
  * API URL. to call any API from this controller you need to add prefix which is
  * passed in controller decorator.
- * in our case our base URL is http://localhost:3000/users
+ * in our case our base URL is http://localhost:4000/users
  */
 @Controller('users')
 @UseGuards(JwtAuthGuard, OrganizationMemberGuard)
