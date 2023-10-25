@@ -40,6 +40,8 @@ export class PermissionsGuard implements CanActivate {
      * 5. [rebac] listRequestManipulator is used to manipulate req.query or req.body
      * 6. [rbac] return permission check (ability.can) if no manipulators are present
      * (detailed comments below)
+     *
+     * For now, just support [rbac]
      */
 
     const { action, subject } = this.verifyAndGetDecorators(context);

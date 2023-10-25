@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,9 +10,14 @@ import { OrganizationRolesModule } from './modules/organizations/roles/roles.mod
 import { AuthModule } from './modules/auth/auth.module';
 import { RouterModule } from '@nestjs/core';
 import { routes } from './route';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true,
+    }),
     RouterModule.register(routes),
     TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,

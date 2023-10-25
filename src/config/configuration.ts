@@ -10,7 +10,7 @@ const getConfig = () => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     name: process.env.DB_NAME,
-    port: parseInt(process.env.DB_PORT) || 5432,
+    port: parseInt(process.env.DB_PORT) || 3306,
   },
   google: {
     client_secret: process.env.GOOGLE_CLIENT_SECRET,

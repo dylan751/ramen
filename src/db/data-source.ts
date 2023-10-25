@@ -1,5 +1,8 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
+// yarn migration:<cmd> uses this file, so make sure env variables are set
+import 'dotenv/config';
+
 import { readFileSync } from 'fs';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 const dbHostname = process.env.DB_HOSTNAME;
 const dbUsername = process.env.DB_USERNAME;
