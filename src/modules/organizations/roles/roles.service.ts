@@ -40,7 +40,7 @@ export class RolesService {
         const permission =
           await this.permissionRepository.findByPermissionConfig(
             permissionConfig.action,
-            permissionConfig.object,
+            permissionConfig.subject,
           );
         return permission.id;
       }),
@@ -107,7 +107,7 @@ export class RolesService {
           const permission =
             await this.permissionRepository.findByPermissionConfig(
               permissionConfig.action,
-              permissionConfig.object,
+              permissionConfig.subject,
             );
           return permission.id;
         }),

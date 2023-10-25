@@ -18,6 +18,9 @@ import { RoleResponseDto, RoleResponseListDto } from './dto/role-response.dto';
 import { EmptyResponseDto } from 'src/modules/common/types/empty-response.dto';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { OrganizationMemberGuard } from '../organization-member.guard';
+import { PermissionsGuard } from 'src/modules/authz/permissions.guard';
+import { CheckPermissions } from 'src/modules/authz/permissions.decorator';
+import { PermissionAction, PermissionSubject } from 'src/db/entities';
 
 @Controller('roles')
 @UseGuards(JwtAuthGuard, OrganizationMemberGuard)
@@ -26,6 +29,8 @@ export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.CREATE, PermissionSubject.ROLE])
   @ApiOperation({
     tags: ['Organization Role'],
     operationId: 'Create roles for an organization',
@@ -45,6 +50,8 @@ export class RolesController {
   }
 
   @Get()
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.READ, PermissionSubject.ROLE])
   @ApiOperation({
     tags: ['Organization Role'],
     operationId: 'Get role list for organization',
@@ -64,6 +71,8 @@ export class RolesController {
   }
 
   @Get(':id')
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.READ, PermissionSubject.ROLE])
   @ApiOperation({
     tags: ['Organization Role'],
     operationId: 'Get role by ID for an org',
@@ -84,6 +93,8 @@ export class RolesController {
   }
 
   @Patch('/:id')
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.UPDATE, PermissionSubject.ROLE])
   @ApiOperation({
     tags: ['Organization Role'],
     operationId: 'Update a role for an organization',
@@ -104,6 +115,8 @@ export class RolesController {
   }
 
   @Delete('/:id')
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.DELETE, PermissionSubject.ROLE])
   @ApiOperation({
     tags: ['Organization Role'],
     operationId: 'Delete a role for an organization',

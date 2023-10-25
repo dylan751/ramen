@@ -62,7 +62,7 @@ erDiagram
     permissions {
         id int pk
         action enum
-        object varchar
+        subject varchar
         createdAt timestamp
         updatedAt timestamp
     }

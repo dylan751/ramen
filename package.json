@@ -27,6 +27,7 @@
     "migration:seed:run": "yarn migration:run && yarn seed:run"
   },
   "dependencies": {
+    "@casl/ability": "^6.5.0",
     "@jorgebodega/typeorm-seeding": "^6.0.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",

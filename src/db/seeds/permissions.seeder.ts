@@ -12,7 +12,7 @@ export default class PermissionSeeder extends Seeder {
     const insertData = data.map((obj) => ({
       id: parseInt(obj.id),
       action: obj.action,
-      object: obj.object,
+      subject: obj.subject,
     }));
 
     await dataSource.transaction(async (transactionalEntityManager) => {

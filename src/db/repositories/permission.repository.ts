@@ -3,8 +3,15 @@ import { DataSource, Repository } from 'typeorm';
 import {
   Permission,
   PermissionAction,
-  PermissionObject,
+  PermissionSubject,
 } from 'src/db/entities';
+import { CaslPermission } from 'src/modules/authz/ability.factory';
+
+export interface ComputedPermission {
+  action: CaslPermission['action'];
+  subject: CaslPermission['subject'];
+  roleId: number;
+}
 
 @Injectable()
 export class PermissionRepository extends Repository<Permission> {
@@ -14,17 +21,18 @@ export class PermissionRepository extends Repository<Permission> {
 
   async findByPermissionConfig(
     action: PermissionAction,
-    object: PermissionObject,
+    subject: PermissionSubject,
   ): Promise<Permission> {
-    return await this.findOne({ where: { action, object } });
+    return await this.findOne({ where: { action, subject } });
   }
 
-  async findByRoleIds(roleIds: number[]): Promise<Array<Permission>> {
+  async findByRoleIds(roleIds: number[]): Promise<Array<ComputedPermission>> {
     return await this.createQueryBuilder('permission')
-      .select()
-      .addSelect('role.id', 'roleId')
+      .select('permission.action', 'action')
+      .addSelect('permission.subject', 'subject')
+      .addSelect('rolePermissions.roleId', 'roleId')
       .innerJoin('permission.rolePermissions', 'rolePermissions')
       .where('rolePermissions.roleId IN (:ids)', { ids: roleIds })
-      .getMany();
+      .getRawMany();
   }
 }

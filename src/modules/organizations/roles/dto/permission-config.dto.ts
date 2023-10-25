@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { PermissionAction, PermissionObject } from 'src/db/entities';
+import { PermissionAction, PermissionSubject } from 'src/db/entities';
 
 export class PermissionConfigDto {
   @ApiProperty({
@@ -13,11 +13,11 @@ export class PermissionConfigDto {
   readonly action: PermissionAction;
 
   @ApiProperty({
-    enum: PermissionObject,
-    example: PermissionObject.ORGANIZATION,
+    enum: PermissionSubject,
+    example: PermissionSubject.ORGANIZATION,
     required: true,
   })
   @IsNotEmpty()
-  @IsEnum(PermissionObject)
-  readonly object: PermissionObject;
+  @IsEnum(PermissionSubject)
+  readonly subject: PermissionSubject;
 }

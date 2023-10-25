@@ -19,7 +19,7 @@ export enum PermissionAction {
   DELETE = 'delete',
 }
 
-export enum PermissionObject {
+export enum PermissionSubject {
   ALL = 'all',
   ORGANIZATION = 'organization',
   USER = 'user',
@@ -40,10 +40,10 @@ export class Permission extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: PermissionObject,
+    enum: PermissionSubject,
   })
   @IsNotEmpty()
-  object: PermissionObject;
+  subject: PermissionSubject;
 
   @CreateDateColumn()
   createdAt: Date;
