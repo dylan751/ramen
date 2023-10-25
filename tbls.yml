@@ -1,0 +1,79 @@
+dsn: mysql://ramen_dev:ramen_dev@localhost:33063/ramen_db
+
+docPath: docs/db-schema
+
+exclude:
+  - migrations
+
+# Additional relation definitions for our schema.
+# Please put new table definitions in the alphabet order.
+relations:
+  # migrations
+  # -- pass
+
+  # organizations
+  # -- pass
+
+  # permissions
+  # -- pass
+
+  # role_permissions
+  - table: role_permissions
+    columns:
+      - roleId
+    parentTable: roles
+    parentColumns:
+      - id
+    def: 1-n
+  - table: role_permissions
+    columns:
+      - permissionId
+    parentTable: permissions
+    parentColumns:
+      - id
+    def: 1-n
+
+  # roles
+  # -- pass
+
+  # user_organization_roles
+  - table: user_organization_roles
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+  - table: user_organization_roles
+    columns:
+      - userId
+    parentTable: users
+    parentColumns:
+      - id
+    def: 1-n
+  - table: user_organization_roles
+    columns:
+      - roleId
+    parentTable: roles
+    parentColumns:
+      - id
+    def: n-n
+
+  # user_organizations
+  - table: user_organizations
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+  - table: user_organizations
+    columns:
+      - userId
+    parentTable: users
+    parentColumns:
+      - id
+    def: 1-n
+
+  # users
+  # -- pass

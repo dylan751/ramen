@@ -56,6 +56,7 @@ If you use VSCode and want to use _breakpoint_ for debugging, start server using
 - Framework: [NestJS](https://nestjs.com/) + [TypeORM](https://typeorm.io/)
 - Read: [Style guide](./STYLE_GUIDE.md)
 - Read: [Database schema](./docs/db-schema/README.md)
+- Read: [Database schema MermaidJS](./docs/db-schema-mermaidjs/README.md)
 - Read: [Development docs](./docs/README.md)
 
 ### Tips
@@ -66,4 +67,4 @@ If you are using VSCode, install the following extensions to help with developme
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) (must-have)
 - [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
 
-<!-- To regenerate database docs, install [tbls](https://github.com/k1LoW/tbls) and run `tbls doc --force` -->
+To regenerate database docs, install [tbls](https://github.com/k1LoW/tbls) and run `tbls doc --force`
