@@ -20,6 +20,10 @@ import { OrganizationResponseDto } from './dto/organization-response.dto';
 import { AuthenticatedRequest } from '../common/types/authenticated-request';
 import { EmptyResponseDto } from '../common/types/empty-response.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CheckPermissions } from '../authz/permissions.decorator';
+import { PermissionAction, PermissionSubject } from 'src/db/entities';
+import { PermissionsGuard } from '../authz/permissions.guard';
+import { OrganizationMemberGuard } from './organization-member.guard';
 
 @Controller('organizations')
 @UseGuards(JwtAuthGuard)
@@ -46,6 +50,7 @@ export class OrganizationsController {
   }
 
   @Get(':id')
+  @UseGuards(OrganizationMemberGuard)
   @ApiOperation({
     tags: ['Organization'],
     operationId: 'Get organization',
@@ -67,6 +72,8 @@ export class OrganizationsController {
   }
 
   @Patch(':id')
+  @UseGuards(OrganizationMemberGuard, PermissionsGuard)
+  @CheckPermissions([PermissionAction.UPDATE, PermissionSubject.ORGANIZATION])
   @ApiOperation({
     tags: ['Organization'],
     operationId: 'Update organization',
@@ -85,6 +92,8 @@ export class OrganizationsController {
   }
 
   @Delete(':id')
+  @UseGuards(OrganizationMemberGuard, PermissionsGuard)
+  @CheckPermissions([PermissionAction.DELETE, PermissionSubject.ORGANIZATION])
   @ApiOperation({
     tags: ['Organization'],
     operationId: 'Delete an organization',
