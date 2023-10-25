@@ -21,6 +21,9 @@ import { BulkInviteRequestDto } from './dto/bulk-invite-request.dto';
 import { BulkInviteResponseDto } from './dto/bulk-invite-response.dto';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { OrganizationMemberGuard } from '../organization-member.guard';
+import { PermissionsGuard } from 'src/modules/authz/permissions.guard';
+import { CheckPermissions } from 'src/modules/authz/permissions.decorator';
+import { PermissionAction, PermissionSubject } from 'src/db/entities';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -35,6 +38,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.READ, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
     summary: 'Get all organization users',
@@ -51,6 +56,8 @@ export class UsersController {
   }
 
   @Get('admin-count')
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.READ, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
     summary: 'Count total admins',
@@ -67,6 +74,8 @@ export class UsersController {
   }
 
   @Post('bulk-invitations')
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.CREATE, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
     summary: 'Bulk invite users',
@@ -84,6 +93,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.UPDATE, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
     summary: 'Edit organization users information',
@@ -102,6 +113,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.DELETE, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
     summary: 'Delete an organization user',

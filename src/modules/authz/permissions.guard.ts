@@ -43,7 +43,6 @@ export class PermissionsGuard implements CanActivate {
      */
 
     const { action, subject } = this.verifyAndGetDecorators(context);
-    console.log('Permission', action, subject);
 
     // get user data
     const req = context
@@ -52,16 +51,11 @@ export class PermissionsGuard implements CanActivate {
     const user = req.user;
     const organizationId = Number(req.params?.organizationId || req.params?.id);
 
-    console.log('User', user, organizationId);
     const { unconditionalAbilities } = await this.abilityFactory.createForUser(
       user,
       organizationId,
     );
 
-    console.log(
-      'Is have permission?',
-      unconditionalAbilities.can(action, subject),
-    );
     return unconditionalAbilities.can(action, subject);
   }
 

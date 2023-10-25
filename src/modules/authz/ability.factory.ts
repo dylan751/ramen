@@ -30,11 +30,9 @@ export class AbilityFactory {
 
     if (organizationId) {
       const roles = await this.authzService.findRoles(user.id, organizationId);
-      console.log('Roles', roles);
       const roleIds = roles.map((role) => role.id);
       const computedPermissions =
         await this.authzService.findAllPermissionsOfRoleIds(roleIds);
-      console.log('Computed permissions', computedPermissions);
 
       computedPermissions.forEach((computedPermission) => {
         const permission: CaslPermission = {
@@ -43,7 +41,6 @@ export class AbilityFactory {
         };
 
         unconditionalPermissions.push(permission);
-        console.log('Unconditional permissions', unconditionalPermissions);
       });
     }
 
