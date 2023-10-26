@@ -30,7 +30,7 @@ CREATE TABLE `roles` (
 | slug | varchar(255) |  | false |  |  |  |  |
 | createdAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
 | updatedAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
-| organizationId | int |  | false |  |  |  |  |
+| organizationId | int |  | false |  |  | [organizations](organizations.md) |  |
 
 ## Constraints
 
