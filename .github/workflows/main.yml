@@ -1,0 +1,79 @@
+name: Ramen-api CI
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  test:
+    name: "Lint & Test"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: ramen_db
+          MYSQL_ROOT_PASSWORD: ramen_dev
+        ports:
+          - 3306:3306
+        # Set health checks to wait until mysql has started
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v2
+
+      - id: yarn-cache-dir-path
+        name: Get yarn cache directory path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - id: yarn-cache
+        name: Yarn cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - id: node-modules-cache
+        name: Node modules cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+
+      - name: Install 🔧
+        if: steps.modules-cache.outputs.cache-hit != 'true'
+        run: yarn install
+
+      - name: Lint 🧐
+        run: yarn lint
+
+      - name: Build 🏗️
+        run: yarn build
+
+      - name: Test 🚨
+        env:
+          DB_HOSTNAME: localhost
+          DB_USERNAME: root
+          DB_PASSWORD: ramen_dev
+          DB_NAME: ramen_db
+          DB_PORT: 3306
+        run: yarn test
+        # NOTE: 30 mins should suffice since we don't have many tests, for now
+        timeout-minutes: 30
