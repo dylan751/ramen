@@ -19,7 +19,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/ramen/Dockerfile
-    # command: [ "yarn", "start:dev" ]
+      target: install-dependencies
+    command: ['yarn', 'start:dev']
     ports:
       - '4000:4000'
     volumes:

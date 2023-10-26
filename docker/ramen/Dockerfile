@@ -1,17 +1,41 @@
-FROM node:18-alpine
+######################################################
+# Installing dependencies:
+######################################################
+FROM node:18-alpine AS install-dependencies
 
-# Create app directory
 WORKDIR /app
 
-# Install app dependencies
 COPY package*.json ./
 
-RUN yarn install 
+RUN yarn install
 
-# Bundle app source
 COPY . .
 
+
+######################################################
+# Creating a build:
+######################################################
+FROM node:18-alpine AS create-build
+
+WORKDIR /app
+
+COPY --from=install-dependencies /app ./
+
 RUN yarn build
+
+USER node
+
+
+######################################################
+# Running the application:
+######################################################
+FROM node:18-alpine AS run
+
+WORKDIR /app
+
+COPY --from=install-dependencies /app/node_modules ./node_modules
+COPY --from=create-build /app/dist ./dist
+COPY package.json ./
 
 EXPOSE 4000
 
