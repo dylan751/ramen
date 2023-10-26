@@ -23,7 +23,7 @@ CREATE TABLE `organizations` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | int |  | false | auto_increment | [user_organization_roles](user_organization_roles.md) [user_organizations](user_organizations.md) |  |  |
+| id | int |  | false | auto_increment | [roles](roles.md) [user_organization_roles](user_organization_roles.md) [user_organizations](user_organizations.md) |  |  |
 | name | varchar(255) |  | false |  |  |  |  |
 | uniqueName | varchar(255) |  | false |  |  |  |  |
 | createdAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |

@@ -34,7 +34,13 @@ relations:
     def: 1-n
 
   # roles
-  # -- pass
+  - table: roles
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
 
   # user_organization_roles
   - table: user_organization_roles
