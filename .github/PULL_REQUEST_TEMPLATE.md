@@ -6,7 +6,7 @@ Close #issue_number
 
 ## How to test this change in local
 <!-- As detailed as possible -->
-<!-- Eg: Run yarn command:run sync-dynamodb-to-es -t AGGREGATION_BILLS in Iggre... -->
+<!-- Eg: Run yarn command:run sync-dynamodb-to-es -t AGGREGATION_BILLS in another services... -->
 
 ### Branches
 - sushi: `develop`
