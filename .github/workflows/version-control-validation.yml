@@ -7,7 +7,7 @@ on:
 jobs:
   validate-prod-mergeable:
     name: Validate if merge can happen
-    if: github.base_ref == 'master'
+    if: github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6
@@ -16,7 +16,7 @@ jobs:
             const branchName = "${{ github.head_ref }}";
 
             if(!(branchName.startsWith("release/") || branchName.startsWith("hotfix/"))){
-              core.setFailed("This Pull Request can not be merged to the master branch");
+              core.setFailed("This Pull Request can not be merged to the main branch");
             }
 
   validate-dev-mergeable:
