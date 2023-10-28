@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from 'src/db/entities';
 import { InvalidAccessTokenException } from '../common/exceptions/base.exception';
 import { UsersService } from 'src/modules/organizations/users/users.service';
+import { ConfigService } from '@nestjs/config';
 
 interface JwtPayload {
   sub: number;
@@ -12,11 +13,14 @@ interface JwtPayload {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly usersService: UsersService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly usersService: UsersService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: configService.get('jwt_secret'),
     });
   }
 
