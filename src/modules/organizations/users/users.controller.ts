@@ -9,6 +9,7 @@ import {
   HttpStatus,
   ParseIntPipe,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -23,7 +24,9 @@ import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { OrganizationMemberGuard } from '../organization-member.guard';
 import { PermissionsGuard } from 'src/modules/authz/permissions.guard';
 import { CheckPermissions } from 'src/modules/authz/permissions.decorator';
-import { PermissionAction, PermissionSubject } from 'src/db/entities';
+import { PermissionAction, PermissionSubject, User } from 'src/db/entities';
+import { GetUserPermissionsResponseDto } from './dto/permissions-response.dto';
+import { NoCacheHeaders } from 'src/decorators/no-cache-headers.decorator';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -129,5 +132,24 @@ export class UsersController {
     @Param('id', ParseIntPipe) userId: number,
   ): Promise<void> {
     await this.usersService.deleteByIdAndOrgId(organizationId, userId);
+  }
+
+  @Get('permissions')
+  @ApiOperation({
+    tags: ['Organization User'],
+    operationId: 'Get user permissions',
+    summary: "Get organization user's permissions",
+    description: "Get organization user's permissions",
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: [GetUserPermissionsResponseDto],
+  })
+  @NoCacheHeaders()
+  async getPermissions(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Req() { user }: { user: User },
+  ): Promise<GetUserPermissionsResponseDto> {
+    return await this.usersService.getPermissions(organizationId, user);
   }
 }

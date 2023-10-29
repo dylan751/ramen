@@ -22,6 +22,8 @@ import { BulkInviteResponseDto } from './dto/bulk-invite-response.dto';
 import { UserOrganizationRepository } from 'src/db/repositories/user-organization.repository';
 import { CanNotDisableTheLastAdminException } from 'src/modules/common/exceptions/base.exception';
 import { Not } from 'typeorm';
+import { GetUserPermissionsResponseDto } from './dto/permissions-response.dto';
+import { AbilityFactory } from 'src/modules/authz/ability.factory';
 
 export interface UserAttributes {
   email: string;
@@ -36,6 +38,7 @@ export class UsersService {
     private readonly organizationRepository: OrganizationRepository,
     private readonly userOrganizationRepository: UserOrganizationRepository,
     private readonly userOrganizationRoleRepository: UserOrganizationRoleRepository,
+    readonly abilityFactory: AbilityFactory,
   ) {}
 
   async findByOrganization(
@@ -318,5 +321,17 @@ export class UsersService {
         throw new NotFoundException(`Role do not exist ${role.id}`);
       }
     });
+  }
+
+  async getPermissions(
+    organizationId: number,
+    user: User,
+  ): Promise<GetUserPermissionsResponseDto> {
+    const { rawUnconditionalPermissions } =
+      await this.abilityFactory.createForUser(user, organizationId);
+
+    return {
+      permissions: rawUnconditionalPermissions,
+    };
   }
 }

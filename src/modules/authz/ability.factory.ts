@@ -16,6 +16,7 @@ export interface CaslPermission {
 
 type Permissions = {
   unconditionalAbilities: AppAbility;
+  rawUnconditionalPermissions: CaslPermission[];
 };
 
 @Injectable()
@@ -46,6 +47,7 @@ export class AbilityFactory {
 
     return {
       unconditionalAbilities: createMongoAbility(unconditionalPermissions),
+      rawUnconditionalPermissions: unconditionalPermissions,
     };
   }
 }
