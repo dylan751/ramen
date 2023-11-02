@@ -24,6 +24,18 @@ export class UserRepository extends Repository<User> {
     return await this.findOne({ where: { email: email } });
   }
 
+  async findByEmailWithOrganizationsAndRoles(email: string): Promise<User> {
+    return await this.createQueryBuilder('user')
+      .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
+      .leftJoinAndSelect('userOrganization.organization', 'organization')
+      .leftJoinAndSelect('userOrganization.roles', 'roles')
+      .where('user.email = :userEmail')
+      .setParameters({
+        userEmail: email,
+      })
+      .getOne();
+  }
+
   async findById(id: number): Promise<User> {
     return await this.findOne({ where: { id: id } });
   }

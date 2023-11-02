@@ -6,6 +6,7 @@ export class ProfileResponseDto {
   constructor(user: User) {
     this.id = user.id;
     this.email = user.email;
+    this.name = user.name;
     this.organizations = user.userOrganizations.map(
       (userOrganization) =>
         new OrganizationProfileResponseDto(
