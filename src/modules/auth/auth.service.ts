@@ -11,9 +11,11 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { RegisterResponse } from './dto/register-response.dto';
 import * as bcrypt from 'bcrypt';
+import { LoginResponse } from './dto/login-response.dto';
+import { ProfileResponseDto } from './dto/profile-response.dto';
 
 interface JwtToken {
-  token: string;
+  accessToken: string;
 }
 
 @Injectable()
@@ -23,8 +25,10 @@ export class AuthService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async login(loginRequest: LoginRequestDto): Promise<JwtToken> {
-    const user = await this.userRepository.findByEmail(loginRequest.email);
+  async login(loginRequest: LoginRequestDto): Promise<LoginResponse> {
+    const user = await this.userRepository.findByEmailWithOrganizationsAndRoles(
+      loginRequest.email,
+    );
 
     if (!user) {
       throw new NotFoundException(
@@ -37,7 +41,13 @@ export class AuthService {
       throw new UnauthorizedException('Wrong password for this account');
     }
 
-    return this.generateToken(user);
+    const { accessToken } = this.generateToken(user);
+    const userProfile = new ProfileResponseDto(user);
+
+    return {
+      accessToken,
+      userData: userProfile,
+    };
   }
 
   async register(
@@ -69,6 +79,6 @@ export class AuthService {
     // NOTE: If client need to decrypt this JWT, it is better to encrypt the payload using
     // public/private key pair instead of symmetric secret key.
     // See: https://docs.nestjs.com/techniques/authentication#implementing-passport-jwt
-    return { token: this.jwtService.sign(payload) };
+    return { accessToken: this.jwtService.sign(payload) };
   }
 }

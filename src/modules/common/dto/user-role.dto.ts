@@ -5,6 +5,7 @@ export class UserRole {
   constructor(role: Role) {
     this.id = role.id;
     this.name = role.name;
+    this.slug = role.slug;
   }
 
   @ApiResponseProperty({
@@ -18,4 +19,10 @@ export class UserRole {
     example: 'Admin',
   })
   name: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: 'admin',
+  })
+  slug: string;
 }
