@@ -143,7 +143,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: [GetUserPermissionsResponseDto],
+    type: GetUserPermissionsResponseDto,
   })
   @NoCacheHeaders()
   async getPermissions(
