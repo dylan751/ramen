@@ -106,10 +106,9 @@ export class UserRepository extends Repository<User> {
 
     const allData = await query.getMany();
 
-    const queryLowered = search.query.toLowerCase();
     let filteredData = allData;
-
     if (search.query) {
+      const queryLowered = search.query.toLowerCase();
       filteredData = allData.filter(
         (user) =>
           user.name.toLowerCase().includes(queryLowered) ||
