@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Brackets, DataSource, Repository } from 'typeorm';
 import { Role, User } from 'src/db/entities';
-import { PaginationOptions } from 'src/modules/common/interfaces/pagination-options';
-import { UserSortField } from 'src/modules/organizations/users/dto/user-pagination-request.dto';
+import { UserSearchRequestDto } from 'src/modules/organizations/users/dto/user-search-request.dto';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -96,66 +95,36 @@ export class UserRepository extends Repository<User> {
 
   async findByOrganizationWithUserOrgRole(
     organizationId: number,
-    options?: PaginationOptions,
-    search?: string,
-    disableRoleSearch = false,
-  ): Promise<User[]> {
-    // the arguments of skip, take, orderBy can be undefined
-    let query = this.createQueryBuilder('user')
+    search?: UserSearchRequestDto,
+  ): Promise<[User[], User[]]> {
+    const query = this.createQueryBuilder('user')
       .innerJoinAndSelect('user.userOrganizations', 'userOrganization')
       .innerJoinAndSelect('userOrganization.roles', 'role')
       .where('userOrganization.organizationId = :organizationId', {
         organizationId,
       });
 
-    if (search) {
-      // FIXME: this query will become slow in the future
-      query = query.andWhere(
-        new Brackets((qb) => {
-          qb.where('user.name LIKE :search', { search: `%${search}%` }).orWhere(
-            'user.email LIKE :search',
-            {
-              search: `%${search}%`,
-            },
-          );
-          if (!disableRoleSearch) {
-            // TODO: replace with role filter from FE
-            // get roles that match the search and get userIds that have these roles
-            qb.orWhere(
-              new Brackets((subQb) => {
-                const userIdsWithRoles = query
-                  .subQuery()
-                  .select('user.id')
-                  .from(User, 'user')
-                  .innerJoin('user.userOrganizations', 'userOrganization')
-                  .innerJoin('userOrganization.roles', 'role')
-                  .where('role.name LIKE :search', { search: `%${search}%` })
-                  .getQuery();
-                subQb.where('user.id IN ' + userIdsWithRoles);
-              }),
-            );
-          }
-        }),
+    const allData = await query.getMany();
+
+    let filteredData = allData;
+    if (search.query) {
+      const queryLowered = search.query.toLowerCase();
+      filteredData = allData.filter(
+        (user) =>
+          user.name.toLowerCase().includes(queryLowered) ||
+          user.email.toLowerCase().includes(queryLowered),
+      );
+    }
+    if (search.role) {
+      filteredData = filteredData.filter((user) =>
+        // For now, one user belongs to an org just have 1 role
+        user.userOrganizations[0].roles[0].slug
+          .toLowerCase()
+          .includes(search.role),
       );
     }
 
-    if (options) {
-      let sortExpression: string;
-      if (options.sortField === UserSortField.ROLE) {
-        sortExpression = 'role.name';
-      } else if (options.sortField === UserSortField.STATUS) {
-        sortExpression = 'userOrganization.status';
-      } else {
-        sortExpression = `user.${options.sortField}`;
-      }
-
-      query = query
-        .skip(options?.offset)
-        .take(options?.limit)
-        .orderBy(sortExpression, options?.order);
-    }
-
-    return await query.getMany();
+    return [allData, filteredData];
   }
 
   async countUserInOrganization(

@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -27,6 +28,7 @@ import { CheckPermissions } from 'src/modules/authz/permissions.decorator';
 import { PermissionAction, PermissionSubject, User } from 'src/db/entities';
 import { GetUserPermissionsResponseDto } from './dto/permissions-response.dto';
 import { NoCacheHeaders } from 'src/decorators/no-cache-headers.decorator';
+import { UserSearchRequestDto } from './dto/user-search-request.dto';
 
 /**
  * whatever the string pass in controller decorator it will be appended to
@@ -54,8 +56,9 @@ export class UsersController {
   })
   async findAll(
     @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Query() search: UserSearchRequestDto,
   ): Promise<OrganizationUserListResponseDto> {
-    return await this.usersService.findByOrganization(organizationId);
+    return await this.usersService.findByOrganization(organizationId, search);
   }
 
   @Get('admin-count')
