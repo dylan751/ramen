@@ -1,7 +1,6 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 import { OrganizationUserResponseDto } from '../../../common/dto/organization-user-response.dto';
 import { UserSearchRequestDto } from './user-search-request.dto';
-import { User } from 'src/db/entities';
 
 class MetaData {
   @ApiProperty({
@@ -15,9 +14,9 @@ class MetaData {
   params: UserSearchRequestDto;
 
   @ApiResponseProperty({
-    type: [User],
+    type: [OrganizationUserResponseDto],
   })
-  allData: User[];
+  allData: OrganizationUserResponseDto[];
 }
 
 export class OrganizationUserListResponseDto {
