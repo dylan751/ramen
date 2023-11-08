@@ -24,6 +24,7 @@ import { CanNotDisableTheLastAdminException } from 'src/modules/common/exception
 import { Not } from 'typeorm';
 import { GetUserPermissionsResponseDto } from './dto/permissions-response.dto';
 import { AbilityFactory } from 'src/modules/authz/ability.factory';
+import { UserSearchRequestDto } from './dto/user-search-request.dto';
 
 export interface UserAttributes {
   email: string;
@@ -43,10 +44,13 @@ export class UsersService {
 
   async findByOrganization(
     organizationId: number,
+    search: UserSearchRequestDto,
   ): Promise<OrganizationUserListResponseDto> {
-    const users = await this.userRepository.findByOrganizationWithUserOrgRole(
-      organizationId,
-    );
+    const [allData, users] =
+      await this.userRepository.findByOrganizationWithUserOrgRole(
+        organizationId,
+        search,
+      );
 
     const userDtos = users.map(
       (user) =>
@@ -55,6 +59,11 @@ export class UsersService {
 
     const result = new OrganizationUserListResponseDto();
     result.users = userDtos;
+    result.metadata = {
+      total: userDtos.length,
+      params: search,
+      allData,
+    };
     return result;
   }
 

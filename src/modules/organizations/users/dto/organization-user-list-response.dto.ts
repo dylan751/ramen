@@ -1,18 +1,23 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 import { OrganizationUserResponseDto } from '../../../common/dto/organization-user-response.dto';
+import { UserSearchRequestDto } from './user-search-request.dto';
+import { User } from 'src/db/entities';
 
 class MetaData {
   @ApiProperty({
     type: Number,
-    oneOf: [{ type: 'number' }, { type: 'null' }],
   })
-  prevPage: number | null;
+  total: number;
 
   @ApiProperty({
-    type: Number,
-    oneOf: [{ type: 'number' }, { type: 'null' }],
+    type: UserSearchRequestDto,
   })
-  nextPage: number | null;
+  params: UserSearchRequestDto;
+
+  @ApiResponseProperty({
+    type: [User],
+  })
+  allData: User[];
 }
 
 export class OrganizationUserListResponseDto {
