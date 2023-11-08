@@ -34,6 +34,17 @@ export class RoleRepository extends Repository<Role> {
       .getMany();
   }
 
+  async findRolesWithPermissionsForOrganization(
+    organizationId: number,
+  ): Promise<Role[]> {
+    return await this.createQueryBuilder('role')
+      .leftJoinAndSelect('role.rolePermissions', 'rolePermissions')
+      .leftJoinAndSelect('rolePermissions.permission', 'permission')
+      .where('organizationId = :organizationId', { organizationId }) // custom roles
+      .orWhere('organizationId = 0') // standard roles: Admin, Member, ...
+      .getMany();
+  }
+
   async findRoleForOrganization(
     organizationId: number,
     id: number,
