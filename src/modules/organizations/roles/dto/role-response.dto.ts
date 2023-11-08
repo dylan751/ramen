@@ -36,11 +36,11 @@ export class RoleResponseDto {
 
 export class RoleResponseListDto {
   constructor(roles: Role[]) {
-    this.items = roles.map((role) => new RoleResponseDto(role));
+    this.roles = roles.map((role) => new RoleResponseDto(role));
   }
 
   @ApiResponseProperty({
     type: [RoleResponseDto],
   })
-  items: RoleResponseDto[];
+  roles: RoleResponseDto[];
 }

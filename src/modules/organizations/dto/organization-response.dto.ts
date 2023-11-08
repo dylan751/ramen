@@ -36,7 +36,7 @@ export class OrganizationResponseDto {
 
 export class OrganizationResponseListDto {
   constructor(organizations: Organization[]) {
-    this.items = organizations.map(
+    this.organizations = organizations.map(
       (organization) => new OrganizationResponseDto(organization),
     );
   }
@@ -44,5 +44,5 @@ export class OrganizationResponseListDto {
   @ApiResponseProperty({
     type: [OrganizationResponseDto],
   })
-  items: OrganizationResponseDto[];
+  organizations: OrganizationResponseDto[];
 }
