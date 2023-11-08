@@ -13,6 +13,10 @@ export interface ComputedPermission {
   roleId: number;
 }
 
+export interface PermissionSubjectInterface {
+  subject: CaslPermission['subject'];
+}
+
 @Injectable()
 export class PermissionRepository extends Repository<Permission> {
   constructor(private dataSource: DataSource) {
@@ -33,6 +37,15 @@ export class PermissionRepository extends Repository<Permission> {
       .addSelect('rolePermissions.roleId', 'roleId')
       .innerJoin('permission.rolePermissions', 'rolePermissions')
       .where('rolePermissions.roleId IN (:ids)', { ids: roleIds })
+      .getRawMany();
+  }
+
+  async findAllPermissionSubjects(): Promise<
+    Array<PermissionSubjectInterface>
+  > {
+    return await this.createQueryBuilder('permission')
+      .select('permission.subject', 'subject')
+      .groupBy('permission.subject')
       .getRawMany();
   }
 }

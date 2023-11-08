@@ -3,6 +3,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
 import { OrganizationUsersModule } from './modules/organizations/users/users.module';
 import { OrganizationRolesModule } from './modules/organizations/roles/roles.module';
+import { PermissionsModule } from './modules/permissions/permissions.module';
 
 export const routes: Routes = [
   // Internal APIs
@@ -24,5 +25,9 @@ export const routes: Routes = [
   {
     path: '/internal/api/v1',
     module: AuthModule,
+  },
+  {
+    path: '/internal/api/v1',
+    module: PermissionsModule,
   },
 ];
