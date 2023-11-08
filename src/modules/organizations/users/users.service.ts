@@ -52,6 +52,11 @@ export class UsersService {
         search,
       );
 
+    const allDataDtos = allData.map(
+      (user) =>
+        new OrganizationUserResponseDto(user, user.userOrganizations[0]),
+    );
+
     const userDtos = users.map(
       (user) =>
         new OrganizationUserResponseDto(user, user.userOrganizations[0]),
@@ -62,7 +67,7 @@ export class UsersService {
     result.metadata = {
       total: userDtos.length,
       params: search,
-      allData,
+      allData: allDataDtos,
     };
     return result;
   }

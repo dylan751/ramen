@@ -52,7 +52,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: [OrganizationUserListResponseDto],
+    type: OrganizationUserListResponseDto,
   })
   async findAll(
     @Param('organizationId', ParseIntPipe) organizationId: number,
