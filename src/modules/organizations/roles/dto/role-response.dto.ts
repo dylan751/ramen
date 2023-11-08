@@ -1,11 +1,14 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
-import { Role } from 'src/db/entities';
+import { Permission, Role } from 'src/db/entities';
 
 export class RoleResponseDto {
   constructor(role: Role) {
     this.id = role.id;
     this.name = role.name;
     this.slug = role.slug;
+    this.permissions = role.rolePermissions.map(
+      (rolePermission) => rolePermission.permission,
+    );
     this.createdAt = role.createdAt;
   }
 
@@ -26,6 +29,11 @@ export class RoleResponseDto {
     example: 'admin',
   })
   slug: string;
+
+  @ApiResponseProperty({
+    type: [Permission],
+  })
+  permissions: Permission[];
 
   @ApiResponseProperty({
     type: Date,

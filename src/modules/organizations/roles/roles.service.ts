@@ -67,9 +67,10 @@ export class RolesService {
   }
 
   async findAll(organizationId: number): Promise<Role[]> {
-    const roles = await this.roleRepository.findRolesForOrganization(
-      organizationId,
-    );
+    const roles =
+      await this.roleRepository.findRolesWithPermissionsForOrganization(
+        organizationId,
+      );
 
     return roles;
   }
