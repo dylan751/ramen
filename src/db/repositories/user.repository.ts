@@ -116,12 +116,13 @@ export class UserRepository extends Repository<User> {
       );
     }
     if (search.role) {
-      filteredData = filteredData.filter((user) =>
-        // For now, one user belongs to an org just have 1 role
-        user.userOrganizations[0].roles[0].slug
-          .toLowerCase()
-          .includes(search.role),
-      );
+      filteredData = filteredData.filter((user) => {
+        // Check if user's roles includes the searching role
+        const roleId = user.userOrganizations[0].roles.map((role) =>
+          role.slug.toLowerCase().includes(search.role),
+        );
+        return roleId.includes(true);
+      });
     }
 
     return [allData, filteredData];

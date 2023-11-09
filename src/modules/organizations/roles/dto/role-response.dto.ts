@@ -9,6 +9,7 @@ export class RoleResponseDto {
     this.permissions = role.rolePermissions.map(
       (rolePermission) => rolePermission.permission,
     );
+    this.isCustom = role.organizationId !== 0;
     this.createdAt = role.createdAt;
   }
 
@@ -34,6 +35,11 @@ export class RoleResponseDto {
     type: [Permission],
   })
   permissions: Permission[];
+
+  @ApiResponseProperty({
+    type: Boolean,
+  })
+  isCustom: boolean;
 
   @ApiResponseProperty({
     type: Date,
