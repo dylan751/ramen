@@ -29,7 +29,9 @@
     "migration:revert": "yarn typeorm migration:revert -d ./src/db/datasource/default.ts",
     "migration:fix:latest": "ts-node ./scripts/check_migrations.ts",
     "seed:run": "typeorm-seeding seed -d ./dist/db/datasource/default.js ./dist/db/seeds/*.seeder.js",
-    "migration:seed:run": "yarn migration:run && yarn seed:run"
+    "migration:seed:run": "yarn migration:run && yarn seed:run",
+    "update": "git checkout && git pull origin && yarn && yarn build && yarn migration:seed:run",
+    "new-release": "./scripts/create-release-branch.sh"
   },
   "dependencies": {
     "@casl/ability": "^6.5.0",
