@@ -26,6 +26,7 @@ import { GetUserPermissionsResponseDto } from './dto/permissions-response.dto';
 import { AbilityFactory } from 'src/modules/authz/ability.factory';
 import { UserSearchRequestDto } from './dto/user-search-request.dto';
 import { UpdateProfileRequestDto } from 'src/modules/auth/dto/update-profile.dto';
+import * as bcrypt from 'bcrypt';
 
 export interface UserAttributes {
   email: string;
@@ -302,7 +303,7 @@ export class UsersService {
     userId: number,
     request: UpdateProfileRequestDto,
   ): Promise<ProfileResponseDto> {
-    const { name, phone, address } = request;
+    const { name, phone, address, password } = request;
     const user = await this.userRepository.findByIdWithOrganizationsAndRoles(
       userId,
     );
@@ -310,6 +311,12 @@ export class UsersService {
     if (name) user.name = name;
     if (phone) user.phone = phone;
     if (address) user.address = address;
+
+    if (password) {
+      // Hash password before save into DB
+      const saltOrRounds = 10;
+      user.password = await bcrypt.hash(password, saltOrRounds);
+    }
 
     const userDto = await user.save();
 

@@ -25,4 +25,12 @@ export class UpdateProfileRequestDto {
   })
   @IsOptional()
   readonly address?: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'password',
+    required: false,
+  })
+  @IsOptional()
+  readonly password?: string;
 }
