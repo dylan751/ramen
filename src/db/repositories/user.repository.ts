@@ -63,9 +63,7 @@ export class UserRepository extends Repository<User> {
       .leftJoinAndSelect('userOrganization.organization', 'organization')
       .leftJoinAndSelect('userOrganization.roles', 'roles')
       .where('user.id = :userId')
-      .setParameters({
-        userId: id,
-      })
+      .setParameters({ userId: id })
       .getOne();
   }
 
