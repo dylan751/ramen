@@ -6,6 +6,7 @@ import {
   Get,
   Request,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
@@ -17,6 +18,7 @@ import { UsersService } from '../organizations/users/users.service';
 import { RegisterResponse } from './dto/register-response.dto';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { UpdateProfileRequestDto } from './dto/update-profile.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -76,5 +78,25 @@ export class AuthController {
     return await this.usersService.findByIdWithOrganizationsAndRoles(
       req.user.id,
     );
+  }
+
+  @Patch('profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ProfileResponseDto,
+  })
+  @ApiOperation({
+    tags: ['Auth'],
+    operationId: 'Update user profile',
+    summary: 'Update user profile',
+    description: 'Update user profile',
+  })
+  @ApiBearerAuth('accessToken')
+  async updateProfile(
+    @Body() updateRequest: UpdateProfileRequestDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ProfileResponseDto> {
+    return await this.usersService.updateProfile(req.user.id, updateRequest);
   }
 }
