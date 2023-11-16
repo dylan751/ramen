@@ -25,6 +25,15 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar' })
   password: string;
 
+  @Column({ type: 'varchar', length: 11 })
+  phone: string;
+
+  @Column({ type: 'varchar' })
+  address: string;
+
+  @Column({ type: 'varchar' })
+  avatar: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

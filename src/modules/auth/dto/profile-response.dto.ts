@@ -7,6 +7,9 @@ export class ProfileResponseDto {
     this.id = user.id;
     this.email = user.email;
     this.name = user.name;
+    this.phone = user.phone;
+    this.address = user.address;
+    this.avatar = user.avatar;
     this.organizations = user.userOrganizations.map(
       (userOrganization) =>
         new OrganizationProfileResponseDto(
@@ -33,6 +36,24 @@ export class ProfileResponseDto {
     example: 'robin',
   })
   name: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: '0339089172',
+  })
+  phone: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: '19A Bach Khoa, Ha Noi',
+  })
+  address: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: 'https://image.com/avatar-1',
+  })
+  avatar: string;
 
   @ApiResponseProperty({
     type: [OrganizationProfileResponseDto],
