@@ -50,8 +50,6 @@ export class RolesController {
   }
 
   @Get()
-  @UseGuards(PermissionsGuard)
-  @CheckPermissions([PermissionAction.READ, PermissionSubject.ROLE])
   @ApiOperation({
     tags: ['Organization Role'],
     operationId: 'Get role list for organization',
