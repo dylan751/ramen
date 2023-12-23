@@ -47,6 +47,7 @@ export class UsersController {
   @CheckPermissions([PermissionAction.READ, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
+    operationId: 'Get user list for organization',
     summary: 'Get all organization users',
     description: 'Get all organization users',
   })
@@ -66,6 +67,7 @@ export class UsersController {
   @CheckPermissions([PermissionAction.READ, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
+    operationId: 'Count total admins of organization',
     summary: 'Count total admins',
     description: 'Count total admins',
   })
@@ -84,6 +86,7 @@ export class UsersController {
   @CheckPermissions([PermissionAction.CREATE, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
+    operationId: 'Invite users to organization',
     summary: 'Bulk invite users',
     description: 'Bulk invite users',
   })
@@ -103,8 +106,9 @@ export class UsersController {
   @CheckPermissions([PermissionAction.UPDATE, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
-    summary: 'Edit organization users information',
-    description: 'Edit organization users information',
+    operationId: 'Update organization user information',
+    summary: 'Update organization users information',
+    description: 'Update organization users information',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -123,6 +127,7 @@ export class UsersController {
   @CheckPermissions([PermissionAction.DELETE, PermissionSubject.USER])
   @ApiOperation({
     tags: ['Organization User'],
+    operationId: 'Delete an organization user',
     summary: 'Delete an organization user',
     description: 'Delete an organization user',
   })
@@ -140,7 +145,7 @@ export class UsersController {
   @Get('permissions')
   @ApiOperation({
     tags: ['Organization User'],
-    operationId: 'Get user permissions',
+    operationId: "Get organization user's permissions",
     summary: "Get organization user's permissions",
     description: "Get organization user's permissions",
   })

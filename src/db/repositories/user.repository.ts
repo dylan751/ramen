@@ -94,27 +94,26 @@ export class UserRepository extends Repository<User> {
   async findByOrganizationWithUserOrgRole(
     organizationId: number,
     search?: UserSearchRequestDto,
-  ): Promise<[User[], User[]]> {
-    const query = this.createQueryBuilder('user')
+  ): Promise<User[]> {
+    const allUsers = await this.createQueryBuilder('user')
       .innerJoinAndSelect('user.userOrganizations', 'userOrganization')
       .innerJoinAndSelect('userOrganization.roles', 'role')
       .where('userOrganization.organizationId = :organizationId', {
         organizationId,
-      });
+      })
+      .getMany();
 
-    const allData = await query.getMany();
-
-    let filteredData = allData;
+    let filteredUsers = allUsers;
     if (search.query) {
       const queryLowered = search.query.toLowerCase();
-      filteredData = allData.filter(
+      filteredUsers = allUsers.filter(
         (user) =>
           user.name.toLowerCase().includes(queryLowered) ||
           user.email.toLowerCase().includes(queryLowered),
       );
     }
     if (search.role) {
-      filteredData = filteredData.filter((user) => {
+      filteredUsers = filteredUsers.filter((user) => {
         // Check if user's roles includes the searching role
         const roleId = user.userOrganizations[0].roles.map((role) =>
           role.slug.toLowerCase().includes(search.role),
@@ -123,7 +122,7 @@ export class UserRepository extends Repository<User> {
       });
     }
 
-    return [allData, filteredData];
+    return filteredUsers;
   }
 
   async countUserInOrganization(
