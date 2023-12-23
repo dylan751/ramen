@@ -48,15 +48,9 @@ export class UsersService {
     organizationId: number,
     search: UserSearchRequestDto,
   ): Promise<OrganizationUserListResponseDto> {
-    const [allData, users] =
-      await this.userRepository.findByOrganizationWithUserOrgRole(
-        organizationId,
-        search,
-      );
-
-    const allDataDtos = allData.map(
-      (user) =>
-        new OrganizationUserResponseDto(user, user.userOrganizations[0]),
+    const users = await this.userRepository.findByOrganizationWithUserOrgRole(
+      organizationId,
+      search,
     );
 
     const userDtos = users.map(
@@ -69,7 +63,6 @@ export class UsersService {
     result.metadata = {
       total: userDtos.length,
       params: search,
-      allData: allDataDtos,
     };
     return result;
   }

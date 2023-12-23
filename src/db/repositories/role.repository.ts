@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Role } from 'src/db/entities';
+import { RoleSearchRequestDto } from 'src/modules/organizations/roles/dto/role-search-request.dto';
 
 @Injectable()
 export class RoleRepository extends Repository<Role> {
@@ -36,13 +37,24 @@ export class RoleRepository extends Repository<Role> {
 
   async findRolesWithPermissionsForOrganization(
     organizationId: number,
+    search: RoleSearchRequestDto,
   ): Promise<Role[]> {
-    return await this.createQueryBuilder('role')
+    const allRoles = await this.createQueryBuilder('role')
       .leftJoinAndSelect('role.rolePermissions', 'rolePermissions')
       .leftJoinAndSelect('rolePermissions.permission', 'permission')
       .where('organizationId = :organizationId', { organizationId }) // custom roles
       .orWhere('organizationId = 0') // standard roles: Admin, Member, ...
       .getMany();
+
+    let filteredRoles = allRoles;
+    if (search.query) {
+      const queryLowered = search.query.toLowerCase();
+      filteredRoles = allRoles.filter((role) =>
+        role.name.toLowerCase().includes(queryLowered),
+      );
+    }
+
+    return filteredRoles;
   }
 
   async findRoleForOrganization(

@@ -9,6 +9,7 @@ import {
   HttpStatus,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleRequestDto } from './dto/create-role-request.dto';
@@ -21,6 +22,7 @@ import { OrganizationMemberGuard } from '../organization-member.guard';
 import { PermissionsGuard } from 'src/modules/authz/permissions.guard';
 import { CheckPermissions } from 'src/modules/authz/permissions.decorator';
 import { PermissionAction, PermissionSubject } from 'src/db/entities';
+import { RoleSearchRequestDto } from './dto/role-search-request.dto';
 
 @Controller('roles')
 @UseGuards(JwtAuthGuard, OrganizationMemberGuard)
@@ -62,10 +64,9 @@ export class RolesController {
   })
   async findAll(
     @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Query() search: RoleSearchRequestDto,
   ): Promise<RoleResponseListDto> {
-    return new RoleResponseListDto(
-      await this.rolesService.findAll(organizationId),
-    );
+    return await this.rolesService.findAll(organizationId, search);
   }
 
   @Get(':id')
