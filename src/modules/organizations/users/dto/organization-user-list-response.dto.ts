@@ -12,11 +12,6 @@ class MetaData {
     type: UserSearchRequestDto,
   })
   params: UserSearchRequestDto;
-
-  @ApiResponseProperty({
-    type: [OrganizationUserResponseDto],
-  })
-  allData: OrganizationUserResponseDto[];
 }
 
 export class OrganizationUserListResponseDto {
