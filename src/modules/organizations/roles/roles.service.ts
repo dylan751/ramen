@@ -8,6 +8,8 @@ import { UpdateRoleRequestDto } from './dto/update-role-request.dto';
 import { RoleRepository } from 'src/db/repositories/role.repository';
 import { Role, RolePermission, UserOrganizationRole } from 'src/db/entities';
 import { PermissionRepository } from 'src/db/repositories/permission.repository';
+import { RoleResponseDto, RoleResponseListDto } from './dto/role-response.dto';
+import { RoleSearchRequestDto } from './dto/role-search-request.dto';
 
 @Injectable()
 export class RolesService {
@@ -66,13 +68,26 @@ export class RolesService {
     return role;
   }
 
-  async findAll(organizationId: number): Promise<Role[]> {
+  async findAll(
+    organizationId: number,
+    search: RoleSearchRequestDto,
+  ): Promise<RoleResponseListDto> {
     const roles =
       await this.roleRepository.findRolesWithPermissionsForOrganization(
         organizationId,
+        search,
       );
 
-    return roles;
+    const roleDtos = roles.map((role) => new RoleResponseDto(role));
+
+    const result = new RoleResponseListDto();
+    result.roles = roleDtos;
+    result.metadata = {
+      total: roleDtos.length,
+      params: search,
+    };
+
+    return result;
   }
 
   async findOne(organizationId: number, roleId: number): Promise<Role> {
