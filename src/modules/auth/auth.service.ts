@@ -83,6 +83,12 @@ export class AuthService {
       };
     }
 
+    // If avatar is empty -> overwrite it with google's avatar
+    if (!user.avatar) {
+      user.avatar = loginWithGoogleRequest.avatar;
+      await user.save();
+    }
+
     const { accessToken } = this.generateToken(user);
     const userProfile = new ProfileResponseDto(user);
 
