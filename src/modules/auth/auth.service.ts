@@ -13,6 +13,7 @@ import { RegisterResponse } from './dto/register-response.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginResponse } from './dto/login-response.dto';
 import { ProfileResponseDto } from './dto/profile-response.dto';
+import { LoginWithGoogleRequestDto } from './dto/login-with-google-request.dto';
 
 interface JwtToken {
   accessToken: string;
@@ -39,6 +40,53 @@ export class AuthService {
     const isMatch = await bcrypt.compare(loginRequest.password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Wrong password for this account');
+    }
+
+    const { accessToken } = this.generateToken(user);
+    const userProfile = new ProfileResponseDto(user);
+
+    return {
+      accessToken,
+      userData: userProfile,
+    };
+  }
+
+  async loginWithGoogle(
+    loginWithGoogleRequest: LoginWithGoogleRequestDto,
+  ): Promise<LoginResponse> {
+    const user = await this.userRepository.findByEmailWithOrganizationsAndRoles(
+      loginWithGoogleRequest.email,
+    );
+
+    // If that email not already exists
+    if (!user) {
+      // Create new user for that email
+      const newUser = new User();
+      newUser.email = loginWithGoogleRequest.email;
+      newUser.name = loginWithGoogleRequest.name;
+      if (loginWithGoogleRequest.avatar) {
+        newUser.avatar = loginWithGoogleRequest.avatar;
+      }
+      await newUser.save();
+
+      // Log user in
+      const newlyCreatedUser =
+        await this.userRepository.findByEmailWithOrganizationsAndRoles(
+          loginWithGoogleRequest.email,
+        );
+      const { accessToken } = this.generateToken(newlyCreatedUser);
+      const userProfile = new ProfileResponseDto(newlyCreatedUser);
+
+      return {
+        accessToken,
+        userData: userProfile,
+      };
+    }
+
+    // If avatar is empty -> overwrite it with google's avatar
+    if (!user.avatar) {
+      user.avatar = loginWithGoogleRequest.avatar;
+      await user.save();
     }
 
     const { accessToken } = this.generateToken(user);
