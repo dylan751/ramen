@@ -101,6 +101,7 @@ export class UserRepository extends Repository<User> {
       .where('userOrganization.organizationId = :organizationId', {
         organizationId,
       })
+      .orderBy('userOrganization.createdAt', 'ASC')
       .getMany();
 
     let filteredUsers = allUsers;
