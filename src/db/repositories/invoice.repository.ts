@@ -14,7 +14,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     organizationId: number,
   ): Promise<Invoice[]> {
     return await this.createQueryBuilder('invoice')
-      .innerJoin('role.userOrganizationInvoices', 'userOrganizationInvoices')
+      .innerJoin('invoice.userOrganizationInvoices', 'userOrganizationInvoices')
       .innerJoin(
         'userOrganizationInvoices.userOrganization',
         'userOrganization',
@@ -38,8 +38,10 @@ export class InvoiceRepository extends Repository<Invoice> {
     let filteredInvoices = allInvoices;
     if (search.query) {
       const queryLowered = search.query.toLowerCase();
-      filteredInvoices = allInvoices.filter((role) =>
-        role.name.toLowerCase().includes(queryLowered),
+      filteredInvoices = allInvoices.filter(
+        (invoice) =>
+          invoice.name.toLowerCase().includes(queryLowered) ||
+          invoice.note.toLowerCase().includes(queryLowered),
       );
     }
 

@@ -17,13 +17,11 @@ export class AddInvoices1708954499706 implements MigrationInterface {
           {
             name: 'name',
             type: 'varchar',
-            isUnique: false,
           },
           {
             name: 'note',
             type: 'varchar',
             isNullable: true,
-            isUnique: true,
           },
           {
             name: 'amount',

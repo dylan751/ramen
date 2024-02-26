@@ -39,7 +39,7 @@ export class InvoiceResponseDto {
 
   @ApiResponseProperty({
     type: Date,
-    example: '2024/02/15',
+    example: '2024-02-26T07:31:35.000Z',
   })
   date: Date;
 
@@ -51,7 +51,7 @@ export class InvoiceResponseDto {
 
   @ApiResponseProperty({
     type: Date,
-    example: '2020/01/01 15:00:00',
+    example: '2024-02-26T07:31:35.000Z',
   })
   createdAt: Date;
 }
