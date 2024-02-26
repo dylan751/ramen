@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Invoice } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from 'src/modules/organizations/invoices/dto/invoice-search-request.dto';
+import { isAfter, isBefore } from 'date-fns';
 
 @Injectable()
 export class InvoiceRepository extends Repository<Invoice> {
@@ -42,6 +43,24 @@ export class InvoiceRepository extends Repository<Invoice> {
         (invoice) =>
           invoice.name.toLowerCase().includes(queryLowered) ||
           invoice.note.toLowerCase().includes(queryLowered),
+      );
+    }
+
+    if (search.fromDate) {
+      filteredInvoices = filteredInvoices.filter((invoice) =>
+        isAfter(invoice.date, search.fromDate),
+      );
+    }
+
+    if (search.toDate) {
+      filteredInvoices = filteredInvoices.filter((invoice) =>
+        isBefore(invoice.date, search.toDate),
+      );
+    }
+
+    if (search.type) {
+      filteredInvoices = filteredInvoices.filter(
+        (invoice) => invoice.type === search.type,
       );
     }
 
