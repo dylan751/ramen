@@ -16,6 +16,7 @@ export class InvoicesService {
   async create(
     organizationId: number,
     request: CreateInvoiceRequestDto,
+    userId: number,
   ): Promise<Invoice> {
     const { name, note, amount, date, type } = request;
 
@@ -30,6 +31,14 @@ export class InvoicesService {
 
     await this.invoiceRepository.manager.transaction(async (manager) => {
       await manager.save(Invoice, invoice);
+
+      // Create user_organization_invoice
+      const userOrganizationInvoice = new UserOrganizationInvoice();
+      userOrganizationInvoice.invoiceId = invoice.id;
+      userOrganizationInvoice.userId = userId;
+      userOrganizationInvoice.organizationId = organizationId;
+
+      await manager.save(UserOrganizationInvoice, userOrganizationInvoice);
     });
 
     return invoice;

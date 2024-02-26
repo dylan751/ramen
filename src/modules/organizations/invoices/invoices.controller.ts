@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
   HttpStatus,
   ParseIntPipe,
   UseGuards,
@@ -26,6 +27,7 @@ import { PermissionsGuard } from 'src/modules/authz/permissions.guard';
 import { CheckPermissions } from 'src/modules/authz/permissions.decorator';
 import { PermissionAction, PermissionSubject } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from './dto/invoice-search-request.dto';
+import { AuthenticatedRequest } from 'src/modules/common/types/authenticated-request';
 
 @Controller('invoices')
 @UseGuards(JwtAuthGuard, OrganizationMemberGuard)
@@ -49,8 +51,13 @@ export class InvoicesController {
   async save(
     @Param('organizationId', ParseIntPipe) organizationId: number,
     @Body() request: CreateInvoiceRequestDto,
+    @Request() req: AuthenticatedRequest,
   ): Promise<InvoiceResponseDto> {
-    const invoice = await this.invoicesService.create(organizationId, request);
+    const invoice = await this.invoicesService.create(
+      organizationId,
+      request,
+      req.user.id,
+    );
     return new InvoiceResponseDto(invoice);
   }
 

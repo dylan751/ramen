@@ -11,7 +11,7 @@ import {
 import { Invoice } from './invoice.entity';
 import { UserOrganization } from './user-organization.entity';
 
-@Entity('user_organization_invoces')
+@Entity('user_organization_invoices')
 export class UserOrganizationInvoice extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
