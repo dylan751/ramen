@@ -16,3 +16,7 @@
 15,"create","account-settings"
 16,"update","account-settings"
 17,"delete","account-settings"
+18,"read","invoice"
+19,"create","invoice"
+20,"update","invoice"
+21,"delete","invoice"
