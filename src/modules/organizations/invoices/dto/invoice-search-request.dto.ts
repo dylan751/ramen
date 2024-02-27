@@ -1,21 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
 import { InvoiceType } from 'src/db/entities';
 
 export class InvoiceSearchRequestDto {
   @ApiProperty({ required: false })
   @IsOptional()
-  query: string;
+  query?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  fromDate: Date;
+  fromDate?: Date;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  toDate: Date;
+  toDate?: Date;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  type: InvoiceType;
+  @IsEnum(InvoiceType)
+  type?: InvoiceType;
 }
