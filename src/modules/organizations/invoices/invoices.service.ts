@@ -68,9 +68,10 @@ export class InvoicesService {
   }
 
   async findOne(organizationId: number, invoiceId: number): Promise<Invoice> {
-    const invoice = await this.invoiceRepository.findOne({
-      where: { organizationId, id: invoiceId },
-    });
+    const invoice = await this.invoiceRepository.findInvoiceForOrganization(
+      organizationId,
+      invoiceId,
+    );
     if (!invoice) {
       throw new NotFoundException(
         `Invoice ${invoiceId} does not belong to the organization ${organizationId}`,

@@ -33,7 +33,17 @@ export class InvoiceRepository extends Repository<Invoice> {
     search: InvoiceSearchRequestDto,
   ): Promise<Invoice[]> {
     const allInvoices = await this.createQueryBuilder('invoice')
-      .where('organizationId = :organizationId', { organizationId })
+      .leftJoinAndSelect(
+        'invoice.userOrganizationInvoices',
+        'userOrganizationInvoices',
+      )
+      .leftJoinAndSelect(
+        'userOrganizationInvoices.userOrganization',
+        'userOrganization',
+      )
+      .leftJoinAndSelect('userOrganization.user', 'user')
+      .leftJoinAndSelect('userOrganization.roles', 'roles')
+      .where('invoice.organizationId = :organizationId', { organizationId })
       .getMany();
 
     let filteredInvoices = allInvoices;
@@ -72,8 +82,18 @@ export class InvoiceRepository extends Repository<Invoice> {
     id: number,
   ): Promise<Invoice> {
     return await this.createQueryBuilder('invoice')
-      .where('organizationId = :organizationId', { organizationId })
-      .andWhere('id = :id', { id })
+      .leftJoinAndSelect(
+        'invoice.userOrganizationInvoices',
+        'userOrganizationInvoices',
+      )
+      .leftJoinAndSelect(
+        'userOrganizationInvoices.userOrganization',
+        'userOrganization',
+      )
+      .leftJoinAndSelect('userOrganization.user', 'user')
+      .leftJoinAndSelect('userOrganization.roles', 'roles')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.id = :id', { id })
       .getOne();
   }
 }

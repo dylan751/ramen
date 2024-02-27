@@ -1,6 +1,7 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 import { Invoice, InvoiceType } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from './invoice-search-request.dto';
+import { OrganizationUserResponseDto } from 'src/modules/common/dto/organization-user-response.dto';
 
 export class InvoiceResponseDto {
   constructor(invoice: Invoice) {
@@ -10,6 +11,10 @@ export class InvoiceResponseDto {
     this.amount = invoice.amount;
     this.date = invoice.date;
     this.type = invoice.type;
+    this.creator = new OrganizationUserResponseDto(
+      invoice.userOrganizationInvoices[0].userOrganization.user,
+      invoice.userOrganizationInvoices[0].userOrganization,
+    );
     this.createdAt = invoice.createdAt;
   }
 
@@ -48,6 +53,11 @@ export class InvoiceResponseDto {
   })
   @ApiProperty({ enumName: 'InvoiceType' })
   type: InvoiceType;
+
+  @ApiResponseProperty({
+    type: OrganizationUserResponseDto,
+  })
+  creator: OrganizationUserResponseDto;
 
   @ApiResponseProperty({
     type: Date,
