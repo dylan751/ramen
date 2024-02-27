@@ -11,10 +11,13 @@ export class InvoiceResponseDto {
     this.amount = invoice.amount;
     this.date = invoice.date;
     this.type = invoice.type;
-    this.creator = new OrganizationUserResponseDto(
-      invoice.userOrganizationInvoices[0].userOrganization.user,
-      invoice.userOrganizationInvoices[0].userOrganization,
-    );
+    if (invoice.userOrganizationInvoices) {
+      // For now, each invoices only has one userOrganizationInvoices
+      this.creator = new OrganizationUserResponseDto(
+        invoice.userOrganizationInvoices[0].userOrganization.user,
+        invoice.userOrganizationInvoices[0].userOrganization,
+      );
+    }
     this.createdAt = invoice.createdAt;
   }
 
