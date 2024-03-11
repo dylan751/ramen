@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Invoice } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from 'src/modules/organizations/invoices/dto/invoice-search-request.dto';
-import { isAfter, isBefore } from 'date-fns';
+import { isAfter, isBefore, isEqual } from 'date-fns';
 
 @Injectable()
 export class InvoiceRepository extends Repository<Invoice> {
@@ -57,14 +57,18 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     if (search.fromDate) {
-      filteredInvoices = filteredInvoices.filter((invoice) =>
-        isAfter(invoice.date, search.fromDate),
+      filteredInvoices = filteredInvoices.filter(
+        (invoice) =>
+          isAfter(invoice.date, new Date(search.fromDate)) ||
+          isEqual(invoice.date, new Date(search.fromDate)),
       );
     }
 
     if (search.toDate) {
-      filteredInvoices = filteredInvoices.filter((invoice) =>
-        isBefore(invoice.date, search.toDate),
+      filteredInvoices = filteredInvoices.filter(
+        (invoice) =>
+          isBefore(invoice.date, new Date(search.toDate)) ||
+          isEqual(invoice.date, new Date(search.toDate)),
       );
     }
 
