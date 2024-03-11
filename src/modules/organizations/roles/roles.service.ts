@@ -109,9 +109,15 @@ export class RolesService {
     req: UpdateRoleRequestDto,
   ) {
     const { name, slug, permissionConfigs } = req;
-    const role = await this.roleRepository.findOneOrFail({
+    const role = await this.roleRepository.findOne({
       where: { id: roleId, organizationId },
     });
+
+    if (!role) {
+      throw new NotFoundException(
+        `Role ${roleId} does not belong to the organization ${organizationId}`,
+      );
+    }
 
     if (name) role.name = name;
     if (slug) role.slug = slug;

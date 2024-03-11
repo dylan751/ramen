@@ -12,6 +12,7 @@ import { routes } from './route';
 import configuration from './config/configuration';
 import { dataSourceOptions } from './db/datasource/default';
 import { PermissionsModule } from './modules/permissions/permissions.module';
+import { OrganizationInvoicesModule } from './modules/organizations/invoices/invoices.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
     OrganizationsModule,
     OrganizationUsersModule,
     OrganizationRolesModule,
+    OrganizationInvoicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
