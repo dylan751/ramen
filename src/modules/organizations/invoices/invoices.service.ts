@@ -8,29 +8,42 @@ import {
   InvoiceResponseDto,
 } from './dto/invoice-response.dto';
 import { InvoiceSearchRequestDto } from './dto/invoice-search-request.dto';
+import { InvoiceItem } from 'src/db/entities/invoice-item.entity';
+import { InvoiceItemRepository } from 'src/db/repositories/invoice-item.repository';
 
 @Injectable()
 export class InvoicesService {
-  constructor(private readonly invoiceRepository: InvoiceRepository) {}
+  constructor(
+    private readonly invoiceRepository: InvoiceRepository,
+    private readonly invoiceItemRepository: InvoiceItemRepository,
+  ) {}
 
   async create(
     organizationId: number,
     request: CreateInvoiceRequestDto,
     userId: number,
   ): Promise<Invoice> {
-    const { name, note, amount, date, type } = request;
+    const { date, items } = request;
 
     // Create invoice
     const invoice = new Invoice();
-    invoice.name = name;
-    invoice.note = note || null;
-    invoice.amount = amount;
     invoice.date = date;
-    invoice.type = type;
     invoice.organizationId = organizationId;
 
     await this.invoiceRepository.manager.transaction(async (manager) => {
       await manager.save(Invoice, invoice);
+
+      // Create invoice_items
+      const invoiceItems: InvoiceItem[] = [];
+      items.forEach((item) => {
+        const invoiceItem = new InvoiceItem();
+        invoiceItem.name = item.name;
+        invoiceItem.note = item.note;
+        invoiceItem.price = item.price;
+        invoiceItem.type = item.type;
+        invoiceItem.invoiceId = invoice.id;
+        invoiceItems.push(invoiceItem);
+      });
 
       // Create user_organization_invoice
       const userOrganizationInvoice = new UserOrganizationInvoice();
@@ -38,7 +51,10 @@ export class InvoicesService {
       userOrganizationInvoice.userId = userId;
       userOrganizationInvoice.organizationId = organizationId;
 
+      await manager.save(InvoiceItem, invoiceItems);
       await manager.save(UserOrganizationInvoice, userOrganizationInvoice);
+
+      invoice.items = invoiceItems;
     });
 
     return invoice;
@@ -86,7 +102,7 @@ export class InvoicesService {
     invoiceId: number,
     req: UpdateInvoiceRequestDto,
   ) {
-    const { name, note, amount, date, type } = req;
+    const { date, items } = req;
     const invoice = await this.invoiceRepository.findOne({
       where: { id: invoiceId, organizationId },
     });
@@ -97,13 +113,33 @@ export class InvoicesService {
       );
     }
 
-    if (name) invoice.name = name;
-    if (note) invoice.note = note;
-    if (amount) invoice.amount = amount;
     if (date) invoice.date = date;
-    if (type) invoice.type = type;
+    if (items.length > 0) {
+      await this.invoiceRepository.manager.transaction(async (manager) => {
+        // Save invoice
+        // Delete previous invoice items
+        // Save new invoice items
+        await manager.save(Invoice, invoice);
+        const oldInvoiceItems =
+          await this.invoiceItemRepository.findByInvoiceId(invoiceId);
+        await manager.delete(InvoiceItem, oldInvoiceItems);
 
-    return await invoice.save();
+        const invoiceItems: InvoiceItem[] = [];
+        items.forEach((item) => {
+          const invoiceItem = new InvoiceItem();
+          invoiceItem.name = item.name;
+          invoiceItem.note = item.note;
+          invoiceItem.price = item.price;
+          invoiceItem.type = item.type;
+          invoiceItem.invoiceId = invoiceId;
+          invoiceItems.push(invoiceItem);
+        });
+        await manager.save(InvoiceItem, invoiceItems);
+        invoice.items = invoiceItems;
+      });
+    }
+
+    return invoice;
   }
 
   async delete(organizationId: number, invoiceId: number): Promise<void> {
@@ -123,6 +159,7 @@ export class InvoicesService {
       deletePromises.push(
         manager.delete(UserOrganizationInvoice, { organizationId, invoiceId }),
       );
+      deletePromises.push(manager.delete(InvoiceItem, { invoiceId }));
       deletePromises.push(manager.delete(Invoice, { id: invoiceId }));
 
       await Promise.all(deletePromises);

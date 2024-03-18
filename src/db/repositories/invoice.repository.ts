@@ -33,6 +33,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     search: InvoiceSearchRequestDto,
   ): Promise<Invoice[]> {
     const allInvoices = await this.createQueryBuilder('invoice')
+      .leftJoinAndSelect('invoice.items', 'items')
       .leftJoinAndSelect(
         'invoice.userOrganizationInvoices',
         'userOrganizationInvoices',
@@ -47,14 +48,14 @@ export class InvoiceRepository extends Repository<Invoice> {
       .getMany();
 
     let filteredInvoices = allInvoices;
-    if (search.query) {
-      const queryLowered = search.query.toLowerCase();
-      filteredInvoices = allInvoices.filter(
-        (invoice) =>
-          invoice.name.toLowerCase().includes(queryLowered) ||
-          invoice.note.toLowerCase().includes(queryLowered),
-      );
-    }
+    // if (search.query) {
+    //   const queryLowered = search.query.toLowerCase();
+    //   filteredInvoices = filteredInvoices.filter(
+    //     (invoice) =>
+    //       invoice.name.toLowerCase().includes(queryLowered) ||
+    //       invoice.note.toLowerCase().includes(queryLowered),
+    //   );
+    // }
 
     if (search.fromDate) {
       filteredInvoices = filteredInvoices.filter(
@@ -72,11 +73,11 @@ export class InvoiceRepository extends Repository<Invoice> {
       );
     }
 
-    if (search.type) {
-      filteredInvoices = filteredInvoices.filter(
-        (invoice) => invoice.type === search.type,
-      );
-    }
+    // if (search.type) {
+    //   filteredInvoices = filteredInvoices.filter(
+    //     (invoice) => invoice.type === search.type,
+    //   );
+    // }
 
     return filteredInvoices;
   }
@@ -86,6 +87,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     id: number,
   ): Promise<Invoice> {
     return await this.createQueryBuilder('invoice')
+      .leftJoinAndSelect('invoice.items', 'items')
       .leftJoinAndSelect(
         'invoice.userOrganizationInvoices',
         'userOrganizationInvoices',

@@ -1,12 +1,13 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateInvoiceRequestDto } from './create-invoice-request.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, MaxLength } from 'class-validator';
+import {
+  IsArray,
+  IsOptional,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 import { InvoiceType } from 'src/db/entities';
 
-export class UpdateInvoiceRequestDto extends PartialType(
-  CreateInvoiceRequestDto,
-) {
+export class UpdateInvoiceItemRequest {
   @ApiProperty({
     type: String,
     example: 'Monthly bill',
@@ -30,8 +31,20 @@ export class UpdateInvoiceRequestDto extends PartialType(
     required: false,
   })
   @IsOptional()
-  readonly amount?: number;
+  readonly price?: number;
 
+  @ApiProperty({
+    type: InvoiceType,
+    enum: InvoiceType,
+    enumName: 'InvoiceType',
+    example: InvoiceType.EXPENSE,
+    required: false,
+  })
+  @IsOptional()
+  readonly type?: InvoiceType;
+}
+
+export class UpdateInvoiceRequestDto {
   @ApiProperty({
     type: Date,
     example: '2024-02-26T07:31:35.000Z',
@@ -41,10 +54,10 @@ export class UpdateInvoiceRequestDto extends PartialType(
   readonly date?: Date;
 
   @ApiProperty({
-    enumName: 'InvoiceType',
-    example: InvoiceType.EXPENSE,
-    required: false,
+    type: [UpdateInvoiceItemRequest],
   })
+  @ValidateNested()
   @IsOptional()
-  readonly type?: InvoiceType;
+  @IsArray()
+  readonly items?: UpdateInvoiceItemRequest[];
 }

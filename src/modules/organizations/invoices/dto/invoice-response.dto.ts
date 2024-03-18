@@ -2,25 +2,9 @@ import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 import { Invoice, InvoiceType } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from './invoice-search-request.dto';
 import { OrganizationUserResponseDto } from 'src/modules/common/dto/organization-user-response.dto';
+import { InvoiceItem } from 'src/db/entities/invoice-item.entity';
 
-export class InvoiceResponseDto {
-  constructor(invoice: Invoice) {
-    this.id = invoice.id;
-    this.name = invoice.name;
-    this.note = invoice.note || null;
-    this.amount = invoice.amount;
-    this.date = invoice.date;
-    this.type = invoice.type;
-    if (invoice.userOrganizationInvoices) {
-      // For now, each invoices only has one userOrganizationInvoices
-      this.creator = new OrganizationUserResponseDto(
-        invoice.userOrganizationInvoices[0].userOrganization.user,
-        invoice.userOrganizationInvoices[0].userOrganization,
-      );
-    }
-    this.createdAt = invoice.createdAt;
-  }
-
+class InvoiceItemResponseDto {
   @ApiResponseProperty({
     type: Number,
     example: 1,
@@ -43,7 +27,48 @@ export class InvoiceResponseDto {
     type: Number,
     example: 10000,
   })
-  amount: number;
+  price: number;
+
+  @ApiResponseProperty({
+    enum: InvoiceType,
+    example: InvoiceType.EXPENSE,
+  })
+  @ApiProperty({ enumName: 'InvoiceType' })
+  type: InvoiceType;
+
+  constructor(invoiceItem: InvoiceItem) {
+    this.id = invoiceItem.id;
+    this.name = invoiceItem.name;
+    this.note = invoiceItem.note || null;
+    this.price = invoiceItem.price;
+    this.type = invoiceItem.type;
+  }
+}
+
+export class InvoiceResponseDto {
+  constructor(invoice: Invoice) {
+    this.id = invoice.id;
+    this.date = invoice.date;
+    if (invoice.items) {
+      this.items = invoice.items.map(
+        (item) => new InvoiceItemResponseDto(item),
+      );
+    }
+    if (invoice.userOrganizationInvoices) {
+      // For now, each invoices only has one userOrganizationInvoices
+      this.creator = new OrganizationUserResponseDto(
+        invoice.userOrganizationInvoices[0].userOrganization.user,
+        invoice.userOrganizationInvoices[0].userOrganization,
+      );
+    }
+    this.createdAt = invoice.createdAt;
+  }
+
+  @ApiResponseProperty({
+    type: Number,
+    example: 1,
+  })
+  id: number;
 
   @ApiResponseProperty({
     type: Date,
@@ -52,10 +77,9 @@ export class InvoiceResponseDto {
   date: Date;
 
   @ApiResponseProperty({
-    enum: InvoiceType,
+    type: [InvoiceItemResponseDto],
   })
-  @ApiProperty({ enumName: 'InvoiceType' })
-  type: InvoiceType;
+  items: InvoiceItemResponseDto[];
 
   @ApiResponseProperty({
     type: OrganizationUserResponseDto,

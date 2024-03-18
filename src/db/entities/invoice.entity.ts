@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import {
   BaseEntity,
   Column,
@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserOrganizationInvoice } from './user-organization-invoice.entity';
+import { InvoiceItem } from './invoice-item.entity';
 
 export enum InvoiceType {
   EXPENSE = 'expense',
@@ -23,26 +24,7 @@ export class Invoice extends BaseEntity {
 
   @Column()
   @IsNotEmpty()
-  name: string;
-
-  @Column()
-  @IsOptional()
-  note?: string;
-
-  @Column()
-  @IsNumber()
-  amount: number;
-
-  @Column()
-  @IsNotEmpty()
   date: Date;
-
-  @Column({
-    type: 'enum',
-    enum: InvoiceType,
-  })
-  @IsNotEmpty()
-  type: InvoiceType;
 
   @Column()
   @IsNumber()
@@ -53,6 +35,9 @@ export class Invoice extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => InvoiceItem, (invoiceItem) => invoiceItem.invoice)
+  items: InvoiceItem[];
 
   @OneToMany(
     () => UserOrganizationInvoice,
