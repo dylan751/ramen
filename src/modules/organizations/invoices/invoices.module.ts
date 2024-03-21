@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
 import { InvoicesController } from './invoices.controller';
 import { InvoiceRepository } from 'src/db/repositories/invoice.repository';
-import { PermissionRepository } from 'src/db/repositories/permission.repository';
 import { MetadataScanner } from '@nestjs/core';
 import { AuthzModule } from 'src/modules/authz/authz.module';
+import { InvoiceItemRepository } from 'src/db/repositories/invoice-item.repository';
 
 @Module({
   imports: [AuthzModule],
@@ -13,7 +13,7 @@ import { AuthzModule } from 'src/modules/authz/authz.module';
     MetadataScanner,
     InvoicesService,
     InvoiceRepository,
-    PermissionRepository,
+    InvoiceItemRepository,
   ],
 })
 class InvoicesModule {}

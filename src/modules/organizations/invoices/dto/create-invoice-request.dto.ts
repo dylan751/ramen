@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   MaxLength,
@@ -9,7 +10,7 @@ import {
 } from 'class-validator';
 import { InvoiceType } from 'src/db/entities';
 
-export class CreateInvoiceRequestDto {
+export class CreateInvoiceItemRequest {
   @ApiProperty({
     type: String,
     example: 'Monthly bill',
@@ -33,8 +34,20 @@ export class CreateInvoiceRequestDto {
     required: true,
   })
   @IsNotEmpty()
-  readonly amount: number;
+  readonly price: number;
 
+  @ApiProperty({
+    type: InvoiceType,
+    enum: InvoiceType,
+    enumName: 'InvoiceType',
+    example: InvoiceType.EXPENSE,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEnum(InvoiceType)
+  readonly type: InvoiceType;
+}
+export class CreateInvoiceRequestDto {
   @ApiProperty({
     type: Date,
     example: '2024-02-26T07:31:35.000Z',
@@ -44,12 +57,11 @@ export class CreateInvoiceRequestDto {
   readonly date: Date;
 
   @ApiProperty({
-    enumName: 'InvoiceType',
-    example: InvoiceType.EXPENSE,
-    required: true,
+    type: [CreateInvoiceItemRequest],
   })
-  @IsNotEmpty()
-  readonly type: InvoiceType;
+  @ValidateNested()
+  @IsArray()
+  readonly items: CreateInvoiceItemRequest[];
 }
 
 export class CreateInvoicesRequestDto {
