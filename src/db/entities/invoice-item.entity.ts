@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Invoice } from './invoice.entity';
+import { CurrencyType, Invoice } from './invoice.entity';
 
 export enum InvoiceType {
   EXPENSE = 'expense',
@@ -33,12 +33,25 @@ export class InvoiceItem extends BaseEntity {
   @IsNumber()
   price: number;
 
+  @Column()
+  @IsNumber()
+  quantity: number;
+
   @Column({
     type: 'enum',
     enum: InvoiceType,
+    enumName: 'InvoiceType',
   })
   @IsNotEmpty()
   type: InvoiceType;
+
+  @Column({
+    type: 'enum',
+    enum: CurrencyType,
+    enumName: 'CurrencyType',
+  })
+  @IsNotEmpty()
+  currency: CurrencyType;
 
   @Column({ type: 'int' })
   invoiceId: number;

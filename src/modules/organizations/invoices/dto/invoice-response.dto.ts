@@ -1,5 +1,5 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
-import { Invoice, InvoiceType } from 'src/db/entities';
+import { CurrencyType, Invoice, InvoiceType } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from './invoice-search-request.dto';
 import { OrganizationUserResponseDto } from 'src/modules/common/dto/organization-user-response.dto';
 import { InvoiceItem } from 'src/db/entities/invoice-item.entity';
@@ -30,18 +30,33 @@ class InvoiceItemResponseDto {
   price: number;
 
   @ApiResponseProperty({
+    type: Number,
+    example: 1,
+  })
+  quantity: number;
+
+  @ApiResponseProperty({
     enum: InvoiceType,
     example: InvoiceType.EXPENSE,
   })
   @ApiProperty({ enumName: 'InvoiceType' })
   type: InvoiceType;
 
+  @ApiResponseProperty({
+    enum: CurrencyType,
+    example: CurrencyType.VND,
+  })
+  @ApiProperty({ enumName: 'CurrencyType' })
+  currency: CurrencyType;
+
   constructor(invoiceItem: InvoiceItem) {
     this.id = invoiceItem.id;
     this.name = invoiceItem.name;
     this.note = invoiceItem.note || null;
     this.price = invoiceItem.price;
+    this.quantity = invoiceItem.quantity;
     this.type = invoiceItem.type;
+    this.currency = invoiceItem.currency;
   }
 }
 

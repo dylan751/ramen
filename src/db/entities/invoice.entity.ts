@@ -17,6 +17,11 @@ export enum InvoiceType {
   INCOME = 'income',
 }
 
+export enum CurrencyType {
+  VND = 'vnd',
+  USD = 'usd',
+}
+
 @Entity('invoices')
 export class Invoice extends BaseEntity {
   @PrimaryGeneratedColumn()

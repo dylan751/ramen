@@ -40,7 +40,9 @@ export class InvoicesService {
         invoiceItem.name = item.name;
         invoiceItem.note = item.note;
         invoiceItem.price = item.price;
+        invoiceItem.quantity = item.quantity;
         invoiceItem.type = item.type;
+        invoiceItem.currency = item.currency;
         invoiceItem.invoiceId = invoice.id;
         invoiceItems.push(invoiceItem);
       });
@@ -130,7 +132,9 @@ export class InvoicesService {
           invoiceItem.name = item.name;
           invoiceItem.note = item.note;
           invoiceItem.price = item.price;
+          invoiceItem.quantity = item.quantity;
           invoiceItem.type = item.type;
+          invoiceItem.currency = item.currency;
           invoiceItem.invoiceId = invoiceId;
           invoiceItems.push(invoiceItem);
         });

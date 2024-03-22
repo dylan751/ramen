@@ -8,7 +8,7 @@ import {
   MaxLength,
   ValidateNested,
 } from 'class-validator';
-import { InvoiceType } from 'src/db/entities';
+import { CurrencyType, InvoiceType } from 'src/db/entities';
 
 export class CreateInvoiceItemRequest {
   @ApiProperty({
@@ -37,6 +37,14 @@ export class CreateInvoiceItemRequest {
   readonly price: number;
 
   @ApiProperty({
+    type: Number,
+    example: 1,
+    required: true,
+  })
+  @IsNotEmpty()
+  readonly quantity: number;
+
+  @ApiProperty({
     type: InvoiceType,
     enum: InvoiceType,
     enumName: 'InvoiceType',
@@ -46,6 +54,17 @@ export class CreateInvoiceItemRequest {
   @IsNotEmpty()
   @IsEnum(InvoiceType)
   readonly type: InvoiceType;
+
+  @ApiProperty({
+    type: CurrencyType,
+    enum: CurrencyType,
+    enumName: 'CurrencyType',
+    example: CurrencyType.VND,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEnum(CurrencyType)
+  readonly currency: CurrencyType;
 }
 export class CreateInvoiceRequestDto {
   @ApiProperty({
