@@ -25,5 +25,4 @@ fi
 
 # TODO: look into how to properly lint staged files using cache
 # yarn lint-staged && node scripts/check_task_def.js
-
 yarn lint
