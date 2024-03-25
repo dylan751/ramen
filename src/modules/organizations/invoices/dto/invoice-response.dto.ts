@@ -64,6 +64,7 @@ export class InvoiceResponseDto {
   constructor(invoice: Invoice) {
     this.id = invoice.id;
     this.date = invoice.date;
+    this.total = invoice.total;
     if (invoice.items) {
       this.items = invoice.items.map(
         (item) => new InvoiceItemResponseDto(item),
@@ -90,6 +91,12 @@ export class InvoiceResponseDto {
     example: '2024-02-26T07:31:35.000Z',
   })
   date: Date;
+
+  @ApiResponseProperty({
+    type: Number,
+    example: 10,
+  })
+  total: number;
 
   @ApiResponseProperty({
     type: [InvoiceItemResponseDto],

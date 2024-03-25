@@ -29,6 +29,9 @@ export class InvoicesService {
     const invoice = new Invoice();
     invoice.date = date;
     invoice.organizationId = organizationId;
+    invoice.total = items.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.price * currentValue.quantity;
+    }, 0);
 
     await this.invoiceRepository.manager.transaction(async (manager) => {
       await manager.save(Invoice, invoice);
@@ -117,6 +120,10 @@ export class InvoicesService {
 
     if (date) invoice.date = date;
     if (items.length > 0) {
+      invoice.total = items.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.price * currentValue.quantity;
+      }, 0);
+
       await this.invoiceRepository.manager.transaction(async (manager) => {
         // Save invoice
         // Delete previous invoice items
