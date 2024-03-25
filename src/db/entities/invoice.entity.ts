@@ -33,6 +33,10 @@ export class Invoice extends BaseEntity {
 
   @Column()
   @IsNumber()
+  total: number;
+
+  @Column()
+  @IsNumber()
   organizationId: number;
 
   @CreateDateColumn()
