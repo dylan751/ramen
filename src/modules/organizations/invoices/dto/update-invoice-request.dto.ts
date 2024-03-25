@@ -50,16 +50,6 @@ export class UpdateInvoiceItemRequest {
   })
   @IsOptional()
   readonly type?: InvoiceType;
-
-  @ApiProperty({
-    type: CurrencyType,
-    enum: CurrencyType,
-    enumName: 'CurrencyType',
-    example: CurrencyType.VND,
-    required: false,
-  })
-  @IsOptional()
-  readonly currency?: CurrencyType;
 }
 
 export class UpdateInvoiceRequestDto {
@@ -70,6 +60,16 @@ export class UpdateInvoiceRequestDto {
   })
   @IsOptional()
   readonly date?: Date;
+
+  @ApiProperty({
+    type: CurrencyType,
+    enum: CurrencyType,
+    enumName: 'CurrencyType',
+    example: CurrencyType.VND,
+    required: false,
+  })
+  @IsOptional()
+  readonly currency?: CurrencyType;
 
   @ApiProperty({
     type: [UpdateInvoiceItemRequest],

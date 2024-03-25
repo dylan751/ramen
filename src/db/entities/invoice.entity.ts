@@ -35,6 +35,14 @@ export class Invoice extends BaseEntity {
   @IsNumber()
   total: number;
 
+  @Column({
+    type: 'enum',
+    enum: CurrencyType,
+    enumName: 'CurrencyType',
+  })
+  @IsNotEmpty()
+  currency: CurrencyType;
+
   @Column()
   @IsNumber()
   organizationId: number;

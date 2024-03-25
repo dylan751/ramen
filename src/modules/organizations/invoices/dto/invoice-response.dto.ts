@@ -42,13 +42,6 @@ class InvoiceItemResponseDto {
   @ApiProperty({ enumName: 'InvoiceType' })
   type: InvoiceType;
 
-  @ApiResponseProperty({
-    enum: CurrencyType,
-    example: CurrencyType.VND,
-  })
-  @ApiProperty({ enumName: 'CurrencyType' })
-  currency: CurrencyType;
-
   constructor(invoiceItem: InvoiceItem) {
     this.id = invoiceItem.id;
     this.name = invoiceItem.name;
@@ -56,7 +49,6 @@ class InvoiceItemResponseDto {
     this.price = invoiceItem.price;
     this.quantity = invoiceItem.quantity;
     this.type = invoiceItem.type;
-    this.currency = invoiceItem.currency;
   }
 }
 
@@ -64,6 +56,7 @@ export class InvoiceResponseDto {
   constructor(invoice: Invoice) {
     this.id = invoice.id;
     this.date = invoice.date;
+    this.currency = invoice.currency;
     this.total = invoice.total;
     if (invoice.items) {
       this.items = invoice.items.map(
@@ -91,6 +84,13 @@ export class InvoiceResponseDto {
     example: '2024-02-26T07:31:35.000Z',
   })
   date: Date;
+
+  @ApiResponseProperty({
+    enum: CurrencyType,
+    example: CurrencyType.VND,
+  })
+  @ApiProperty({ enumName: 'CurrencyType' })
+  currency: CurrencyType;
 
   @ApiResponseProperty({
     type: Number,
