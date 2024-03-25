@@ -54,6 +54,15 @@ export class CreateInvoiceItemRequest {
   @IsNotEmpty()
   @IsEnum(InvoiceType)
   readonly type: InvoiceType;
+}
+export class CreateInvoiceRequestDto {
+  @ApiProperty({
+    type: Date,
+    example: '2024-02-26T07:31:35.000Z',
+    required: true,
+  })
+  @IsNotEmpty()
+  readonly date: Date;
 
   @ApiProperty({
     type: CurrencyType,
@@ -65,15 +74,6 @@ export class CreateInvoiceItemRequest {
   @IsNotEmpty()
   @IsEnum(CurrencyType)
   readonly currency: CurrencyType;
-}
-export class CreateInvoiceRequestDto {
-  @ApiProperty({
-    type: Date,
-    example: '2024-02-26T07:31:35.000Z',
-    required: true,
-  })
-  @IsNotEmpty()
-  readonly date: Date;
 
   @ApiProperty({
     type: [CreateInvoiceItemRequest],
