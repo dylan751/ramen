@@ -83,3 +83,60 @@ relations:
 
   # users
   # -- pass
+
+  # invoices
+  - table: invoices
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+
+  # invoice_items
+  - table: invoice_items
+    columns:
+      - invoiceId
+    parentTable: invoices
+    parentColumns:
+      - id
+    def: 1-n
+
+  # invoice_owners
+  - table: invoice_owners
+    columns:
+      - invoiceId
+    parentTable: invoices
+    parentColumns:
+      - id
+    def: n-1
+  - table: invoice_owners
+    columns:
+      - userId
+    parentTable: users
+    parentColumns:
+      - id
+    def: n-1
+
+  # user_organization_invoices
+  - table: user_organization_invoices
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+  - table: user_organization_invoices
+    columns:
+      - userId
+    parentTable: users
+    parentColumns:
+      - id
+    def: 1-n
+  - table: user_organization_invoices
+    columns:
+      - invoiceId
+    parentTable: invoices
+    parentColumns:
+      - id
+    def: n-n

@@ -13,6 +13,9 @@ CREATE TABLE `users` (
   `password` varchar(255) DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `phone` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_97672ac88f789774dd47f7c8be3` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=[Redacted by tbls] DEFAULT CHARSET=utf8mb3
@@ -24,12 +27,15 @@ CREATE TABLE `users` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | int |  | false | auto_increment | [user_organization_roles](user_organization_roles.md) [user_organizations](user_organizations.md) |  |  |
+| id | int |  | false | auto_increment | [user_organization_roles](user_organization_roles.md) [user_organizations](user_organizations.md) [invoice_owners](invoice_owners.md) [user_organization_invoices](user_organization_invoices.md) |  |  |
 | name | varchar(255) |  | true |  |  |  |  |
 | email | varchar(255) |  | false |  |  |  |  |
 | password | varchar(255) |  | true |  |  |  |  |
 | createdAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
 | updatedAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
+| phone | varchar(255) |  | true |  |  |  |  |
+| address | varchar(255) |  | true |  |  |  |  |
+| avatar | varchar(255) |  | true |  |  |  |  |
 
 ## Constraints
 

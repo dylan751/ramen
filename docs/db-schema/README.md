@@ -4,13 +4,17 @@
 
 | Name | Columns | Comment | Type |
 | ---- | ------- | ------- | ---- |
+| [invoice_items](invoice_items.md) | 9 |  | BASE TABLE |
+| [invoice_owners](invoice_owners.md) | 5 |  | BASE TABLE |
+| [invoices](invoices.md) | 7 |  | BASE TABLE |
 | [organizations](organizations.md) | 5 |  | BASE TABLE |
 | [permissions](permissions.md) | 5 |  | BASE TABLE |
 | [role_permissions](role_permissions.md) | 5 |  | BASE TABLE |
 | [roles](roles.md) | 6 |  | BASE TABLE |
+| [user_organization_invoices](user_organization_invoices.md) | 6 |  | BASE TABLE |
 | [user_organization_roles](user_organization_roles.md) | 6 |  | BASE TABLE |
 | [user_organizations](user_organizations.md) | 5 |  | BASE TABLE |
-| [users](users.md) | 6 |  | BASE TABLE |
+| [users](users.md) | 9 |  | BASE TABLE |
 
 ## Relations
 
