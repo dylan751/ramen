@@ -23,12 +23,13 @@ export class InvoicesService {
     request: CreateInvoiceRequestDto,
     userId: number,
   ): Promise<Invoice> {
-    const { date, currency, items } = request;
+    const { date, type, currency, items } = request;
 
     // Create invoice
     const invoice = new Invoice();
     invoice.date = date;
     invoice.organizationId = organizationId;
+    invoice.type = type;
     invoice.currency = currency;
     invoice.total = items.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price * currentValue.quantity;
@@ -45,7 +46,6 @@ export class InvoicesService {
         invoiceItem.note = item.note;
         invoiceItem.price = item.price;
         invoiceItem.quantity = item.quantity;
-        invoiceItem.type = item.type;
         invoiceItem.invoiceId = invoice.id;
         invoiceItems.push(invoiceItem);
       });
@@ -107,7 +107,7 @@ export class InvoicesService {
     invoiceId: number,
     req: UpdateInvoiceRequestDto,
   ) {
-    const { date, currency, items } = req;
+    const { date, type, currency, items } = req;
     const invoice = await this.invoiceRepository.findOne({
       where: { id: invoiceId, organizationId },
     });
@@ -120,6 +120,7 @@ export class InvoicesService {
 
     if (date) invoice.date = date;
     if (currency) invoice.currency = currency;
+    if (type) invoice.type = type;
     if (items.length > 0) {
       invoice.total = items.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.price * currentValue.quantity;
@@ -141,7 +142,6 @@ export class InvoicesService {
           invoiceItem.note = item.note;
           invoiceItem.price = item.price;
           invoiceItem.quantity = item.quantity;
-          invoiceItem.type = item.type;
           invoiceItem.invoiceId = invoiceId;
           invoiceItems.push(invoiceItem);
         });
