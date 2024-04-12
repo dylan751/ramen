@@ -73,11 +73,11 @@ export class InvoiceRepository extends Repository<Invoice> {
       );
     }
 
-    // if (search.type) {
-    //   filteredInvoices = filteredInvoices.filter(
-    //     (invoice) => invoice.type === search.type,
-    //   );
-    // }
+    if (search.type) {
+      filteredInvoices = filteredInvoices.filter(
+        (invoice) => invoice.type === search.type,
+      );
+    }
 
     return filteredInvoices;
   }
