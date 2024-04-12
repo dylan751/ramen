@@ -35,20 +35,12 @@ class InvoiceItemResponseDto {
   })
   quantity: number;
 
-  @ApiResponseProperty({
-    enum: InvoiceType,
-    example: InvoiceType.EXPENSE,
-  })
-  @ApiProperty({ enumName: 'InvoiceType' })
-  type: InvoiceType;
-
   constructor(invoiceItem: InvoiceItem) {
     this.id = invoiceItem.id;
     this.name = invoiceItem.name;
     this.note = invoiceItem.note || null;
     this.price = invoiceItem.price;
     this.quantity = invoiceItem.quantity;
-    this.type = invoiceItem.type;
   }
 }
 
@@ -56,6 +48,7 @@ export class InvoiceResponseDto {
   constructor(invoice: Invoice) {
     this.id = invoice.id;
     this.date = invoice.date;
+    this.type = invoice.type;
     this.currency = invoice.currency;
     this.total = invoice.total;
     if (invoice.items) {
@@ -84,6 +77,13 @@ export class InvoiceResponseDto {
     example: '2024-02-26T07:31:35.000Z',
   })
   date: Date;
+
+  @ApiResponseProperty({
+    enum: InvoiceType,
+    example: InvoiceType.EXPENSE,
+  })
+  @ApiProperty({ enumName: 'InvoiceType' })
+  type: InvoiceType;
 
   @ApiResponseProperty({
     enum: CurrencyType,

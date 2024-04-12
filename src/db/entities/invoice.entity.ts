@@ -37,6 +37,14 @@ export class Invoice extends BaseEntity {
 
   @Column({
     type: 'enum',
+    enum: InvoiceType,
+    enumName: 'InvoiceType',
+  })
+  @IsNotEmpty()
+  type: InvoiceType;
+
+  @Column({
+    type: 'enum',
     enum: CurrencyType,
     enumName: 'CurrencyType',
   })

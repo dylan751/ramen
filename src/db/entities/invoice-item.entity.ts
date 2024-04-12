@@ -37,14 +37,6 @@ export class InvoiceItem extends BaseEntity {
   @IsNumber()
   quantity: number;
 
-  @Column({
-    type: 'enum',
-    enum: InvoiceType,
-    enumName: 'InvoiceType',
-  })
-  @IsNotEmpty()
-  type: InvoiceType;
-
   @Column({ type: 'int' })
   invoiceId: number;
 
