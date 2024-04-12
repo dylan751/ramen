@@ -5,12 +5,15 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserOrganizationInvoice } from './user-organization-invoice.entity';
 import { InvoiceItem } from './invoice-item.entity';
+import { Category } from './category.entity';
+import { Project } from './project.entity';
 
 export enum InvoiceType {
   EXPENSE = 'expense',
@@ -55,6 +58,14 @@ export class Invoice extends BaseEntity {
   @IsNumber()
   organizationId: number;
 
+  @Column()
+  @IsNumber()
+  projectId: number;
+
+  @Column()
+  @IsNumber()
+  categoryId: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -70,4 +81,12 @@ export class Invoice extends BaseEntity {
   )
   @JoinColumn({ name: 'id' })
   userOrganizationInvoices: UserOrganizationInvoice[];
+
+  @ManyToOne(() => Project, (project) => project.invoices)
+  @JoinColumn({ name: 'projectId' })
+  project: Project;
+
+  @ManyToOne(() => Category, (category) => category.invoices)
+  @JoinColumn({ name: 'categoryId' })
+  category: Category;
 }

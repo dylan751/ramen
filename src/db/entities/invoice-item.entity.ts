@@ -11,11 +11,6 @@ import {
 } from 'typeorm';
 import { Invoice } from './invoice.entity';
 
-export enum InvoiceType {
-  EXPENSE = 'expense',
-  INCOME = 'income',
-}
-
 @Entity('invoice_items')
 export class InvoiceItem extends BaseEntity {
   @PrimaryGeneratedColumn()
