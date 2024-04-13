@@ -13,6 +13,7 @@ import configuration from './config/configuration';
 import { dataSourceOptions } from './db/datasource/default';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { OrganizationInvoicesModule } from './modules/organizations/invoices/invoices.module';
+import { OrganizationProjectsModule } from './modules/organizations/projects/projects.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { OrganizationInvoicesModule } from './modules/organizations/invoices/inv
     OrganizationUsersModule,
     OrganizationRolesModule,
     OrganizationInvoicesModule,
+    OrganizationProjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

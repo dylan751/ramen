@@ -20,3 +20,7 @@
 19,"create","invoice"
 20,"update","invoice"
 21,"delete","invoice"
+22,"read","project"
+23,"create","project"
+24,"update","project"
+25,"delete","project"
