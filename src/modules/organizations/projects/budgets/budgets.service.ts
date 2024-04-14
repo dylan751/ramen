@@ -71,7 +71,7 @@ export class BudgetsService {
       );
     if (!budget) {
       throw new NotFoundException(
-        `Budget ${budgetId} does not belong to the organization ${organizationId}, budget ${projectId}`,
+        `Budget ${budgetId} does not belong to the organization ${organizationId}, project ${projectId}`,
       );
     }
 
@@ -91,7 +91,7 @@ export class BudgetsService {
 
     if (!budget) {
       throw new NotFoundException(
-        `Budget ${budgetId} does not belong to the organization ${organizationId}, budget ${projectId}`,
+        `Budget ${budgetId} does not belong to the organization ${organizationId}, project ${projectId}`,
       );
     }
 

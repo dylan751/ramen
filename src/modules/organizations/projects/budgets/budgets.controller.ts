@@ -27,7 +27,7 @@ import { PermissionAction, PermissionSubject } from 'src/db/entities';
 import { BudgetSearchRequestDto } from './dto/budget-search-request.dto';
 import { OrganizationMemberGuard } from '../../organization-member.guard';
 
-@Controller('budget')
+@Controller('budgets')
 @UseGuards(JwtAuthGuard, OrganizationMemberGuard)
 @ApiBearerAuth('accessToken')
 export class BudgetsController {

@@ -1,4 +1,5 @@
 export * from './budget.repository';
+export * from './category.repository';
 export * from './invoice-item.repository';
 export * from './invoice.repository';
 export * from './organization.repository';

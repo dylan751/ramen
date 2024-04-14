@@ -21,6 +21,10 @@ export class Category extends BaseEntity {
   organizationId: number;
 
   @Column()
+  @IsNumber()
+  projectId: number;
+
+  @Column()
   @IsNotEmpty()
   name: string;
 

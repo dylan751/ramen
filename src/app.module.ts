@@ -15,6 +15,7 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
 import { OrganizationInvoicesModule } from './modules/organizations/invoices/invoices.module';
 import { OrganizationProjectsModule } from './modules/organizations/projects/projects.module';
 import { OrganizationProjectBudgetsModule } from './modules/organizations/projects/budgets/budgets.module';
+import { OrganizationProjectCategoriesModule } from './modules/organizations/projects/categories/categories.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { OrganizationProjectBudgetsModule } from './modules/organizations/projec
     OrganizationInvoicesModule,
     OrganizationProjectsModule,
     OrganizationProjectBudgetsModule,
+    OrganizationProjectCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
