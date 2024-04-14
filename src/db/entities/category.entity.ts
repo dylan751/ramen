@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import {
   BaseEntity,
   Column,
@@ -15,6 +15,10 @@ import { Budget } from './budget.entity';
 export class Category extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  @IsNumber()
+  organizationId: number;
 
   @Column()
   @IsNotEmpty()

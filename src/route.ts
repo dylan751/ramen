@@ -6,6 +6,7 @@ import { OrganizationRolesModule } from './modules/organizations/roles/roles.mod
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { OrganizationInvoicesModule } from './modules/organizations/invoices/invoices.module';
 import { OrganizationProjectsModule } from './modules/organizations/projects/projects.module';
+import { OrganizationProjectBudgetsModule } from './modules/organizations/projects/budgets/budgets.module';
 
 export const routes: Routes = [
   // Internal APIs
@@ -28,6 +29,12 @@ export const routes: Routes = [
       {
         path: 'organizations/:organizationId',
         module: OrganizationProjectsModule,
+        children: [
+          {
+            path: 'projects/:projectId',
+            module: OrganizationProjectBudgetsModule,
+          },
+        ],
       },
     ],
   },

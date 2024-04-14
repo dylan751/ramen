@@ -14,6 +14,7 @@ import { dataSourceOptions } from './db/datasource/default';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { OrganizationInvoicesModule } from './modules/organizations/invoices/invoices.module';
 import { OrganizationProjectsModule } from './modules/organizations/projects/projects.module';
+import { OrganizationProjectBudgetsModule } from './modules/organizations/projects/budgets/budgets.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { OrganizationProjectsModule } from './modules/organizations/projects/pro
     OrganizationRolesModule,
     OrganizationInvoicesModule,
     OrganizationProjectsModule,
+    OrganizationProjectBudgetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

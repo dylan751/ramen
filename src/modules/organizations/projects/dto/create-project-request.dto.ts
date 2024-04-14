@@ -20,7 +20,7 @@ export class CreateProjectRequestDto {
   readonly description: string;
 
   @ApiProperty({
-    type: String,
+    type: Number,
     example: 100000,
     required: true,
   })

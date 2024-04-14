@@ -19,11 +19,19 @@ export class Budget extends BaseEntity {
 
   @Column()
   @IsNumber()
+  organizationId: number;
+
+  @Column()
+  @IsNumber()
   projectId: number;
 
   @Column()
   @IsNumber()
   categoryId: number;
+
+  @Column()
+  @IsNumber()
+  amount: number;
 
   @CreateDateColumn()
   createdAt: Date;
