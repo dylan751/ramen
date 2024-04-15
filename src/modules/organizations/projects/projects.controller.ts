@@ -101,9 +101,9 @@ export class ProjectsController {
   @CheckPermissions([PermissionAction.UPDATE, PermissionSubject.PROJECT])
   @ApiOperation({
     tags: ['Organization Project'],
-    operationId: 'Update an project for an organization',
-    summary: 'Update an project for an organization',
-    description: 'Update an project for an organization',
+    operationId: 'Update a project for an organization',
+    summary: 'Update a project for an organization',
+    description: 'Update a project for an organization',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -123,9 +123,9 @@ export class ProjectsController {
   @CheckPermissions([PermissionAction.DELETE, PermissionSubject.PROJECT])
   @ApiOperation({
     tags: ['Organization Project'],
-    operationId: 'Delete an project for an organization',
-    summary: 'Delete an project for an organization',
-    description: 'Delete an project for an organization',
+    operationId: 'Delete a project for an organization',
+    summary: 'Delete a project for an organization',
+    description: 'Delete a project for an organization',
   })
   @ApiResponse({
     status: HttpStatus.OK,
