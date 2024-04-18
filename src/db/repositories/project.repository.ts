@@ -15,6 +15,9 @@ export class ProjectRepository extends Repository<Project> {
     search: ProjectSearchRequestDto,
   ): Promise<Project[]> {
     const allProjects = await this.createQueryBuilder('project')
+      .leftJoinAndSelect('project.creator', 'creator')
+      .leftJoinAndSelect('creator.userOrganizations', 'userOrganizations')
+      .leftJoinAndSelect('userOrganizations.roles', 'roles')
       .where('project.organizationId = :organizationId', { organizationId })
       .getMany();
 
@@ -53,6 +56,9 @@ export class ProjectRepository extends Repository<Project> {
     id: number,
   ): Promise<Project> {
     return await this.createQueryBuilder('project')
+      .leftJoinAndSelect('project.creator', 'creator')
+      .leftJoinAndSelect('creator.userOrganizations', 'userOrganizations')
+      .leftJoinAndSelect('userOrganizations.roles', 'roles')
       .where('project.organizationId = :organizationId', { organizationId })
       .andWhere('project.id = :id', { id })
       .getOne();

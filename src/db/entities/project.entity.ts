@@ -4,12 +4,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Budget } from './budget.entity';
 import { Invoice } from './invoice.entity';
+import { User } from './user.entity';
 
 @Entity('projects')
 export class Project extends BaseEntity {
@@ -40,6 +43,10 @@ export class Project extends BaseEntity {
   @IsNumber()
   organizationId: number;
 
+  @Column()
+  @IsNumber()
+  creatorId: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -51,4 +58,8 @@ export class Project extends BaseEntity {
 
   @OneToMany(() => Budget, (budget) => budget.project)
   budgets: Budget[];
+
+  @ManyToOne(() => User, (creator) => creator.projects)
+  @JoinColumn({ name: 'creatorId' })
+  creator: User;
 }

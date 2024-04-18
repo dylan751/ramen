@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Organization } from './organization.entity';
 import { UserOrganization } from './user-organization.entity';
+import { Project } from './project.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -48,4 +49,7 @@ export class User extends BaseEntity {
     (userOrganization) => userOrganization.user,
   )
   userOrganizations: UserOrganization[];
+
+  @OneToMany(() => Project, (project) => project.creator)
+  projects: Project[];
 }

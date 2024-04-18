@@ -16,6 +16,7 @@ export class ProjectsService {
   async create(
     organizationId: number,
     request: CreateProjectRequestDto,
+    userId: number,
   ): Promise<Project> {
     const { name, description, totalBudget, startDate, endDate } = request;
 
@@ -27,6 +28,7 @@ export class ProjectsService {
     project.totalBudget = totalBudget;
     project.startDate = startDate;
     project.endDate = endDate;
+    project.creatorId = userId;
 
     await this.projectRepository.manager.transaction(async (manager) => {
       await manager.save(Project, project);

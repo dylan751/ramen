@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
   HttpStatus,
   ParseIntPipe,
   UseGuards,
@@ -26,6 +27,7 @@ import { PermissionsGuard } from 'src/modules/authz/permissions.guard';
 import { CheckPermissions } from 'src/modules/authz/permissions.decorator';
 import { PermissionAction, PermissionSubject } from 'src/db/entities';
 import { ProjectSearchRequestDto } from './dto/project-search-request.dto';
+import { AuthenticatedRequest } from 'src/modules/common/types/authenticated-request';
 
 @Controller('projects')
 @UseGuards(JwtAuthGuard, OrganizationMemberGuard)
@@ -49,8 +51,13 @@ export class ProjectsController {
   async save(
     @Param('organizationId', ParseIntPipe) organizationId: number,
     @Body() request: CreateProjectRequestDto,
+    @Request() req: AuthenticatedRequest,
   ): Promise<ProjectResponseDto> {
-    const project = await this.projectsService.create(organizationId, request);
+    const project = await this.projectsService.create(
+      organizationId,
+      request,
+      req.user.id,
+    );
     return new ProjectResponseDto(project);
   }
 
