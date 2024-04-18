@@ -5,6 +5,9 @@ import { OrganizationUsersModule } from './modules/organizations/users/users.mod
 import { OrganizationRolesModule } from './modules/organizations/roles/roles.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { OrganizationInvoicesModule } from './modules/organizations/invoices/invoices.module';
+import { OrganizationProjectsModule } from './modules/organizations/projects/projects.module';
+import { OrganizationProjectBudgetsModule } from './modules/organizations/projects/budgets/budgets.module';
+import { OrganizationProjectCategoriesModule } from './modules/organizations/projects/categories/categories.module';
 
 export const routes: Routes = [
   // Internal APIs
@@ -23,6 +26,20 @@ export const routes: Routes = [
       {
         path: 'organizations/:organizationId',
         module: OrganizationInvoicesModule,
+      },
+      {
+        path: 'organizations/:organizationId',
+        module: OrganizationProjectsModule,
+        children: [
+          {
+            path: 'projects/:projectId',
+            module: OrganizationProjectBudgetsModule,
+          },
+          {
+            path: 'projects/:projectId',
+            module: OrganizationProjectCategoriesModule,
+          },
+        ],
       },
     ],
   },

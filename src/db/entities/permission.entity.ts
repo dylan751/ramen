@@ -25,6 +25,9 @@ export enum PermissionSubject {
   USER = 'user',
   ROLE = 'role',
   INVOICE = 'invoice',
+  PROJECT = 'project',
+  BUDGET = 'budget',
+  CATEGORY = 'category',
 }
 
 @Entity('permissions')
