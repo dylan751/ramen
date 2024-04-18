@@ -136,9 +136,9 @@ export class BudgetsController {
   @CheckPermissions([PermissionAction.DELETE, PermissionSubject.BUDGET])
   @ApiOperation({
     tags: ['Organization Project Budget'],
-    operationId: "Delete an project's budget for an organization",
-    summary: "Delete an project's budget for an organization",
-    description: "Delete an project's budget for an organization",
+    operationId: "Delete a project's budget for an organization",
+    summary: "Delete a project's budget for an organization",
+    description: "Delete a project's budget for an organization",
   })
   @ApiResponse({
     status: HttpStatus.OK,

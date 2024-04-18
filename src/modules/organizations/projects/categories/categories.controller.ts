@@ -140,9 +140,9 @@ export class CategoriesController {
   @CheckPermissions([PermissionAction.DELETE, PermissionSubject.CATEGORY])
   @ApiOperation({
     tags: ['Organization Project Category'],
-    operationId: "Delete an project's category for an organization",
-    summary: "Delete an project's category for an organization",
-    description: "Delete an project's category for an organization",
+    operationId: "Delete a project's category for an organization",
+    summary: "Delete a project's category for an organization",
+    description: "Delete a project's category for an organization",
   })
   @ApiResponse({
     status: HttpStatus.OK,
