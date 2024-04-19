@@ -13,6 +13,7 @@ import {
 import { Budget } from './budget.entity';
 import { Invoice } from './invoice.entity';
 import { User } from './user.entity';
+import { Category } from './category.entity';
 
 @Entity('projects')
 export class Project extends BaseEntity {
@@ -58,6 +59,9 @@ export class Project extends BaseEntity {
 
   @OneToMany(() => Budget, (budget) => budget.project)
   budgets: Budget[];
+
+  @OneToMany(() => Category, (category) => category.project)
+  categories: Category[];
 
   @ManyToOne(() => User, (creator) => creator.projects)
   @JoinColumn({ name: 'creatorId' })

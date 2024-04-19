@@ -6,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -43,7 +44,7 @@ export class Budget extends BaseEntity {
   @JoinColumn({ name: 'projectId' })
   project: Project;
 
-  @ManyToOne(() => Category, (category) => category.budgets)
-  @JoinColumn({ name: 'categoryId' })
+  @OneToOne(() => Category, (category) => category.budget)
+  @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
   category: Category;
 }

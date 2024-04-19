@@ -33,6 +33,8 @@ export class InvoiceRepository extends Repository<Invoice> {
     search: InvoiceSearchRequestDto,
   ): Promise<Invoice[]> {
     const allInvoices = await this.createQueryBuilder('invoice')
+      .leftJoinAndSelect('invoice.project', 'project')
+      .leftJoinAndSelect('invoice.category', 'category')
       .leftJoinAndSelect('invoice.items', 'items')
       .leftJoinAndSelect(
         'invoice.userOrganizationInvoices',
@@ -87,6 +89,8 @@ export class InvoiceRepository extends Repository<Invoice> {
     id: number,
   ): Promise<Invoice> {
     return await this.createQueryBuilder('invoice')
+      .leftJoinAndSelect('invoice.project', 'project')
+      .leftJoinAndSelect('invoice.category', 'category')
       .leftJoinAndSelect('invoice.items', 'items')
       .leftJoinAndSelect(
         'invoice.userOrganizationInvoices',

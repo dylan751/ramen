@@ -18,6 +18,9 @@ export class ProjectRepository extends Repository<Project> {
       .leftJoinAndSelect('project.creator', 'creator')
       .leftJoinAndSelect('creator.userOrganizations', 'userOrganizations')
       .leftJoinAndSelect('userOrganizations.roles', 'roles')
+      .leftJoinAndSelect('project.invoices', 'invoices')
+      .leftJoinAndSelect('project.budgets', 'budgets')
+      .leftJoinAndSelect('project.categories', 'categories')
       .where('project.organizationId = :organizationId', { organizationId })
       .getMany();
 
@@ -59,6 +62,9 @@ export class ProjectRepository extends Repository<Project> {
       .leftJoinAndSelect('project.creator', 'creator')
       .leftJoinAndSelect('creator.userOrganizations', 'userOrganizations')
       .leftJoinAndSelect('userOrganizations.roles', 'roles')
+      .leftJoinAndSelect('project.invoices', 'invoices')
+      .leftJoinAndSelect('project.budgets', 'budgets')
+      .leftJoinAndSelect('project.categories', 'categories')
       .where('project.organizationId = :organizationId', { organizationId })
       .andWhere('project.id = :id', { id })
       .getOne();
