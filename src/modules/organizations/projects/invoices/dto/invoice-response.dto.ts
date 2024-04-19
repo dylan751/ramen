@@ -3,8 +3,8 @@ import { CurrencyType, Invoice, InvoiceType } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from './invoice-search-request.dto';
 import { OrganizationUserResponseDto } from 'src/modules/common/dto/organization-user-response.dto';
 import { InvoiceItem } from 'src/db/entities/invoice-item.entity';
-import { ProjectResponseDto } from '../../projects/dto/project-response.dto';
-import { CategoryResponseDto } from '../../projects/categories/dto/category-response.dto';
+import { ProjectResponseDto } from '../../dto/project-response.dto';
+import { CategoryResponseDto } from '../../categories/dto/category-response.dto';
 
 class InvoiceItemResponseDto {
   @ApiResponseProperty({

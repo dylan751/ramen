@@ -1,5 +1,5 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
-import { Category, InvoiceType } from 'src/db/entities';
+import { Category, ColorType, InvoiceType } from 'src/db/entities';
 import { CategorySearchRequestDto } from './category-search-request.dto';
 
 export class CategoryResponseDto {
@@ -25,10 +25,11 @@ export class CategoryResponseDto {
   name: string;
 
   @ApiResponseProperty({
-    type: String,
-    example: '#abcdef',
+    enum: ColorType,
+    example: ColorType.PRIMARY,
   })
-  color: string;
+  @ApiProperty({ enumName: 'ColorType' })
+  color: ColorType;
 
   @ApiResponseProperty({
     type: String,

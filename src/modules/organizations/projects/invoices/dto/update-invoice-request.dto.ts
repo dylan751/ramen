@@ -78,4 +78,12 @@ export class UpdateInvoiceRequestDto {
   @IsOptional()
   @IsArray()
   readonly items?: UpdateInvoiceItemRequest[];
+
+  @ApiProperty({
+    type: Number,
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  readonly categoryId?: number;
 }

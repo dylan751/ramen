@@ -15,6 +15,16 @@ import { Invoice, InvoiceType } from './invoice.entity';
 import { Budget } from './budget.entity';
 import { Project } from './project.entity';
 
+export enum ColorType {
+  DEFAULT = 'default',
+  PRIMARY = 'primary',
+  SECONDARY = 'secondary',
+  ERROR = 'error',
+  INFO = 'info',
+  SUCCESS = 'success',
+  WARNING = 'WARNING',
+}
+
 @Entity('categories')
 export class Category extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -32,9 +42,13 @@ export class Category extends BaseEntity {
   @IsNotEmpty()
   name: string;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: ColorType,
+    enumName: 'ColorType',
+  })
   @IsNotEmpty()
-  color: string;
+  color: ColorType;
 
   @Column()
   @IsNotEmpty()
