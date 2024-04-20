@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InvoiceRepository } from 'src/db/repositories/invoice.repository';
-import {
-  InvoiceResponseListDto,
-  InvoiceResponseDto,
-} from './dto/invoice-response.dto';
-import { InvoiceSearchRequestDto } from './dto/invoice-search-request.dto';
 import { CreateInvoiceRequestDto } from './dto/create-invoice-request.dto';
 import { Invoice, InvoiceItem, UserOrganizationInvoice } from 'src/db/entities';
 import { UpdateInvoiceRequestDto } from './dto/update-invoice-request.dto';
 import { InvoiceItemRepository } from 'src/db/repositories';
+import { InvoiceSearchRequestDto } from '../../invoices/dto/invoice-search-request.dto';
+import {
+  InvoiceResponseDto,
+  InvoiceResponseListDto,
+} from '../../invoices/dto/invoice-response.dto';
 
 @Injectable()
 export class ProjectInvoicesService {
