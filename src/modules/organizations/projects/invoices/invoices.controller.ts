@@ -13,19 +13,19 @@ import {
 } from '@nestjs/common';
 import { ProjectInvoicesService } from './invoices.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import {
-  InvoiceResponseDto,
-  InvoiceResponseListDto,
-} from './dto/invoice-response.dto';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { PermissionsGuard } from 'src/modules/authz/permissions.guard';
 import { CheckPermissions } from 'src/modules/authz/permissions.decorator';
 import { PermissionAction, PermissionSubject } from 'src/db/entities';
-import { InvoiceSearchRequestDto } from './dto/invoice-search-request.dto';
 import { OrganizationMemberGuard } from '../../organization-member.guard';
 import { CreateInvoiceRequestDto } from './dto/create-invoice-request.dto';
 import { AuthenticatedRequest } from 'src/modules/common/types/authenticated-request';
 import { UpdateInvoiceRequestDto } from './dto/update-invoice-request.dto';
+import {
+  InvoiceResponseDto,
+  InvoiceResponseListDto,
+} from '../../invoices/dto/invoice-response.dto';
+import { InvoiceSearchRequestDto } from '../../invoices/dto/invoice-search-request.dto';
 
 @Controller('invoices')
 @UseGuards(JwtAuthGuard, OrganizationMemberGuard)
