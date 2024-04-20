@@ -16,13 +16,12 @@ import { Budget } from './budget.entity';
 import { Project } from './project.entity';
 
 export enum ColorType {
-  DEFAULT = 'default',
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
   ERROR = 'error',
   INFO = 'info',
   SUCCESS = 'success',
-  WARNING = 'WARNING',
+  WARNING = 'warning',
 }
 
 @Entity('categories')
