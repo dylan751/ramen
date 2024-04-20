@@ -81,6 +81,14 @@ export class CreateInvoiceRequestDto {
   @ValidateNested()
   @IsArray()
   readonly items: CreateInvoiceItemRequest[];
+
+  @ApiProperty({
+    type: Number,
+    example: 1,
+    required: true,
+  })
+  @IsNotEmpty()
+  readonly categoryId: number;
 }
 
 export class CreateInvoicesRequestDto {

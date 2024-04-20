@@ -2,6 +2,9 @@ import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 import { Project } from 'src/db/entities';
 import { ProjectSearchRequestDto } from './project-search-request.dto';
 import { OrganizationUserResponseDto } from 'src/modules/common/dto/organization-user-response.dto';
+import { InvoiceResponseDto } from '../../invoices/dto/invoice-response.dto';
+import { BudgetResponseDto } from '../budgets/dto/budget-response.dto';
+import { CategoryResponseDto } from '../categories/dto/category-response.dto';
 
 export class ProjectResponseDto {
   constructor(project: Project) {
@@ -17,6 +20,21 @@ export class ProjectResponseDto {
         project.creator.userOrganizations.find(
           (userOrg) => userOrg.organizationId === project.organizationId,
         ),
+      );
+    }
+    if (project.invoices) {
+      this.invoices = project.invoices.map(
+        (invoice) => new InvoiceResponseDto(invoice),
+      );
+    }
+    if (project.budgets) {
+      this.budgets = project.budgets.map(
+        (budget) => new BudgetResponseDto(budget),
+      );
+    }
+    if (project.categories) {
+      this.categories = project.categories.map(
+        (category) => new CategoryResponseDto(category),
       );
     }
     this.createdAt = project.createdAt;
@@ -62,6 +80,21 @@ export class ProjectResponseDto {
     type: OrganizationUserResponseDto,
   })
   creator: OrganizationUserResponseDto;
+
+  @ApiResponseProperty({
+    type: [InvoiceResponseDto],
+  })
+  invoices: InvoiceResponseDto[];
+
+  @ApiResponseProperty({
+    type: [BudgetResponseDto],
+  })
+  budgets: BudgetResponseDto[];
+
+  @ApiResponseProperty({
+    type: [CategoryResponseDto],
+  })
+  categories: CategoryResponseDto[];
 
   @ApiResponseProperty({
     type: Date,

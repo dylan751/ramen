@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
-import { InvoiceType } from 'src/db/entities';
+import { ColorType, InvoiceType } from 'src/db/entities';
 
 export class UpdateCategoryRequestDto {
   @ApiProperty({
@@ -12,12 +12,15 @@ export class UpdateCategoryRequestDto {
   readonly name?: string;
 
   @ApiProperty({
-    type: String,
-    example: '#abcdef',
+    type: ColorType,
+    enum: ColorType,
+    enumName: 'ColorType',
+    example: ColorType.PRIMARY,
     required: false,
   })
   @IsOptional()
-  readonly color?: string;
+  @IsEnum(ColorType)
+  readonly color?: ColorType;
 
   @ApiProperty({
     type: String,

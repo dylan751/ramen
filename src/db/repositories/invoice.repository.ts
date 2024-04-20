@@ -33,6 +33,8 @@ export class InvoiceRepository extends Repository<Invoice> {
     search: InvoiceSearchRequestDto,
   ): Promise<Invoice[]> {
     const allInvoices = await this.createQueryBuilder('invoice')
+      .leftJoinAndSelect('invoice.project', 'project')
+      .leftJoinAndSelect('invoice.category', 'category')
       .leftJoinAndSelect('invoice.items', 'items')
       .leftJoinAndSelect(
         'invoice.userOrganizationInvoices',
@@ -82,11 +84,71 @@ export class InvoiceRepository extends Repository<Invoice> {
     return filteredInvoices;
   }
 
+  async findInvoicesForProjectOfOrganization(
+    organizationId: number,
+    projectId: number,
+    search: InvoiceSearchRequestDto,
+  ): Promise<Invoice[]> {
+    const allInvoices = await this.createQueryBuilder('invoice')
+      .leftJoinAndSelect('invoice.project', 'project')
+      .leftJoinAndSelect('invoice.category', 'category')
+      .leftJoinAndSelect('invoice.items', 'items')
+      .leftJoinAndSelect(
+        'invoice.userOrganizationInvoices',
+        'userOrganizationInvoices',
+      )
+      .leftJoinAndSelect(
+        'userOrganizationInvoices.userOrganization',
+        'userOrganization',
+      )
+      .leftJoinAndSelect('userOrganization.user', 'user')
+      .leftJoinAndSelect('userOrganization.roles', 'roles')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId })
+      .getMany();
+
+    let filteredInvoices = allInvoices;
+    // if (search.query) {
+    //   const queryLowered = search.query.toLowerCase();
+    //   filteredInvoices = filteredInvoices.filter(
+    //     (invoice) =>
+    //       invoice.name.toLowerCase().includes(queryLowered) ||
+    //       invoice.note.toLowerCase().includes(queryLowered),
+    //   );
+    // }
+
+    if (search.fromDate) {
+      filteredInvoices = filteredInvoices.filter(
+        (invoice) =>
+          isAfter(invoice.date, new Date(search.fromDate)) ||
+          isEqual(invoice.date, new Date(search.fromDate)),
+      );
+    }
+
+    if (search.toDate) {
+      filteredInvoices = filteredInvoices.filter(
+        (invoice) =>
+          isBefore(invoice.date, new Date(search.toDate)) ||
+          isEqual(invoice.date, new Date(search.toDate)),
+      );
+    }
+
+    if (search.type) {
+      filteredInvoices = filteredInvoices.filter(
+        (invoice) => invoice.type === search.type,
+      );
+    }
+
+    return filteredInvoices;
+  }
+
   async findInvoiceForOrganization(
     organizationId: number,
     id: number,
   ): Promise<Invoice> {
     return await this.createQueryBuilder('invoice')
+      .leftJoinAndSelect('invoice.project', 'project')
+      .leftJoinAndSelect('invoice.category', 'category')
       .leftJoinAndSelect('invoice.items', 'items')
       .leftJoinAndSelect(
         'invoice.userOrganizationInvoices',
