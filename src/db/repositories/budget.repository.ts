@@ -15,6 +15,8 @@ export class BudgetRepository extends Repository<Budget> {
     search: BudgetSearchRequestDto,
   ): Promise<Budget[]> {
     const query = this.createQueryBuilder('budget')
+      .leftJoinAndSelect('budget.category', 'category')
+      .leftJoinAndSelect('category.invoices', 'invoices')
       .where('budget.organizationId = :organizationId', { organizationId })
       .andWhere('budget.projectId = :projectId', { projectId });
 
@@ -49,9 +51,23 @@ export class BudgetRepository extends Repository<Budget> {
     id: number,
   ): Promise<Budget> {
     return await this.createQueryBuilder('budget')
+      .leftJoinAndSelect('budget.category', 'category')
+      .leftJoinAndSelect('category.invoices', 'invoices')
       .where('budget.organizationId = :organizationId', { organizationId })
       .andWhere('budget.projectId = :projectId', { projectId })
       .andWhere('budget.id = :id', { id })
+      .getOne();
+  }
+
+  async findBudgetByCategoryId(
+    organizationId: number,
+    projectId: number,
+    categoryId: number,
+  ): Promise<Budget> {
+    return await this.createQueryBuilder('budget')
+      .where('budget.organizationId = :organizationId', { organizationId })
+      .andWhere('budget.projectId = :projectId', { projectId })
+      .andWhere('budget.categoryId = :categoryId', { categoryId })
       .getOne();
   }
 }

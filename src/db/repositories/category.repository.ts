@@ -15,6 +15,7 @@ export class CategoryRepository extends Repository<Category> {
     search: CategorySearchRequestDto,
   ): Promise<Category[]> {
     const query = this.createQueryBuilder('category')
+      .leftJoinAndSelect('category.invoices', 'invoices')
       .where('category.organizationId = :organizationId', { organizationId })
       .andWhere('category.projectId = :projectId', { projectId });
 
@@ -44,6 +45,7 @@ export class CategoryRepository extends Repository<Category> {
     id: number,
   ): Promise<Category> {
     return await this.createQueryBuilder('category')
+      .leftJoinAndSelect('category.invoices', 'invoices')
       .where('category.organizationId = :organizationId', { organizationId })
       .andWhere('category.projectId = :projectId', { projectId })
       .andWhere('category.id = :id', { id })

@@ -1,12 +1,16 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 import { Budget } from 'src/db/entities';
 import { BudgetSearchRequestDto } from './budget-search-request.dto';
+import { CategoryResponseDto } from '../../categories/dto/category-response.dto';
 
 export class BudgetResponseDto {
   constructor(budget: Budget) {
     this.id = budget.id;
     this.categoryId = budget.categoryId;
     this.amount = budget.amount;
+    if (budget.category) {
+      this.category = new CategoryResponseDto(budget.category);
+    }
     this.createdAt = budget.createdAt;
   }
 
@@ -27,6 +31,11 @@ export class BudgetResponseDto {
     example: 100000,
   })
   amount: number;
+
+  @ApiResponseProperty({
+    type: CategoryResponseDto,
+  })
+  category: CategoryResponseDto;
 
   @ApiResponseProperty({
     type: Date,
