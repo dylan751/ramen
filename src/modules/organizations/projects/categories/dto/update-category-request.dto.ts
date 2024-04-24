@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
-import { ColorType, InvoiceType } from 'src/db/entities';
+import { ColorType, IconType, InvoiceType } from 'src/db/entities';
 
 export class UpdateCategoryRequestDto {
   @ApiProperty({
@@ -23,12 +23,15 @@ export class UpdateCategoryRequestDto {
   readonly color?: ColorType;
 
   @ApiProperty({
-    type: String,
-    example: 'mdi:circle-outline',
+    type: IconType,
+    enum: IconType,
+    enumName: 'IconType',
+    example: IconType.MDI_AIRPLANE,
     required: false,
   })
   @IsOptional()
-  readonly icon?: string;
+  @IsEnum(IconType)
+  readonly icon?: IconType;
 
   @ApiProperty({
     type: InvoiceType,
