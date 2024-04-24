@@ -9,6 +9,16 @@ export class CategoryResponseDto {
     this.color = category.color;
     this.icon = category.icon;
     this.type = category.type;
+    if (category.invoices) {
+      this.spentAmount =
+        category.invoices.reduce((acc, invoice) => {
+          let sum = acc;
+          if (invoice.type === category.type) {
+            sum += invoice.total;
+          }
+          return sum;
+        }, 0) ?? 0;
+    }
     this.createdAt = category.createdAt;
   }
 
@@ -44,6 +54,12 @@ export class CategoryResponseDto {
   })
   @ApiProperty({ enumName: 'InvoiceType' })
   type: InvoiceType;
+
+  @ApiResponseProperty({
+    type: Number,
+    example: 1000,
+  })
+  spentAmount: number;
 
   @ApiResponseProperty({
     type: Date,

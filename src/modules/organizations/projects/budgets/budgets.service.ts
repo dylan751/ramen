@@ -20,7 +20,27 @@ export class BudgetsService {
   ): Promise<Budget> {
     const { categoryId, amount } = request;
 
-    // Create budget
+    // If the budget for that category existed -> overwrite it
+    const existedBudget = await this.budgetRepository.findBudgetByCategoryId(
+      organizationId,
+      projectId,
+      categoryId,
+    );
+
+    if (existedBudget) {
+      const updatedBudget = await this.update(
+        organizationId,
+        projectId,
+        existedBudget.id,
+        {
+          amount: request.amount,
+        },
+      );
+
+      return updatedBudget;
+    }
+
+    // Else, create new budget
     const budget = new Budget();
     budget.organizationId = organizationId;
     budget.projectId = projectId;
