@@ -52,6 +52,7 @@ export class InvoiceResponseDto {
     this.date = invoice.date;
     this.type = invoice.type;
     this.currency = invoice.currency;
+    this.clientName = invoice.clientName;
     this.total = invoice.total;
     if (invoice.items) {
       this.items = invoice.items.map(
@@ -99,6 +100,12 @@ export class InvoiceResponseDto {
   })
   @ApiProperty({ enumName: 'CurrencyType' })
   currency: CurrencyType;
+
+  @ApiResponseProperty({
+    type: String,
+    example: 'John Doe',
+  })
+  clientName: string;
 
   @ApiResponseProperty({
     type: Number,

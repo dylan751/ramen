@@ -72,6 +72,14 @@ export class UpdateInvoiceRequestDto {
   readonly currency?: CurrencyType;
 
   @ApiProperty({
+    type: String,
+    example: 'John Doe',
+    required: false,
+  })
+  @IsOptional()
+  readonly clientName?: string;
+
+  @ApiProperty({
     type: [UpdateInvoiceItemRequest],
   })
   @ValidateNested()
