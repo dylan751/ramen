@@ -32,7 +32,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     organizationId: number,
     search: InvoiceSearchRequestDto,
   ): Promise<Invoice[]> {
-    const allInvoices = await this.createQueryBuilder('invoice')
+    const query = await this.createQueryBuilder('invoice')
       .leftJoinAndSelect('invoice.project', 'project')
       .leftJoinAndSelect('invoice.category', 'category')
       .leftJoinAndSelect('invoice.items', 'items')
@@ -46,8 +46,27 @@ export class InvoiceRepository extends Repository<Invoice> {
       )
       .leftJoinAndSelect('userOrganization.user', 'user')
       .leftJoinAndSelect('userOrganization.roles', 'roles')
-      .where('invoice.organizationId = :organizationId', { organizationId })
-      .getMany();
+      .where('invoice.organizationId = :organizationId', { organizationId });
+
+    if (search.projectId) {
+      query.andWhere('invoice.projectId = :projectId', {
+        projectId: search.projectId,
+      });
+    }
+
+    if (search.categoryId) {
+      query.andWhere('invoice.categoryId = :categoryId', {
+        categoryId: search.categoryId,
+      });
+    }
+
+    if (search.type) {
+      query.andWhere('invoice.type = :type', {
+        type: search.type,
+      });
+    }
+
+    const allInvoices = await query.getMany();
 
     let filteredInvoices = allInvoices;
     // if (search.query) {
@@ -72,12 +91,6 @@ export class InvoiceRepository extends Repository<Invoice> {
         (invoice) =>
           isBefore(invoice.date, new Date(search.toDate)) ||
           isEqual(invoice.date, new Date(search.toDate)),
-      );
-    }
-
-    if (search.type) {
-      filteredInvoices = filteredInvoices.filter(
-        (invoice) => invoice.type === search.type,
       );
     }
 
@@ -89,7 +102,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     projectId: number,
     search: InvoiceSearchRequestDto,
   ): Promise<Invoice[]> {
-    const allInvoices = await this.createQueryBuilder('invoice')
+    const query = await this.createQueryBuilder('invoice')
       .leftJoinAndSelect('invoice.project', 'project')
       .leftJoinAndSelect('invoice.category', 'category')
       .leftJoinAndSelect('invoice.items', 'items')
@@ -104,8 +117,21 @@ export class InvoiceRepository extends Repository<Invoice> {
       .leftJoinAndSelect('userOrganization.user', 'user')
       .leftJoinAndSelect('userOrganization.roles', 'roles')
       .where('invoice.organizationId = :organizationId', { organizationId })
-      .andWhere('invoice.projectId = :projectId', { projectId })
-      .getMany();
+      .andWhere('invoice.projectId = :projectId', { projectId });
+
+    if (search.categoryId) {
+      query.andWhere('invoice.categoryId = :categoryId', {
+        categoryId: search.categoryId,
+      });
+    }
+
+    if (search.type) {
+      query.andWhere('invoice.type = :type', {
+        type: search.type,
+      });
+    }
+
+    const allInvoices = await query.getMany();
 
     let filteredInvoices = allInvoices;
     // if (search.query) {
@@ -130,12 +156,6 @@ export class InvoiceRepository extends Repository<Invoice> {
         (invoice) =>
           isBefore(invoice.date, new Date(search.toDate)) ||
           isEqual(invoice.date, new Date(search.toDate)),
-      );
-    }
-
-    if (search.type) {
-      filteredInvoices = filteredInvoices.filter(
-        (invoice) => invoice.type === search.type,
       );
     }
 

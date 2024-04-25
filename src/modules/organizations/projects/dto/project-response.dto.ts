@@ -1,5 +1,5 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
-import { Project } from 'src/db/entities';
+import { InvoiceType, Project } from 'src/db/entities';
 import { ProjectSearchRequestDto } from './project-search-request.dto';
 import { OrganizationUserResponseDto } from 'src/modules/common/dto/organization-user-response.dto';
 import { InvoiceResponseDto } from '../../invoices/dto/invoice-response.dto';
@@ -26,6 +26,14 @@ export class ProjectResponseDto {
       this.invoices = project.invoices.map(
         (invoice) => new InvoiceResponseDto(invoice),
       );
+      this.totalSpent =
+        project.invoices.reduce((acc, invoice) => {
+          let sum = acc;
+          if (invoice.type === InvoiceType.EXPENSE) {
+            sum += invoice.total;
+          }
+          return sum;
+        }, 0) ?? 0;
     }
     if (project.budgets) {
       this.budgets = project.budgets.map(
@@ -95,6 +103,12 @@ export class ProjectResponseDto {
     type: [CategoryResponseDto],
   })
   categories: CategoryResponseDto[];
+
+  @ApiResponseProperty({
+    type: Number,
+    example: 1000,
+  })
+  totalSpent: number;
 
   @ApiResponseProperty({
     type: Date,
