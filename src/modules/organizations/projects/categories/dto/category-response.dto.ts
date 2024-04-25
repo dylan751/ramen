@@ -10,10 +10,10 @@ export class CategoryResponseDto {
     this.icon = category.icon;
     this.type = category.type;
     if (category.invoices) {
-      this.spentAmount =
+      this.totalSpent =
         category.invoices.reduce((acc, invoice) => {
           let sum = acc;
-          if (invoice.type === category.type) {
+          if (invoice.type === InvoiceType.EXPENSE) {
             sum += invoice.total;
           }
           return sum;
@@ -59,7 +59,7 @@ export class CategoryResponseDto {
     type: Number,
     example: 1000,
   })
-  spentAmount: number;
+  totalSpent: number;
 
   @ApiResponseProperty({
     type: Date,
