@@ -55,6 +55,10 @@ export class Invoice extends BaseEntity {
   currency: CurrencyType;
 
   @Column()
+  @IsNotEmpty()
+  clientName: string;
+
+  @Column()
   @IsNumber()
   organizationId: number;
 

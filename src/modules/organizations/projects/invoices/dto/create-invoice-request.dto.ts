@@ -76,6 +76,14 @@ export class CreateInvoiceRequestDto {
   readonly currency: CurrencyType;
 
   @ApiProperty({
+    type: String,
+    example: 'John Doe',
+    required: true,
+  })
+  @IsNotEmpty()
+  readonly clientName: string;
+
+  @ApiProperty({
     type: [CreateInvoiceItemRequest],
   })
   @ValidateNested()

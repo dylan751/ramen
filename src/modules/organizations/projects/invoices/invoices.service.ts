@@ -23,7 +23,7 @@ export class ProjectInvoicesService {
     request: CreateInvoiceRequestDto,
     userId: number,
   ): Promise<Invoice> {
-    const { date, type, currency, items, categoryId } = request;
+    const { date, type, currency, clientName, items, categoryId } = request;
 
     // Create invoice
     const invoice = new Invoice();
@@ -33,6 +33,7 @@ export class ProjectInvoicesService {
     invoice.categoryId = categoryId;
     invoice.type = type;
     invoice.currency = currency;
+    invoice.clientName = clientName;
     invoice.total = items.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price * currentValue.quantity;
     }, 0);
@@ -99,7 +100,7 @@ export class ProjectInvoicesService {
     invoiceId: number,
     req: UpdateInvoiceRequestDto,
   ) {
-    const { date, type, currency, items, categoryId } = req;
+    const { date, type, currency, clientName, items, categoryId } = req;
     const invoice = await this.invoiceRepository.findOne({
       where: { id: invoiceId, organizationId, projectId },
     });
@@ -112,6 +113,7 @@ export class ProjectInvoicesService {
 
     if (date) invoice.date = date;
     if (currency) invoice.currency = currency;
+    if (clientName) invoice.clientName = clientName;
     if (type) invoice.type = type;
     if (categoryId) invoice.categoryId = categoryId;
     if (items.length > 0) {
