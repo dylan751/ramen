@@ -19,4 +19,12 @@ export class InvoiceSearchRequestDto {
   @IsOptional()
   @IsEnum(InvoiceType)
   type?: InvoiceType;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  projectId?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  categoryId?: number;
 }
