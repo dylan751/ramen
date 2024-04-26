@@ -23,7 +23,8 @@ export class ProjectInvoicesService {
     request: CreateInvoiceRequestDto,
     userId: number,
   ): Promise<Invoice> {
-    const { date, type, currency, clientName, items, categoryId } = request;
+    const { date, type, currency, clientName, tax, items, categoryId } =
+      request;
 
     // Create invoice
     const invoice = new Invoice();
@@ -34,9 +35,15 @@ export class ProjectInvoicesService {
     invoice.type = type;
     invoice.currency = currency;
     invoice.clientName = clientName;
-    invoice.total = items.reduce((accumulator, currentValue) => {
+    invoice.tax = tax;
+
+    let total = items.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price * currentValue.quantity;
     }, 0);
+    const invoiceTax = invoice.tax ? invoice.tax / 100 : 0; // tax can be null
+
+    total += total * invoiceTax;
+    invoice.total = total;
 
     await this.invoiceRepository.manager.transaction(async (manager) => {
       await manager.save(Invoice, invoice);
@@ -100,7 +107,7 @@ export class ProjectInvoicesService {
     invoiceId: number,
     req: UpdateInvoiceRequestDto,
   ) {
-    const { date, type, currency, clientName, items, categoryId } = req;
+    const { date, type, currency, clientName, tax, items, categoryId } = req;
     const invoice = await this.invoiceRepository.findOne({
       where: { id: invoiceId, organizationId, projectId },
     });
@@ -114,12 +121,17 @@ export class ProjectInvoicesService {
     if (date) invoice.date = date;
     if (currency) invoice.currency = currency;
     if (clientName) invoice.clientName = clientName;
+    if (clientName) invoice.tax = tax;
     if (type) invoice.type = type;
     if (categoryId) invoice.categoryId = categoryId;
     if (items.length > 0) {
-      invoice.total = items.reduce((accumulator, currentValue) => {
+      let total = items.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.price * currentValue.quantity;
       }, 0);
+      const invoiceTax = invoice.tax ? invoice.tax / 100 : 0; // tax can be null
+
+      total += total * invoiceTax;
+      invoice.total = total;
 
       await this.invoiceRepository.manager.transaction(async (manager) => {
         // Save invoice
