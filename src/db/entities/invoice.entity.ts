@@ -60,6 +60,10 @@ export class Invoice extends BaseEntity {
 
   @Column()
   @IsNumber()
+  tax: number;
+
+  @Column()
+  @IsNumber()
   organizationId: number;
 
   @Column()

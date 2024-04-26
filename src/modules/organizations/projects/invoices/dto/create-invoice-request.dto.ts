@@ -84,6 +84,14 @@ export class CreateInvoiceRequestDto {
   readonly clientName: string;
 
   @ApiProperty({
+    type: Number,
+    example: 10,
+    required: false,
+  })
+  @IsOptional()
+  readonly tax?: number;
+
+  @ApiProperty({
     type: [CreateInvoiceItemRequest],
   })
   @ValidateNested()
