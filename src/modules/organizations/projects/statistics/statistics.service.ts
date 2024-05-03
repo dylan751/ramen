@@ -42,6 +42,7 @@ export class StatisticsService {
       expensesByMonth,
       incomesByCategory,
       expensesByCategory,
+      lastInvoices,
     ] = await Promise.all([
       this.invoiceRepository.countInvoices(organizationId, projectId, search),
       this.budgetRepository.countBudgets(organizationId, projectId),
@@ -76,6 +77,7 @@ export class StatisticsService {
         projectId,
         search,
       ),
+      this.invoiceRepository.getLastInvoices(organizationId, projectId, search),
     ]);
 
     const projectStatistics = new ProjectStatisticsResponseDto();
@@ -91,6 +93,7 @@ export class StatisticsService {
     projectStatistics.expensesByMonth = expensesByMonth;
     projectStatistics.incomesByCategory = incomesByCategory;
     projectStatistics.expensesByCategory = expensesByCategory;
+    projectStatistics.lastInvoices = lastInvoices;
     projectStatistics.balance = totalIncome - totalExpense;
 
     return projectStatistics;
