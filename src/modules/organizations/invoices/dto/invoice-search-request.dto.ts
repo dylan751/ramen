@@ -5,10 +5,6 @@ import { InvoiceType } from 'src/db/entities';
 export class InvoiceSearchRequestDto {
   @ApiProperty({ required: false })
   @IsOptional()
-  query?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
   fromDate?: Date;
 
   @ApiProperty({ required: false })

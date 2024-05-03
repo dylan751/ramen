@@ -72,14 +72,6 @@ export class InvoiceRepository extends Repository<Invoice> {
     const allInvoices = await query.getMany();
 
     let filteredInvoices = allInvoices;
-    // if (search.query) {
-    //   const queryLowered = search.query.toLowerCase();
-    //   filteredInvoices = filteredInvoices.filter(
-    //     (invoice) =>
-    //       invoice.name.toLowerCase().includes(queryLowered) ||
-    //       invoice.note.toLowerCase().includes(queryLowered),
-    //   );
-    // }
 
     if (search.fromDate) {
       filteredInvoices = filteredInvoices.filter(
@@ -137,14 +129,6 @@ export class InvoiceRepository extends Repository<Invoice> {
     const allInvoices = await query.getMany();
 
     let filteredInvoices = allInvoices;
-    // if (search.query) {
-    //   const queryLowered = search.query.toLowerCase();
-    //   filteredInvoices = filteredInvoices.filter(
-    //     (invoice) =>
-    //       invoice.name.toLowerCase().includes(queryLowered) ||
-    //       invoice.note.toLowerCase().includes(queryLowered),
-    //   );
-    // }
 
     if (search.fromDate) {
       filteredInvoices = filteredInvoices.filter(
