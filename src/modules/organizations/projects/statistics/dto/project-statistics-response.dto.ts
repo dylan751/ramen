@@ -1,4 +1,5 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
+import { InvoiceResponseDto } from 'src/modules/organizations/invoices/dto/invoice-response.dto';
 
 export class IncomesAndExpensesByCategoryResponseDto {
   @ApiResponseProperty({
@@ -96,4 +97,9 @@ export class ProjectStatisticsResponseDto {
     type: [IncomesAndExpensesByCategoryResponseDto],
   })
   incomesByCategory: IncomesAndExpensesByCategoryResponseDto[];
+
+  @ApiResponseProperty({
+    type: [InvoiceResponseDto],
+  })
+  lastInvoices: InvoiceResponseDto[];
 }

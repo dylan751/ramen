@@ -5,6 +5,7 @@ import { InvoiceSearchRequestDto } from 'src/modules/organizations/invoices/dto/
 import { getYear, isAfter, isBefore, isEqual } from 'date-fns';
 import { ProjectStatisticsSearchRequestDto } from 'src/modules/organizations/projects/statistics/dto/project-statistics-search-request.dto';
 import { IncomesAndExpensesByCategoryResponseDto } from 'src/modules/organizations/projects/statistics/dto/project-statistics-response.dto';
+import { InvoiceResponseDto } from 'src/modules/organizations/invoices/dto/invoice-response.dto';
 
 @Injectable()
 export class InvoiceRepository extends Repository<Invoice> {
@@ -369,5 +370,40 @@ export class InvoiceRepository extends Repository<Invoice> {
       });
     });
     return expenseArray;
+  }
+
+  async getLastInvoices(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<InvoiceResponseDto[]> {
+    const query = await this.createQueryBuilder('invoice')
+      .leftJoinAndSelect('invoice.project', 'project')
+      .leftJoinAndSelect('invoice.category', 'category')
+      .leftJoinAndSelect('invoice.items', 'items')
+      .leftJoinAndSelect(
+        'invoice.userOrganizationInvoices',
+        'userOrganizationInvoices',
+      )
+      .leftJoinAndSelect(
+        'userOrganizationInvoices.userOrganization',
+        'userOrganization',
+      )
+      .leftJoinAndSelect('userOrganization.user', 'user')
+      .leftJoinAndSelect('userOrganization.roles', 'roles')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId });
+
+    if (search.date) {
+      const year = getYear(search.date);
+      query.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const lastInvoices = await query
+      .orderBy('invoice.createdAt', 'DESC')
+      .take(5)
+      .getMany();
+
+    return lastInvoices.map((invoice) => new InvoiceResponseDto(invoice));
   }
 }
