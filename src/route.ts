@@ -9,6 +9,7 @@ import { OrganizationProjectsModule } from './modules/organizations/projects/pro
 import { OrganizationProjectBudgetsModule } from './modules/organizations/projects/budgets/budgets.module';
 import { OrganizationProjectCategoriesModule } from './modules/organizations/projects/categories/categories.module';
 import { OrganizationProjectInvoicesModule } from './modules/organizations/projects/invoices/invoices.module';
+import { OrganizationProjectStatisticsModule } from './modules/organizations/projects/statistics/statistics.module';
 
 export const routes: Routes = [
   // Internal APIs
@@ -43,6 +44,10 @@ export const routes: Routes = [
           {
             path: 'projects/:projectId',
             module: OrganizationProjectCategoriesModule,
+          },
+          {
+            path: 'projects/:projectId',
+            module: OrganizationProjectStatisticsModule,
           },
         ],
       },

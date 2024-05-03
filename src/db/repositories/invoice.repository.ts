@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Invoice } from 'src/db/entities';
+import { Invoice, InvoiceType } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from 'src/modules/organizations/invoices/dto/invoice-search-request.dto';
-import { isAfter, isBefore, isEqual } from 'date-fns';
+import { getYear, isAfter, isBefore, isEqual } from 'date-fns';
+import { ProjectStatisticsSearchRequestDto } from 'src/modules/organizations/projects/statistics/dto/project-statistics-search-request.dto';
+import { IncomesAndExpensesByCategoryResponseDto } from 'src/modules/organizations/projects/statistics/dto/project-statistics-response.dto';
 
 @Injectable()
 export class InvoiceRepository extends Repository<Invoice> {
@@ -183,5 +185,189 @@ export class InvoiceRepository extends Repository<Invoice> {
       .where('invoice.organizationId = :organizationId', { organizationId })
       .andWhere('invoice.id = :id', { id })
       .getOne();
+  }
+
+  async countInvoices(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<number> {
+    const invoicesCountQuery = await this.createQueryBuilder('invoice')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId });
+
+    if (search.date) {
+      const year = getYear(search.date);
+      invoicesCountQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const invoicesCount = await invoicesCountQuery.getCount();
+    return invoicesCount;
+  }
+
+  async calculateTotalIncome(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<number> {
+    const totalInvoiceValueQuery = await this.createQueryBuilder('invoice')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId })
+      .andWhere('invoice.type = :type', { type: InvoiceType.INCOME });
+
+    if (search.date) {
+      const year = getYear(search.date);
+      totalInvoiceValueQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const totalInvoiceValue = await totalInvoiceValueQuery
+      .select('SUM(invoice.total)', 'total')
+      .getRawOne();
+
+    return parseFloat(totalInvoiceValue.total) || 0;
+  }
+
+  async calculateTotalExpense(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<number> {
+    const totalInvoiceValueQuery = await this.createQueryBuilder('invoice')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId })
+      .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE });
+
+    if (search.date) {
+      const year = getYear(search.date);
+      totalInvoiceValueQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const totalInvoiceValue = await totalInvoiceValueQuery
+      .select('SUM(invoice.total)', 'total')
+      .getRawOne();
+
+    return parseFloat(totalInvoiceValue.total) || 0;
+  }
+
+  async calculateIncomesByMonth(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<number[]> {
+    const incomesByMonth: number[] = [];
+
+    for (let month = 1; month <= 12; month++) {
+      const totalIncomeQuery = await this.createQueryBuilder('invoice')
+        .select('SUM(invoice.total)', 'total')
+        .where('invoice.organizationId = :organizationId', { organizationId })
+        .andWhere('invoice.projectId = :projectId', { projectId })
+        .andWhere('invoice.type = :type', { type: InvoiceType.INCOME })
+        .andWhere('MONTH(invoice.date) = :month', { month });
+
+      if (search.date) {
+        const year = getYear(search.date);
+        totalIncomeQuery.andWhere('YEAR(invoice.date) = :year', { year });
+      }
+
+      const totalIncome = await totalIncomeQuery.getRawOne();
+
+      incomesByMonth.push(parseFloat(totalIncome.total) || 0);
+    }
+
+    return incomesByMonth;
+  }
+
+  async calculateExpensesByMonth(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<number[]> {
+    const expensesByMonth: number[] = [];
+
+    for (let month = 1; month <= 12; month++) {
+      const totalExpenseQuery = await this.createQueryBuilder('invoice')
+        .select('SUM(invoice.total)', 'total')
+        .where('invoice.organizationId = :organizationId', { organizationId })
+        .andWhere('invoice.projectId = :projectId', { projectId })
+        .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE })
+        .andWhere('MONTH(invoice.date) = :month', { month });
+
+      if (search.date) {
+        const year = getYear(search.date);
+        totalExpenseQuery.andWhere('YEAR(invoice.date) = :year', { year });
+      }
+
+      const totalExpense = await totalExpenseQuery.getRawOne();
+
+      expensesByMonth.push(parseFloat(totalExpense.total) || 0);
+    }
+
+    return expensesByMonth;
+  }
+
+  async calculateIncomesByCategory(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<IncomesAndExpensesByCategoryResponseDto[]> {
+    const incomesQuery = await this.createQueryBuilder('invoice')
+      .select('SUM(invoice.total)', 'total')
+      .leftJoinAndSelect('invoice.category', 'category')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId })
+      .andWhere('invoice.type = :type', { type: InvoiceType.INCOME });
+
+    if (search.date) {
+      const year = getYear(search.date);
+      incomesQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const incomes = await incomesQuery
+      .groupBy('invoice.categoryId')
+      .getRawMany();
+
+    // Format data response
+    const incomeArray: IncomesAndExpensesByCategoryResponseDto[] = [];
+    incomes.forEach((income) => {
+      incomeArray.push({
+        name: income.category_name,
+        color: income.category_color,
+        total: parseFloat(income.total),
+      });
+    });
+    return incomeArray;
+  }
+
+  async calculateExpensesByCategory(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<IncomesAndExpensesByCategoryResponseDto[]> {
+    const expensesQuery = await this.createQueryBuilder('invoice')
+      .select('SUM(invoice.total)', 'total')
+      .leftJoinAndSelect('invoice.category', 'category')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId })
+      .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE });
+
+    if (search.date) {
+      const year = getYear(search.date);
+      expensesQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const expenses = await expensesQuery
+      .groupBy('invoice.categoryId')
+      .getRawMany();
+
+    // Format data response
+    const expenseArray: IncomesAndExpensesByCategoryResponseDto[] = [];
+    expenses.forEach((expense) => {
+      expenseArray.push({
+        name: expense.category_name,
+        color: expense.category_color,
+        total: parseFloat(expense.total),
+      });
+    });
+    return expenseArray;
   }
 }
