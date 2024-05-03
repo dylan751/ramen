@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProjectRequestDto } from './dto/create-project-request.dto';
 import { UpdateProjectRequestDto } from './dto/update-project-request.dto';
-import { ProjectRepository } from 'src/db/repositories/project.repository';
+import { ProjectRepository } from 'src/db/repositories';
 import { Project } from 'src/db/entities';
 import {
   ProjectResponseListDto,

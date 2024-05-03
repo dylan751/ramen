@@ -51,4 +51,16 @@ export class CategoryRepository extends Repository<Category> {
       .andWhere('category.id = :id', { id })
       .getOne();
   }
+
+  async countCategories(
+    organizationId: number,
+    projectId: number,
+  ): Promise<number> {
+    return this.count({
+      where: {
+        organizationId,
+        projectId,
+      },
+    });
+  }
 }

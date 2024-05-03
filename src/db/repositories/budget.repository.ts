@@ -70,4 +70,16 @@ export class BudgetRepository extends Repository<Budget> {
       .andWhere('budget.categoryId = :categoryId', { categoryId })
       .getOne();
   }
+
+  async countBudgets(
+    organizationId: number,
+    projectId: number,
+  ): Promise<number> {
+    return this.count({
+      where: {
+        organizationId,
+        projectId,
+      },
+    });
+  }
 }

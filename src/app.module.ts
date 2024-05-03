@@ -17,6 +17,7 @@ import { OrganizationProjectsModule } from './modules/organizations/projects/pro
 import { OrganizationProjectBudgetsModule } from './modules/organizations/projects/budgets/budgets.module';
 import { OrganizationProjectCategoriesModule } from './modules/organizations/projects/categories/categories.module';
 import { OrganizationProjectInvoicesModule } from './modules/organizations/projects/invoices/invoices.module';
+import { OrganizationProjectStatisticsModule } from './modules/organizations/projects/statistics/statistics.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { OrganizationProjectInvoicesModule } from './modules/organizations/proje
     OrganizationProjectInvoicesModule,
     OrganizationProjectBudgetsModule,
     OrganizationProjectCategoriesModule,
+    OrganizationProjectStatisticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
