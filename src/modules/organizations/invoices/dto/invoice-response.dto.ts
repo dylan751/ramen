@@ -50,6 +50,7 @@ export class InvoiceResponseDto {
   constructor(invoice: Invoice) {
     this.id = invoice.id;
     this.date = invoice.date;
+    this.uid = invoice.uid;
     this.type = invoice.type;
     this.currency = invoice.currency;
     this.clientName = invoice.clientName;
@@ -87,6 +88,12 @@ export class InvoiceResponseDto {
     example: '2024-02-26T07:31:35.000Z',
   })
   date: Date;
+
+  @ApiResponseProperty({
+    type: String,
+    example: 'INV-EF5',
+  })
+  uid: string;
 
   @ApiResponseProperty({
     enum: InvoiceType,

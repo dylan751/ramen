@@ -35,6 +35,10 @@ export class Invoice extends BaseEntity {
   date: Date;
 
   @Column()
+  @IsNotEmpty()
+  uid: string;
+
+  @Column()
   @IsNumber()
   total: number;
 

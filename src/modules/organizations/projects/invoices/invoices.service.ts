@@ -9,6 +9,11 @@ import {
   InvoiceResponseDto,
   InvoiceResponseListDto,
 } from '../../invoices/dto/invoice-response.dto';
+import {
+  INVOICE_PREFIX,
+  INVOICE_SUFFIX_LENGTH,
+  generateInvoiceUID,
+} from 'src/modules/common/utils';
 
 @Injectable()
 export class ProjectInvoicesService {
@@ -26,8 +31,14 @@ export class ProjectInvoicesService {
     const { date, type, currency, clientName, tax, items, categoryId } =
       request;
 
+    const invoiceUID = generateInvoiceUID(
+      INVOICE_PREFIX,
+      INVOICE_SUFFIX_LENGTH,
+    );
+
     // Create invoice
     const invoice = new Invoice();
+    invoice.uid = invoiceUID;
     invoice.date = date;
     invoice.organizationId = organizationId;
     invoice.projectId = projectId;
