@@ -7,6 +7,8 @@ export class OrganizationProfileResponseDto {
     this.id = organization.id;
     this.name = organization.name;
     this.uniqueName = organization.uniqueName;
+    this.phone = organization.phone;
+    this.address = organization.address;
     this.roles = roles.map((role) => new UserRole(role));
   }
 
@@ -27,6 +29,18 @@ export class OrganizationProfileResponseDto {
     example: 'org_unique_name',
   })
   uniqueName: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: '0339089172',
+  })
+  phone: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: '19A Bach Khoa, Ha Noi',
+  })
+  address: string;
 
   @ApiResponseProperty({
     type: [UserRole],

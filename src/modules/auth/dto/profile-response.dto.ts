@@ -57,19 +57,6 @@ export class ProfileResponseDto {
 
   @ApiResponseProperty({
     type: [OrganizationProfileResponseDto],
-    example: [
-      {
-        id: 1,
-        name: 'First Organization Name',
-        uniqueName: 'first_organization_unique_name',
-        roles: [
-          {
-            id: 1,
-            name: 'Admin',
-          },
-        ],
-      },
-    ],
   })
   organizations: OrganizationProfileResponseDto[];
 }

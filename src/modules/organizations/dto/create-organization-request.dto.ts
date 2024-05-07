@@ -19,4 +19,20 @@ export class CreateOrganizationRequestDto {
   @IsNotEmpty()
   @Validate(OrganizationUniqueNameValidator)
   readonly uniqueName: string;
+
+  @ApiProperty({
+    type: String,
+    example: '0339089172',
+    required: true,
+  })
+  @IsNotEmpty()
+  readonly phone: string;
+
+  @ApiProperty({
+    type: String,
+    example: '19A Bach Khoa, Ha Noi',
+    required: true,
+  })
+  @IsNotEmpty()
+  readonly address: string;
 }
