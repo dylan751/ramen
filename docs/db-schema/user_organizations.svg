@@ -80,32 +80,38 @@
 <!-- organizations -->
 <g id="node3" class="node">
 <title>organizations</title>
-<polygon fill="#efefef" stroke="transparent" points="342.5,-252.5 342.5,-287.5 590.5,-287.5 590.5,-252.5 342.5,-252.5"/>
-<polygon fill="none" stroke="#000000" points="342.5,-252.5 342.5,-287.5 590.5,-287.5 590.5,-252.5 342.5,-252.5"/>
-<text text-anchor="start" x="349.2029" y="-265.3" font-family="Arial Bold" font-size="18.00" fill="#000000">organizations</text>
-<text text-anchor="start" x="456.2291" y="-265.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
-<text text-anchor="start" x="490.4339" y="-265.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
+<polygon fill="#efefef" stroke="transparent" points="342.5,-282.5 342.5,-317.5 590.5,-317.5 590.5,-282.5 342.5,-282.5"/>
+<polygon fill="none" stroke="#000000" points="342.5,-282.5 342.5,-317.5 590.5,-317.5 590.5,-282.5 342.5,-282.5"/>
+<text text-anchor="start" x="349.2029" y="-295.3" font-family="Arial Bold" font-size="18.00" fill="#000000">organizations</text>
+<text text-anchor="start" x="456.2291" y="-295.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
+<text text-anchor="start" x="490.4339" y="-295.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
+<polygon fill="none" stroke="#000000" points="342.5,-252.5 342.5,-282.5 590.5,-282.5 590.5,-252.5 342.5,-252.5"/>
+<text text-anchor="start" x="349.5" y="-263.9" font-family="Arial" font-size="14.00" fill="#000000">id    </text>
+<text text-anchor="start" x="394.594" y="-263.9" font-family="Arial" font-size="14.00" fill="#666666">[int]</text>
 <polygon fill="none" stroke="#000000" points="342.5,-222.5 342.5,-252.5 590.5,-252.5 590.5,-222.5 342.5,-222.5"/>
-<text text-anchor="start" x="349.5" y="-233.9" font-family="Arial" font-size="14.00" fill="#000000">id    </text>
-<text text-anchor="start" x="394.594" y="-233.9" font-family="Arial" font-size="14.00" fill="#666666">[int]</text>
+<text text-anchor="start" x="349.5" y="-233.9" font-family="Arial" font-size="14.00" fill="#000000">name    </text>
+<text text-anchor="start" x="418.7132" y="-233.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(255)]</text>
 <polygon fill="none" stroke="#000000" points="342.5,-192.5 342.5,-222.5 590.5,-222.5 590.5,-192.5 342.5,-192.5"/>
-<text text-anchor="start" x="349.5" y="-203.9" font-family="Arial" font-size="14.00" fill="#000000">name    </text>
-<text text-anchor="start" x="418.7132" y="-203.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(255)]</text>
+<text text-anchor="start" x="349.5" y="-203.9" font-family="Arial" font-size="14.00" fill="#000000">uniqueName    </text>
+<text text-anchor="start" x="463.0568" y="-203.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(255)]</text>
 <polygon fill="none" stroke="#000000" points="342.5,-162.5 342.5,-192.5 590.5,-192.5 590.5,-162.5 342.5,-162.5"/>
-<text text-anchor="start" x="349.5" y="-173.9" font-family="Arial" font-size="14.00" fill="#000000">uniqueName    </text>
-<text text-anchor="start" x="463.0568" y="-173.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(255)]</text>
+<text text-anchor="start" x="349.5" y="-173.9" font-family="Arial" font-size="14.00" fill="#000000">createdAt    </text>
+<text text-anchor="start" x="443.6136" y="-173.9" font-family="Arial" font-size="14.00" fill="#666666">[timestamp]</text>
 <polygon fill="none" stroke="#000000" points="342.5,-132.5 342.5,-162.5 590.5,-162.5 590.5,-132.5 342.5,-132.5"/>
-<text text-anchor="start" x="349.5" y="-143.9" font-family="Arial" font-size="14.00" fill="#000000">createdAt    </text>
-<text text-anchor="start" x="443.6136" y="-143.9" font-family="Arial" font-size="14.00" fill="#666666">[timestamp]</text>
+<text text-anchor="start" x="349.5" y="-143.9" font-family="Arial" font-size="14.00" fill="#000000">updatedAt    </text>
+<text text-anchor="start" x="447.5182" y="-143.9" font-family="Arial" font-size="14.00" fill="#666666">[timestamp]</text>
 <polygon fill="none" stroke="#000000" points="342.5,-102.5 342.5,-132.5 590.5,-132.5 590.5,-102.5 342.5,-102.5"/>
-<text text-anchor="start" x="349.5" y="-113.9" font-family="Arial" font-size="14.00" fill="#000000">updatedAt    </text>
-<text text-anchor="start" x="447.5182" y="-113.9" font-family="Arial" font-size="14.00" fill="#666666">[timestamp]</text>
+<text text-anchor="start" x="349.5" y="-113.9" font-family="Arial" font-size="14.00" fill="#000000">phone    </text>
+<text text-anchor="start" x="422.6178" y="-113.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(255)]</text>
+<polygon fill="none" stroke="#000000" points="342.5,-72.5 342.5,-102.5 590.5,-102.5 590.5,-72.5 342.5,-72.5"/>
+<text text-anchor="start" x="349.5" y="-83.9" font-family="Arial" font-size="14.00" fill="#000000">address    </text>
+<text text-anchor="start" x="433.4958" y="-83.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(255)]</text>
 </g>
 <!-- user_organizations&#45;&gt;organizations -->
 <g id="edge2" class="edge">
 <title>user_organizations:organizationId&#45;&gt;organizations:id</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M459.5651,-546.4709C498.6426,-537.5443 469.7917,-472.4674 449.5,-427 423.4617,-368.6563 368.5383,-389.3437 342.5,-331 325.5642,-293.0521 300.9444,-237.5 342.5,-237.5"/>
-<polygon fill="#000000" stroke="#000000" points="459.4481,-546.4828 449.0423,-543.0233 454.4741,-546.9914 449.5,-547.5 449.5,-547.5 449.5,-547.5 454.4741,-546.9914 449.9577,-551.9767 459.4481,-546.4828 459.4481,-546.4828"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M459.624,-546.4414C499.2013,-537.2644 473.765,-470.477 449.5,-427 422.2696,-378.2098 369.7304,-409.7902 342.5,-361 322.248,-324.7134 300.9444,-267.5 342.5,-267.5"/>
+<polygon fill="#000000" stroke="#000000" points="459.4458,-546.46 449.032,-543.0244 454.4729,-546.98 449.5,-547.5 449.5,-547.5 449.5,-547.5 454.4729,-546.98 449.968,-551.9756 459.4458,-546.46 459.4458,-546.46"/>
 <text text-anchor="start" x="428.2765" y="-557.5" font-family="Arial" font-size="10.00" fill="#000000">1&#45;n</text>
 </g>
 </g>
