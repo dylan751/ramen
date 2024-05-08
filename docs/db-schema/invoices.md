@@ -14,6 +14,12 @@ CREATE TABLE `invoices` (
   `organizationId` int NOT NULL,
   `total` int DEFAULT NULL,
   `currency` enum('vnd','usd') NOT NULL,
+  `type` enum('expense','income') NOT NULL,
+  `projectId` int NOT NULL,
+  `categoryId` int NOT NULL,
+  `clientName` varchar(255) DEFAULT NULL,
+  `tax` int DEFAULT NULL,
+  `uid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=[Redacted by tbls] DEFAULT CHARSET=utf8mb3
 ```
@@ -24,13 +30,19 @@ CREATE TABLE `invoices` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | int |  | false | auto_increment | [invoice_items](invoice_items.md) [invoice_owners](invoice_owners.md) [user_organization_invoices](user_organization_invoices.md) |  |  |
+| id | int |  | false | auto_increment | [invoice_items](invoice_items.md) [user_organization_invoices](user_organization_invoices.md) |  |  |
 | date | timestamp |  | true |  |  |  |  |
 | createdAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
 | updatedAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
 | organizationId | int |  | false |  |  | [organizations](organizations.md) |  |
 | total | int |  | true |  |  |  |  |
 | currency | enum('vnd','usd') |  | false |  |  |  |  |
+| type | enum('expense','income') |  | false |  |  |  |  |
+| projectId | int |  | false |  |  | [projects](projects.md) |  |
+| categoryId | int |  | false |  |  | [categories](categories.md) |  |
+| clientName | varchar(255) |  | true |  |  |  |  |
+| tax | int |  | true |  |  |  |  |
+| uid | varchar(255) |  | true |  |  |  |  |
 
 ## Constraints
 

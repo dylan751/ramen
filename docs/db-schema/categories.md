@@ -1,4 +1,4 @@
-# organizations
+# categories
 
 ## Description
 
@@ -6,16 +6,17 @@
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
-CREATE TABLE `organizations` (
+CREATE TABLE `categories` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `uniqueName` varchar(255) NOT NULL,
+  `color` varchar(255) NOT NULL,
+  `icon` varchar(255) NOT NULL,
+  `type` enum('expense','income') NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `phone` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UQ_30955c69c151c28bc7c92e663f7` (`uniqueName`)
+  `organizationId` int NOT NULL,
+  `projectId` int NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=[Redacted by tbls] DEFAULT CHARSET=utf8mb3
 ```
 
@@ -25,31 +26,31 @@ CREATE TABLE `organizations` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | int |  | false | auto_increment | [roles](roles.md) [user_organization_roles](user_organization_roles.md) [user_organizations](user_organizations.md) [invoices](invoices.md) [user_organization_invoices](user_organization_invoices.md) [projects](projects.md) [budgets](budgets.md) [categories](categories.md) |  |  |
+| id | int |  | false | auto_increment | [invoices](invoices.md) [budgets](budgets.md) |  |  |
 | name | varchar(255) |  | false |  |  |  |  |
-| uniqueName | varchar(255) |  | false |  |  |  |  |
+| color | varchar(255) |  | false |  |  |  |  |
+| icon | varchar(255) |  | false |  |  |  |  |
+| type | enum('expense','income') |  | false |  |  |  |  |
 | createdAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
 | updatedAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
-| phone | varchar(255) |  | true |  |  |  |  |
-| address | varchar(255) |  | true |  |  |  |  |
+| organizationId | int |  | false |  |  | [organizations](organizations.md) |  |
+| projectId | int |  | false |  |  |  |  |
 
 ## Constraints
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
 | PRIMARY | PRIMARY KEY | PRIMARY KEY (id) |
-| UQ_30955c69c151c28bc7c92e663f7 | UNIQUE | UNIQUE KEY UQ_30955c69c151c28bc7c92e663f7 (uniqueName) |
 
 ## Indexes
 
 | Name | Definition |
 | ---- | ---------- |
 | PRIMARY | PRIMARY KEY (id) USING BTREE |
-| UQ_30955c69c151c28bc7c92e663f7 | UNIQUE KEY UQ_30955c69c151c28bc7c92e663f7 (uniqueName) USING BTREE |
 
 ## Relations
 
-![er](organizations.svg)
+![er](categories.svg)
 
 ---
 

@@ -1,4 +1,4 @@
-# invoice_items
+# budgets
 
 ## Description
 
@@ -6,15 +6,14 @@
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
-CREATE TABLE `invoice_items` (
+CREATE TABLE `budgets` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `invoiceId` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `note` varchar(255) DEFAULT NULL,
-  `price` int NOT NULL,
+  `projectId` int NOT NULL,
+  `categoryId` int NOT NULL,
+  `amount` int NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `quantity` int NOT NULL DEFAULT '1',
+  `organizationId` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=[Redacted by tbls] DEFAULT CHARSET=utf8mb3
 ```
@@ -26,13 +25,12 @@ CREATE TABLE `invoice_items` (
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
 | id | int |  | false | auto_increment |  |  |  |
-| invoiceId | int |  | false |  |  | [invoices](invoices.md) |  |
-| name | varchar(255) |  | false |  |  |  |  |
-| note | varchar(255) |  | true |  |  |  |  |
-| price | int |  | false |  |  |  |  |
+| projectId | int |  | false |  |  | [projects](projects.md) |  |
+| categoryId | int |  | false |  |  | [categories](categories.md) |  |
+| amount | int |  | false |  |  |  |  |
 | createdAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
 | updatedAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
-| quantity | int | 1 | false |  |  |  |  |
+| organizationId | int |  | false |  |  | [organizations](organizations.md) |  |
 
 ## Constraints
 
@@ -48,7 +46,7 @@ CREATE TABLE `invoice_items` (
 
 ## Relations
 
-![er](invoice_items.svg)
+![er](budgets.svg)
 
 ---
 

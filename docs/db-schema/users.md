@@ -27,7 +27,7 @@ CREATE TABLE `users` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | int |  | false | auto_increment | [user_organization_roles](user_organization_roles.md) [user_organizations](user_organizations.md) [invoice_owners](invoice_owners.md) [user_organization_invoices](user_organization_invoices.md) |  |  |
+| id | int |  | false | auto_increment | [user_organization_roles](user_organization_roles.md) [user_organizations](user_organizations.md) [user_organization_invoices](user_organization_invoices.md) [projects](projects.md) |  |  |
 | name | varchar(255) |  | true |  |  |  |  |
 | email | varchar(255) |  | false |  |  |  |  |
 | password | varchar(255) |  | true |  |  |  |  |
