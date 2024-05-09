@@ -22,5 +22,9 @@ export class InvoiceSearchRequestDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
+  status?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
   categoryId?: number;
 }

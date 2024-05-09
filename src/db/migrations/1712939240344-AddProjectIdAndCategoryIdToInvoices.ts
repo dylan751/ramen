@@ -16,6 +16,8 @@ export class AddProjectIdAndCategoryIdToInvoices1712939240344
       new TableColumn({
         name: 'categoryId',
         type: 'int',
+        isNullable: true,
+        default: null,
       }),
     );
   }

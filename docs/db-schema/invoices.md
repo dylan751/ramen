@@ -16,7 +16,7 @@ CREATE TABLE `invoices` (
   `currency` enum('vnd','usd') NOT NULL,
   `type` enum('expense','income') NOT NULL,
   `projectId` int NOT NULL,
-  `categoryId` int NOT NULL,
+  `categoryId` int DEFAULT NULL,
   `clientName` varchar(255) DEFAULT NULL,
   `tax` int DEFAULT NULL,
   `uid` varchar(255) DEFAULT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `invoices` (
 | currency | enum('vnd','usd') |  | false |  |  |  |  |
 | type | enum('expense','income') |  | false |  |  |  |  |
 | projectId | int |  | false |  |  | [projects](projects.md) |  |
-| categoryId | int |  | false |  |  | [categories](categories.md) |  |
+| categoryId | int |  | true |  |  | [categories](categories.md) |  |
 | clientName | varchar(255) |  | true |  |  |  |  |
 | tax | int |  | true |  |  |  |  |
 | uid | varchar(255) |  | true |  |  |  |  |
