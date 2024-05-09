@@ -101,10 +101,10 @@ export class CreateInvoiceRequestDto {
   @ApiProperty({
     type: Number,
     example: 1,
-    required: true,
+    required: false,
   })
-  @IsNotEmpty()
-  readonly categoryId: number;
+  @IsOptional()
+  readonly categoryId?: number;
 }
 
 export class CreateInvoicesRequestDto {

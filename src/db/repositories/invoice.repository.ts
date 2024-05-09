@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Invoice, InvoiceType } from 'src/db/entities';
+import { Invoice, InvoiceStatus, InvoiceType } from 'src/db/entities';
 import { InvoiceSearchRequestDto } from 'src/modules/organizations/invoices/dto/invoice-search-request.dto';
 import { getYear, isAfter, isBefore, isEqual } from 'date-fns';
 import { ProjectStatisticsSearchRequestDto } from 'src/modules/organizations/projects/statistics/dto/project-statistics-search-request.dto';
@@ -69,6 +69,19 @@ export class InvoiceRepository extends Repository<Invoice> {
       });
     }
 
+    if (search.status) {
+      switch (search.status) {
+        case InvoiceStatus.CATEGORIZED: {
+          query.andWhere('invoice.categoryId IS NOT NULL');
+          break;
+        }
+        case InvoiceStatus.UNCATEGORIZED: {
+          query.andWhere('invoice.categoryId IS NULL');
+          break;
+        }
+      }
+    }
+
     const allInvoices = await query.getMany();
 
     let filteredInvoices = allInvoices;
@@ -124,6 +137,19 @@ export class InvoiceRepository extends Repository<Invoice> {
       query.andWhere('invoice.type = :type', {
         type: search.type,
       });
+    }
+
+    if (search.status) {
+      switch (search.status) {
+        case InvoiceStatus.CATEGORIZED: {
+          query.andWhere('invoice.categoryId IS NOT NULL');
+          break;
+        }
+        case InvoiceStatus.UNCATEGORIZED: {
+          query.andWhere('invoice.categoryId IS NULL');
+          break;
+        }
+      }
     }
 
     const allInvoices = await query.getMany();
@@ -300,7 +326,8 @@ export class InvoiceRepository extends Repository<Invoice> {
       .leftJoinAndSelect('invoice.category', 'category')
       .where('invoice.organizationId = :organizationId', { organizationId })
       .andWhere('invoice.projectId = :projectId', { projectId })
-      .andWhere('invoice.type = :type', { type: InvoiceType.INCOME });
+      .andWhere('invoice.type = :type', { type: InvoiceType.INCOME })
+      .andWhere('invoice.categoryId IS NOT NULL');
 
     if (search.date) {
       const year = getYear(search.date);
@@ -333,7 +360,8 @@ export class InvoiceRepository extends Repository<Invoice> {
       .leftJoinAndSelect('invoice.category', 'category')
       .where('invoice.organizationId = :organizationId', { organizationId })
       .andWhere('invoice.projectId = :projectId', { projectId })
-      .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE });
+      .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE })
+      .andWhere('invoice.categoryId IS NOT NULL');
 
     if (search.date) {
       const year = getYear(search.date);

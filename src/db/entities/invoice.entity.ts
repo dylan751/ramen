@@ -20,6 +20,11 @@ export enum InvoiceType {
   INCOME = 'income',
 }
 
+export enum InvoiceStatus {
+  CATEGORIZED = 'categorized',
+  UNCATEGORIZED = 'uncategorized',
+}
+
 export enum CurrencyType {
   VND = 'vnd',
   USD = 'usd',
