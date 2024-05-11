@@ -99,6 +99,18 @@ export class ProjectStatisticsResponseDto {
   incomesByCategory: IncomesAndExpensesByCategoryResponseDto[];
 
   @ApiResponseProperty({
+    type: Number,
+    example: 10000,
+  })
+  totalUncategorizedIncome: number;
+
+  @ApiResponseProperty({
+    type: Number,
+    example: 10000,
+  })
+  totalUncategorizedExpense: number;
+
+  @ApiResponseProperty({
     type: [InvoiceResponseDto],
   })
   lastInvoices: InvoiceResponseDto[];
