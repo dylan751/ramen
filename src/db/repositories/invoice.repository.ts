@@ -384,6 +384,52 @@ export class InvoiceRepository extends Repository<Invoice> {
     return expenseArray;
   }
 
+  async calculateTotalUncategorizedIncome(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<number> {
+    const totalInvoiceValueQuery = await this.createQueryBuilder('invoice')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId })
+      .andWhere('invoice.type = :type', { type: InvoiceType.INCOME })
+      .andWhere('invoice.categoryId IS NULL');
+
+    if (search.date) {
+      const year = getYear(search.date);
+      totalInvoiceValueQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const totalInvoiceValue = await totalInvoiceValueQuery
+      .select('SUM(invoice.total)', 'total')
+      .getRawOne();
+
+    return parseFloat(totalInvoiceValue.total) || 0;
+  }
+
+  async calculateTotalUncategorizedExpense(
+    organizationId: number,
+    projectId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<number> {
+    const totalInvoiceValueQuery = await this.createQueryBuilder('invoice')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.projectId = :projectId', { projectId })
+      .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE })
+      .andWhere('invoice.categoryId IS NULL');
+
+    if (search.date) {
+      const year = getYear(search.date);
+      totalInvoiceValueQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const totalInvoiceValue = await totalInvoiceValueQuery
+      .select('SUM(invoice.total)', 'total')
+      .getRawOne();
+
+    return parseFloat(totalInvoiceValue.total) || 0;
+  }
+
   async getLastInvoices(
     organizationId: number,
     projectId: number,
