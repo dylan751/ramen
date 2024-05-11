@@ -94,7 +94,8 @@ export class StatisticsService {
     projectStatistics.incomesByCategory = incomesByCategory;
     projectStatistics.expensesByCategory = expensesByCategory;
     projectStatistics.lastInvoices = lastInvoices;
-    projectStatistics.balance = totalIncome - totalExpense;
+    projectStatistics.balance =
+      project.totalBudget + totalIncome - totalExpense;
 
     return projectStatistics;
   }
