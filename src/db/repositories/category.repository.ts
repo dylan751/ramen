@@ -52,7 +52,7 @@ export class CategoryRepository extends Repository<Category> {
       .getOne();
   }
 
-  async countCategories(
+  async countProjectCategories(
     organizationId: number,
     projectId: number,
   ): Promise<number> {

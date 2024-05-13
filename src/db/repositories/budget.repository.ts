@@ -71,7 +71,7 @@ export class BudgetRepository extends Repository<Budget> {
       .getOne();
   }
 
-  async countBudgets(
+  async countProjectBudgets(
     organizationId: number,
     projectId: number,
   ): Promise<number> {

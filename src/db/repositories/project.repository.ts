@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Project } from 'src/db/entities';
 import { ProjectSearchRequestDto } from 'src/modules/organizations/projects/dto/project-search-request.dto';
-import { isAfter, isBefore, isEqual } from 'date-fns';
+import { getYear, isAfter, isBefore, isEqual } from 'date-fns';
+import { OrganizationStatisticsSearchRequestDto } from 'src/modules/organizations/statistics/dto/organization-statistics-search-request.dto';
 
 @Injectable()
 export class ProjectRepository extends Repository<Project> {
@@ -68,5 +69,41 @@ export class ProjectRepository extends Repository<Project> {
       .where('project.organizationId = :organizationId', { organizationId })
       .andWhere('project.id = :id', { id })
       .getOne();
+  }
+
+  async countOrgProjects(
+    organizationId: number,
+    search: OrganizationStatisticsSearchRequestDto,
+  ): Promise<number> {
+    const projectsCountQuery = await this.createQueryBuilder('project').where(
+      'project.organizationId = :organizationId',
+      { organizationId },
+    );
+
+    if (search.date) {
+      const year = getYear(search.date);
+      projectsCountQuery.andWhere('YEAR(project.startDate) = :year', { year });
+    }
+
+    const projectsCount = await projectsCountQuery.getCount();
+    return projectsCount;
+  }
+
+  async getOrgProjects(
+    organizationId: number,
+    search: OrganizationStatisticsSearchRequestDto,
+  ): Promise<Project[]> {
+    const projectsQuery = await this.createQueryBuilder('project').where(
+      'project.organizationId = :organizationId',
+      { organizationId },
+    );
+
+    if (search.date) {
+      const year = getYear(search.date);
+      projectsQuery.andWhere('YEAR(project.startDate) = :year', { year });
+    }
+
+    const projects = await projectsQuery.getMany();
+    return projects;
   }
 }
