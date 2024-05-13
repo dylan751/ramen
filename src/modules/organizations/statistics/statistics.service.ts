@@ -8,6 +8,7 @@ import {
 } from 'src/db/repositories';
 import { OrganizationStatisticsResponseDto } from './dto/organization-statistics-response.dto';
 import { OrganizationStatisticsSearchRequestDto } from './dto/organization-statistics-search-request.dto';
+import { ProjectResponseDto } from '../projects/dto/project-response.dto';
 
 @Injectable()
 export class StatisticsService {
@@ -83,7 +84,9 @@ export class StatisticsService {
     organizationStatistics.totalUncategorizedIncome = totalUncategorizedIncome;
     organizationStatistics.totalUncategorizedExpense =
       totalUncategorizedExpense;
-    organizationStatistics.projects = projects;
+    organizationStatistics.projects = projects.map(
+      (project) => new ProjectResponseDto(project),
+    );
     organizationStatistics.balance = totalIncome - totalExpense;
 
     return organizationStatistics;

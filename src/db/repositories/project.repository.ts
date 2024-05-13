@@ -93,10 +93,14 @@ export class ProjectRepository extends Repository<Project> {
     organizationId: number,
     search: OrganizationStatisticsSearchRequestDto,
   ): Promise<Project[]> {
-    const projectsQuery = await this.createQueryBuilder('project').where(
-      'project.organizationId = :organizationId',
-      { organizationId },
-    );
+    const projectsQuery = await this.createQueryBuilder('project')
+      .leftJoinAndSelect('project.creator', 'creator')
+      .leftJoinAndSelect('creator.userOrganizations', 'userOrganizations')
+      .leftJoinAndSelect('userOrganizations.roles', 'roles')
+      .leftJoinAndSelect('project.invoices', 'invoices')
+      .leftJoinAndSelect('project.budgets', 'budgets')
+      .leftJoinAndSelect('project.categories', 'categories')
+      .where('project.organizationId = :organizationId', { organizationId });
 
     if (search.date) {
       const year = getYear(search.date);

@@ -1,5 +1,5 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
-import { Project } from 'src/db/entities';
+import { ProjectResponseDto } from '../../projects/dto/project-response.dto';
 
 export class OrganizationStatisticsResponseDto {
   @ApiResponseProperty({
@@ -75,9 +75,9 @@ export class OrganizationStatisticsResponseDto {
   expensesByMonth: number[];
 
   @ApiResponseProperty({
-    type: [Project],
+    type: [ProjectResponseDto],
   })
-  projects: Project[];
+  projects: ProjectResponseDto[];
 
   @ApiResponseProperty({
     type: Number,
