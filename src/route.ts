@@ -1,6 +1,7 @@
 import { Routes } from '@nestjs/core';
 import { AuthModule } from './modules/auth/auth.module';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
+import { OrganizationStatisticsModule } from './modules/organizations/statistics/statistics.module';
 import { OrganizationUsersModule } from './modules/organizations/users/users.module';
 import { OrganizationRolesModule } from './modules/organizations/roles/roles.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
@@ -17,6 +18,10 @@ export const routes: Routes = [
     path: '/internal/api/v1',
     module: OrganizationsModule,
     children: [
+      {
+        path: 'organizations/:organizationId',
+        module: OrganizationStatisticsModule,
+      },
       {
         path: 'organizations/:organizationId',
         module: OrganizationUsersModule,

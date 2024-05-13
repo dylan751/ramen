@@ -74,4 +74,12 @@ export class RoleRepository extends Repository<Role> {
       .where('organizationId = :organizationId', { organizationId }) // custom roles
       .getMany();
   }
+
+  async countOrgRoles(organizationId: number): Promise<number> {
+    return this.count({
+      where: {
+        organizationId,
+      },
+    });
+  }
 }

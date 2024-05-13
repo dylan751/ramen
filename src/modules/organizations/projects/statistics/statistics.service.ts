@@ -46,50 +46,58 @@ export class StatisticsService {
       totalUncategorizedExpense,
       lastInvoices,
     ] = await Promise.all([
-      this.invoiceRepository.countInvoices(organizationId, projectId, search),
-      this.budgetRepository.countBudgets(organizationId, projectId),
-      this.categoryRepository.countCategories(organizationId, projectId),
-      this.invoiceRepository.calculateTotalIncome(
+      this.invoiceRepository.countProjectInvoices(
         organizationId,
         projectId,
         search,
       ),
-      this.invoiceRepository.calculateTotalExpense(
+      this.budgetRepository.countProjectBudgets(organizationId, projectId),
+      this.categoryRepository.countProjectCategories(organizationId, projectId),
+      this.invoiceRepository.calculateProjectTotalIncome(
         organizationId,
         projectId,
         search,
       ),
-      this.invoiceRepository.calculateIncomesByMonth(
+      this.invoiceRepository.calculateProjectTotalExpense(
         organizationId,
         projectId,
         search,
       ),
-      this.invoiceRepository.calculateExpensesByMonth(
+      this.invoiceRepository.calculateProjectIncomesByMonth(
         organizationId,
         projectId,
         search,
       ),
-      this.invoiceRepository.calculateIncomesByCategory(
+      this.invoiceRepository.calculateProjectExpensesByMonth(
         organizationId,
         projectId,
         search,
       ),
-      this.invoiceRepository.calculateExpensesByCategory(
+      this.invoiceRepository.calculateProjectIncomesByCategory(
         organizationId,
         projectId,
         search,
       ),
-      this.invoiceRepository.calculateTotalUncategorizedIncome(
+      this.invoiceRepository.calculateProjectExpensesByCategory(
         organizationId,
         projectId,
         search,
       ),
-      this.invoiceRepository.calculateTotalUncategorizedExpense(
+      this.invoiceRepository.calculateProjectTotalUncategorizedIncome(
         organizationId,
         projectId,
         search,
       ),
-      this.invoiceRepository.getLastInvoices(organizationId, projectId, search),
+      this.invoiceRepository.calculateProjectTotalUncategorizedExpense(
+        organizationId,
+        projectId,
+        search,
+      ),
+      this.invoiceRepository.getProjectLastInvoices(
+        organizationId,
+        projectId,
+        search,
+      ),
     ]);
 
     const projectStatistics = new ProjectStatisticsResponseDto();
