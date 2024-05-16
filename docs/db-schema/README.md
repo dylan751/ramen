@@ -7,7 +7,7 @@
 | [budgets](budgets.md) | 7 |  | BASE TABLE |
 | [categories](categories.md) | 9 |  | BASE TABLE |
 | [invoice_items](invoice_items.md) | 8 |  | BASE TABLE |
-| [invoices](invoices.md) | 13 |  | BASE TABLE |
+| [invoices](invoices.md) | 14 |  | BASE TABLE |
 | [organizations](organizations.md) | 7 |  | BASE TABLE |
 | [permissions](permissions.md) | 5 |  | BASE TABLE |
 | [projects](projects.md) | 10 |  | BASE TABLE |
