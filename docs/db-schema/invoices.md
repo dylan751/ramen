@@ -20,6 +20,7 @@ CREATE TABLE `invoices` (
   `clientName` varchar(255) DEFAULT NULL,
   `tax` int DEFAULT NULL,
   `uid` varchar(255) DEFAULT NULL,
+  `exchangeRate` decimal(10,0) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=[Redacted by tbls] DEFAULT CHARSET=utf8mb3
 ```
@@ -43,6 +44,7 @@ CREATE TABLE `invoices` (
 | clientName | varchar(255) |  | true |  |  |  |  |
 | tax | int |  | true |  |  |  |  |
 | uid | varchar(255) |  | true |  |  |  |  |
+| exchangeRate | decimal(10,0) |  | true |  |  |  |  |
 
 ## Constraints
 
