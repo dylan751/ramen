@@ -1,7 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InvoiceRepository } from 'src/db/repositories/invoice.repository';
 import { CreateInvoiceRequestDto } from './dto/create-invoice-request.dto';
-import { Invoice, InvoiceItem, UserOrganizationInvoice } from 'src/db/entities';
+import {
+  CurrencyType,
+  Invoice,
+  InvoiceItem,
+  UserOrganizationInvoice,
+} from 'src/db/entities';
 import { UpdateInvoiceRequestDto } from './dto/update-invoice-request.dto';
 import { InvoiceItemRepository } from 'src/db/repositories';
 import { InvoiceSearchRequestDto } from '../../invoices/dto/invoice-search-request.dto';
@@ -28,8 +33,16 @@ export class ProjectInvoicesService {
     request: CreateInvoiceRequestDto,
     userId: number,
   ): Promise<Invoice> {
-    const { date, type, currency, clientName, tax, items, categoryId } =
-      request;
+    const {
+      date,
+      type,
+      currency,
+      clientName,
+      tax,
+      exchangeRate,
+      items,
+      categoryId,
+    } = request;
 
     const invoiceUID = generateInvoiceUID(
       INVOICE_PREFIX,
@@ -47,6 +60,8 @@ export class ProjectInvoicesService {
     invoice.currency = currency;
     invoice.clientName = clientName;
     invoice.tax = tax;
+    invoice.exchangeRate =
+      invoice.currency === CurrencyType.USD ? 1 : exchangeRate; // If USD, then the exchange rate is 1 (1 USD = 1 USD)
 
     let total = items.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price * currentValue.quantity;
@@ -118,7 +133,16 @@ export class ProjectInvoicesService {
     invoiceId: number,
     req: UpdateInvoiceRequestDto,
   ) {
-    const { date, type, currency, clientName, tax, items, categoryId } = req;
+    const {
+      date,
+      type,
+      currency,
+      clientName,
+      tax,
+      exchangeRate,
+      items,
+      categoryId,
+    } = req;
     const invoice = await this.invoiceRepository.findOne({
       where: { id: invoiceId, organizationId, projectId },
     });
@@ -130,9 +154,16 @@ export class ProjectInvoicesService {
     }
 
     if (date) invoice.date = date;
-    if (currency) invoice.currency = currency;
+    if (currency) {
+      invoice.currency = currency;
+      invoice.exchangeRate =
+        invoice.currency === CurrencyType.USD ? 1 : exchangeRate; // If USD, then the exchange rate is 1 (1 USD = 1 USD)
+    }
     if (clientName) invoice.clientName = clientName;
-    if (clientName) invoice.tax = tax;
+    if (tax) invoice.tax = tax;
+    if (exchangeRate)
+      invoice.exchangeRate =
+        invoice.currency === CurrencyType.USD ? 1 : exchangeRate; // If USD, then the exchange rate is 1 (1 USD = 1 USD)
     if (type) invoice.type = type;
     if (categoryId) invoice.categoryId = categoryId;
     if (items.length > 0) {
