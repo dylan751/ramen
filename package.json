@@ -31,7 +31,8 @@
     "seed:run": "typeorm-seeding seed -d ./dist/db/datasource/default.js ./dist/db/seeds/*.seeder.js",
     "migration:seed:run": "yarn migration:run && yarn seed:run",
     "update": "git checkout && git pull origin && yarn && yarn build && yarn migration:seed:run",
-    "new-release": "./scripts/create-release-branch.sh"
+    "new-release": "./scripts/create-release-branch.sh",
+    "prepare": "husky"
   },
   "dependencies": {
     "@casl/ability": "^6.5.0",
@@ -45,6 +46,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "csvtojson": "^2.0.10",
+    "date-fns": "^3.3.1",
     "dotenv": "^16.3.1",
     "mysql2": "^3.6.2",
     "passport": "^0.6.0",
@@ -57,6 +59,8 @@
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@nestjs/cli": "^8.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/jwt": "^10.1.1",
@@ -76,6 +80,7 @@
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^9.0.11",
     "jest": "^27.2.5",
     "prettier": "^2.3.2",
     "source-map-support": "^0.5.20",

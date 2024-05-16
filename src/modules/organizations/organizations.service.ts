@@ -48,6 +48,8 @@ export class OrganizationsService {
     }
     organization.name = createRequest.name;
     organization.uniqueName = createRequest.uniqueName;
+    organization.phone = createRequest.phone;
+    organization.address = createRequest.address;
     organization.users = [];
     organization.users.push(user);
 
@@ -100,6 +102,14 @@ export class OrganizationsService {
 
     if (updateRequest.uniqueName !== undefined) {
       organization.uniqueName = updateRequest.uniqueName;
+    }
+
+    if (updateRequest.phone !== undefined) {
+      organization.phone = updateRequest.phone;
+    }
+
+    if (updateRequest.address !== undefined) {
+      organization.address = updateRequest.address;
     }
 
     await organization.save();

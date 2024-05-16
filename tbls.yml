@@ -83,3 +83,113 @@ relations:
 
   # users
   # -- pass
+
+  # invoices
+  - table: invoices
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+  - table: invoices
+    columns:
+      - projectId
+    parentTable: projects
+    parentColumns:
+      - id
+    def: 1-n
+  - table: invoices
+    columns:
+      - categoryId
+    parentTable: categories
+    parentColumns:
+      - id
+    def: 1-n
+
+  # invoice_items
+  - table: invoice_items
+    columns:
+      - invoiceId
+    parentTable: invoices
+    parentColumns:
+      - id
+    def: 1-n
+
+  # user_organization_invoices
+  - table: user_organization_invoices
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+  - table: user_organization_invoices
+    columns:
+      - userId
+    parentTable: users
+    parentColumns:
+      - id
+    def: 1-n
+  - table: user_organization_invoices
+    columns:
+      - invoiceId
+    parentTable: invoices
+    parentColumns:
+      - id
+    def: n-n
+
+  # projects
+  - table: projects
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+  - table: projects
+    columns:
+      - creatorId
+    parentTable: users
+    parentColumns:
+      - id
+    def: 1-n
+
+  # budgets
+  - table: budgets
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+  - table: budgets
+    columns:
+      - projectId
+    parentTable: projects
+    parentColumns:
+      - id
+    def: 1-n
+  - table: budgets
+    columns:
+      - categoryId
+    parentTable: categories
+    parentColumns:
+      - id
+    def: 1-1
+
+  # categories
+  - table: categories
+    columns:
+      - organizationId
+    parentTable: organizations
+    parentColumns:
+      - id
+    def: 1-n
+  - table: budgets
+    columns:
+      - projectId
+    parentTable: projects
+    parentColumns:
+      - id
+    def: 1-n

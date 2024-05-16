@@ -6,6 +6,8 @@ export class OrganizationResponseDto {
     this.id = organization.id;
     this.name = organization.name;
     this.uniqueName = organization.uniqueName;
+    this.phone = organization.phone;
+    this.address = organization.address;
     this.createdAt = organization.createdAt;
   }
 
@@ -28,8 +30,20 @@ export class OrganizationResponseDto {
   uniqueName: string;
 
   @ApiResponseProperty({
+    type: String,
+    example: '0339089172',
+  })
+  phone: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: '19A Bach Khoa, Ha Noi',
+  })
+  address: string;
+
+  @ApiResponseProperty({
     type: Date,
-    example: '2020/01/01 15:00:00',
+    example: '2024-02-26T07:31:35.000Z',
   })
   createdAt: Date;
 }

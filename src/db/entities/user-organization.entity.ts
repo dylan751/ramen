@@ -15,6 +15,7 @@ import { Organization } from './organization.entity';
 import { Role } from './role.entity';
 import { UserOrganizationRole } from './user-organization-role.entity';
 import { User } from './user.entity';
+import { UserOrganizationInvoice } from './user-organization-invoice.entity';
 
 export enum UserOrganizationStatus {
   ACTIVE = 'active',
@@ -54,6 +55,12 @@ export class UserOrganization extends BaseEntity {
     (userOrganizationRole) => userOrganizationRole.userOrganization,
   )
   userOrganizationRoles: UserOrganizationRole[];
+
+  @OneToMany(
+    () => UserOrganizationInvoice,
+    (userOrganizationInvoice) => userOrganizationInvoice.userOrganization,
+  )
+  userOrganizationInvoices: UserOrganizationInvoice[];
 
   @ManyToMany(() => Role)
   @JoinTable({

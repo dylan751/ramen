@@ -27,6 +27,12 @@ export class Organization extends BaseEntity {
   @Validate(OrganizationUniqueNameValidator)
   uniqueName: string;
 
+  @Column()
+  phone: string;
+
+  @Column()
+  address: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
