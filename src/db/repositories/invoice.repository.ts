@@ -233,7 +233,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
     return parseFloat(totalInvoiceValue.total) || 0;
@@ -255,7 +255,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
     return parseFloat(totalInvoiceValue.total) || 0;
@@ -270,7 +270,7 @@ export class InvoiceRepository extends Repository<Invoice> {
 
     for (let month = 1; month <= 12; month++) {
       const totalIncomeQuery = await this.createQueryBuilder('invoice')
-        .select('SUM(invoice.total)', 'total')
+        .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
         .where('invoice.organizationId = :organizationId', { organizationId })
         .andWhere('invoice.projectId = :projectId', { projectId })
         .andWhere('invoice.type = :type', { type: InvoiceType.INCOME })
@@ -298,7 +298,7 @@ export class InvoiceRepository extends Repository<Invoice> {
 
     for (let month = 1; month <= 12; month++) {
       const totalExpenseQuery = await this.createQueryBuilder('invoice')
-        .select('SUM(invoice.total)', 'total')
+        .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
         .where('invoice.organizationId = :organizationId', { organizationId })
         .andWhere('invoice.projectId = :projectId', { projectId })
         .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE })
@@ -323,7 +323,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     search: ProjectStatisticsSearchRequestDto,
   ): Promise<IncomesAndExpensesByCategoryResponseDto[]> {
     const incomesQuery = await this.createQueryBuilder('invoice')
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .leftJoinAndSelect('invoice.category', 'category')
       .where('invoice.organizationId = :organizationId', { organizationId })
       .andWhere('invoice.projectId = :projectId', { projectId })
@@ -357,7 +357,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     search: ProjectStatisticsSearchRequestDto,
   ): Promise<IncomesAndExpensesByCategoryResponseDto[]> {
     const expensesQuery = await this.createQueryBuilder('invoice')
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .leftJoinAndSelect('invoice.category', 'category')
       .where('invoice.organizationId = :organizationId', { organizationId })
       .andWhere('invoice.projectId = :projectId', { projectId })
@@ -402,7 +402,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
     return parseFloat(totalInvoiceValue.total) || 0;
@@ -425,7 +425,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
     return parseFloat(totalInvoiceValue.total) || 0;
@@ -498,7 +498,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
     return parseFloat(totalInvoiceValue.total) || 0;
@@ -518,7 +518,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
     return parseFloat(totalInvoiceValue.total) || 0;
@@ -532,7 +532,7 @@ export class InvoiceRepository extends Repository<Invoice> {
 
     for (let month = 1; month <= 12; month++) {
       const totalIncomeQuery = await this.createQueryBuilder('invoice')
-        .select('SUM(invoice.total)', 'total')
+        .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
         .where('invoice.organizationId = :organizationId', { organizationId })
         .andWhere('invoice.type = :type', { type: InvoiceType.INCOME })
         .andWhere('MONTH(invoice.date) = :month', { month });
@@ -558,7 +558,7 @@ export class InvoiceRepository extends Repository<Invoice> {
 
     for (let month = 1; month <= 12; month++) {
       const totalExpenseQuery = await this.createQueryBuilder('invoice')
-        .select('SUM(invoice.total)', 'total')
+        .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
         .where('invoice.organizationId = :organizationId', { organizationId })
         .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE })
         .andWhere('MONTH(invoice.date) = :month', { month });
@@ -591,7 +591,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
     return parseFloat(totalInvoiceValue.total) || 0;
@@ -612,7 +612,7 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
     return parseFloat(totalInvoiceValue.total) || 0;

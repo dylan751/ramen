@@ -56,6 +56,7 @@ export class InvoiceResponseDto {
     this.clientName = invoice.clientName;
     this.tax = invoice.tax;
     this.total = invoice.total;
+    this.exchangeRate = invoice.exchangeRate;
     if (invoice.items) {
       this.items = invoice.items.map(
         (item) => new InvoiceItemResponseDto(item),
@@ -126,6 +127,12 @@ export class InvoiceResponseDto {
     example: 10,
   })
   total: number;
+
+  @ApiResponseProperty({
+    type: Number,
+    example: 10,
+  })
+  exchangeRate: number;
 
   @ApiResponseProperty({
     type: [InvoiceItemResponseDto],

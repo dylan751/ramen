@@ -14,7 +14,9 @@ export class CategoryResponseDto {
         category.invoices.reduce((acc, invoice) => {
           let sum = acc;
           if (invoice.type === InvoiceType.EXPENSE) {
-            sum += invoice.total;
+            sum += parseFloat(
+              (invoice.total / invoice.exchangeRate).toFixed(2),
+            );
           }
           return sum;
         }, 0) ?? 0;

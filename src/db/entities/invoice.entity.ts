@@ -47,6 +47,10 @@ export class Invoice extends BaseEntity {
   @IsNumber()
   total: number;
 
+  @Column()
+  @IsNumber()
+  exchangeRate: number;
+
   @Column({
     type: 'enum',
     enum: InvoiceType,
