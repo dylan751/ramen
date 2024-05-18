@@ -1,0 +1,27 @@
+name: Ramen Production CI/CD
+
+on:
+  push:
+    branches: ['develop']
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [20.13.1]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - run: yarn install
+      - run: yarn build
+      - name: Change Directory
+        run: cd /home/duongnh/ramen/actions-runner/_work/ramen/ramen
+      - run: pm2 restart 0
