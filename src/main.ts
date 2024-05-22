@@ -4,8 +4,19 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+const corsOptions = {
+  origin: [
+    'http://hdwallet.toolhub.app',
+    'http://www.hdwallet.toolhub.app',
+    'http://cashbook.toolhub.app',
+    'http://www.cashbook.toolhub.app',
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+};
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, { cors: corsOptions });
 
   const config = new DocumentBuilder()
     .setTitle('GR API')
