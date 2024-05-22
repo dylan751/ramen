@@ -6,10 +6,10 @@ import { AppModule } from './app.module';
 
 const corsOptions = {
   origin: [
-    'http://hdwallet.toolhub.app',
-    'http://www.hdwallet.toolhub.app',
-    'http://cashbook.toolhub.app',
-    'http://www.cashbook.toolhub.app',
+    'https://hdwallet.toolhub.app',
+    'https://www.hdwallet.toolhub.app',
+    'https://cashbook.toolhub.app',
+    'https://www.cashbook.toolhub.app',
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
