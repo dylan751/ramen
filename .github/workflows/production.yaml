@@ -24,7 +24,7 @@ jobs:
       - run: yarn install
       - run: yarn build
       
-      - name: Change Directory
-        run: cd /home/duongnh/ramen/actions-runner/_work/ramen/ramen
+      # - name: Change Directory
+      #   run: cd /home/duongnh/ramen-ci/actions-runner/_work/ramen/ramen
 
-      - run: pm2 restart ramen
+      # - run: pm2 restart ramen
