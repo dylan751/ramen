@@ -13,6 +13,15 @@ jobs:
         node-version: [20.13.1]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
+    env:
+      DB_HOSTNAME: ${{secrets.DB_HOSTNAME}}
+      DB_USERNAME: ${{secrets.DB_USERNAME}}
+      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+      DB_NAME: ${{secrets.DB_NAME}}
+      DB_PORT: ${{secrets.DB_PORT}}
+      DB_SYNCHRONIZE: ${{secrets.DB_SYNCHRONIZE}}
+      JWT_SECRET: ${{secrets.JWT_SECRET}}
+
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -24,7 +33,7 @@ jobs:
       - run: yarn install
       - run: yarn build
       
-      # - name: Change Directory
-      #   run: cd /home/duongnh/ramen-ci/actions-runner/_work/ramen/ramen
+      - name: Change Directory
+        run: cd /home/duongnh/ramen-ci/actions-runner/_work/ramen/ramen
 
-      # - run: pm2 restart ramen
+      - run: pm2 restart ramen
