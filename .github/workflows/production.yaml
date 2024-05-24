@@ -41,6 +41,6 @@ jobs:
       
       
       - name: Change Directory
-        run: cd /home/duongnh/ramen-ci/actions-runner/_work/ramen/ramen
+        run: cd /home/duongnh/ramen/actions-runner/_work/ramen/ramen
 
       - run: pm2 restart ramen
