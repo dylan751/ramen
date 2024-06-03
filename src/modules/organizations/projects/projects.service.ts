@@ -1,8 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProjectRequestDto } from './dto/create-project-request.dto';
 import { UpdateProjectRequestDto } from './dto/update-project-request.dto';
-import { ProjectRepository } from 'src/db/repositories';
-import { Project } from 'src/db/entities';
+import { InvoiceRepository, ProjectRepository } from 'src/db/repositories';
+import {
+  Budget,
+  Category,
+  Invoice,
+  InvoiceItem,
+  Project,
+  UserOrganizationInvoice,
+} from 'src/db/entities';
 import {
   ProjectResponseListDto,
   ProjectResponseDto,
@@ -11,7 +18,10 @@ import { ProjectSearchRequestDto } from './dto/project-search-request.dto';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly projectRepository: ProjectRepository) {}
+  constructor(
+    private readonly projectRepository: ProjectRepository,
+    private readonly invoiceRepository: InvoiceRepository,
+  ) {}
 
   async create(
     organizationId: number,
@@ -107,6 +117,13 @@ export class ProjectsService {
       where: { id: projectId, organizationId },
     });
 
+    const projectInvoices =
+      await this.invoiceRepository.findInvoicesForProjectOfOrganization(
+        organizationId,
+        projectId,
+        {},
+      );
+
     if (!project) {
       throw new NotFoundException(
         `Project ${projectId} doesn't belong to organization ${organizationId}`,
@@ -116,6 +133,22 @@ export class ProjectsService {
     await this.projectRepository.manager.transaction(async (manager) => {
       const deletePromises = [];
 
+      projectInvoices.forEach((invoice) => {
+        deletePromises.push(
+          manager.delete(UserOrganizationInvoice, {
+            organizationId,
+            invoiceId: invoice.id,
+          }),
+        );
+        deletePromises.push(
+          manager.delete(InvoiceItem, { invoiceId: invoice.id }),
+        );
+      });
+
+      deletePromises.push(manager.delete(Invoice, { projectId }));
+
+      deletePromises.push(manager.delete(Budget, { projectId }));
+      deletePromises.push(manager.delete(Category, { projectId }));
       deletePromises.push(manager.delete(Project, { id: projectId }));
 
       await Promise.all(deletePromises);

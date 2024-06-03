@@ -116,8 +116,7 @@ export class StatisticsService {
     projectStatistics.lastInvoices = lastInvoices;
     projectStatistics.totalUncategorizedIncome = totalUncategorizedIncome;
     projectStatistics.totalUncategorizedExpense = totalUncategorizedExpense;
-    projectStatistics.balance =
-      project.totalBudget + totalIncome - totalExpense;
+    projectStatistics.balance = totalIncome - totalExpense;
 
     return projectStatistics;
   }
