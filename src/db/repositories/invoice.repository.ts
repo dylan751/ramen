@@ -231,25 +231,21 @@ export class InvoiceRepository extends Repository<Invoice> {
       .andWhere('invoice.projectId = :projectId', { projectId })
       .andWhere('invoice.type = :type', { type: InvoiceType.INCOME });
 
-    if (search.date) {
-      const year = getYear(search.date);
-      totalInvoiceValueQuery.andWhere('YEAR(invoice.date) = :year', { year });
-    }
-
-    const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total / invoice.exchangeRate)', 'invoiceTotal')
-      .getRawOne();
-
     const totalProjectValueQuery = await this.projectRepository
       .createQueryBuilder('project')
       .where('project.id = :projectId', { projectId });
 
     if (search.date) {
       const year = getYear(search.date);
+      totalInvoiceValueQuery.andWhere('YEAR(invoice.date) = :year', { year });
       totalProjectValueQuery.andWhere('YEAR(project.startDate) = :year', {
         year,
       });
     }
+
+    const totalInvoiceValue = await totalInvoiceValueQuery
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'invoiceTotal')
+      .getRawOne();
 
     const totalProjectValue = await totalProjectValueQuery
       .select('SUM(project.totalBudget)', 'projectTotal')
@@ -290,6 +286,10 @@ export class InvoiceRepository extends Repository<Invoice> {
   ): Promise<number[]> {
     const incomesByMonth: number[] = [];
 
+    const totalProjectIncomeQuery = await this.projectRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId', { projectId });
+
     for (let month = 1; month <= 12; month++) {
       const totalIncomeQuery = await this.createQueryBuilder('invoice')
         .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
@@ -301,6 +301,9 @@ export class InvoiceRepository extends Repository<Invoice> {
       if (search.date) {
         const year = getYear(search.date);
         totalIncomeQuery.andWhere('YEAR(invoice.date) = :year', { year });
+        totalProjectIncomeQuery.andWhere('YEAR(project.startDate) = :year', {
+          year,
+        });
       }
 
       const totalIncome = await totalIncomeQuery.getRawOne();
@@ -309,17 +312,6 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     // ---------------------------------------------------------------
-    const totalProjectIncomeQuery = await this.projectRepository
-      .createQueryBuilder('project')
-      .where('project.id = :projectId', { projectId });
-
-    if (search.date) {
-      const year = getYear(search.date);
-      totalProjectIncomeQuery.andWhere('YEAR(project.startDate) = :year', {
-        year,
-      });
-    }
-
     const totalProjectIncome = await totalProjectIncomeQuery.getOne();
 
     // Total income = Total invoice income + total project budget
@@ -532,25 +524,21 @@ export class InvoiceRepository extends Repository<Invoice> {
       .where('invoice.organizationId = :organizationId', { organizationId })
       .andWhere('invoice.type = :type', { type: InvoiceType.INCOME });
 
-    if (search.date) {
-      const year = getYear(search.date);
-      totalInvoiceValueQuery.andWhere('YEAR(invoice.date) = :year', { year });
-    }
-
-    const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total / invoice.exchangeRate)', 'invoiceTotal')
-      .getRawOne();
-
     const totalProjectValueQuery = await this.projectRepository
       .createQueryBuilder('project')
       .where('project.organizationId = :organizationId', { organizationId });
 
     if (search.date) {
       const year = getYear(search.date);
+      totalInvoiceValueQuery.andWhere('YEAR(invoice.date) = :year', { year });
       totalProjectValueQuery.andWhere('YEAR(project.startDate) = :year', {
         year,
       });
     }
+
+    const totalInvoiceValue = await totalInvoiceValueQuery
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'invoiceTotal')
+      .getRawOne();
 
     const totalProjectValue = await totalProjectValueQuery
       .select('SUM(project.totalBudget)', 'projectTotal')
@@ -590,6 +578,10 @@ export class InvoiceRepository extends Repository<Invoice> {
   ): Promise<number[]> {
     const incomesByMonth: number[] = [];
 
+    const totalProjectIncomeQuery = await this.projectRepository
+      .createQueryBuilder('project')
+      .where('project.organizationId = :organizationId', { organizationId });
+
     for (let month = 1; month <= 12; month++) {
       const totalIncomeQuery = await this.createQueryBuilder('invoice')
         .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
@@ -600,6 +592,9 @@ export class InvoiceRepository extends Repository<Invoice> {
       if (search.date) {
         const year = getYear(search.date);
         totalIncomeQuery.andWhere('YEAR(invoice.date) = :year', { year });
+        totalProjectIncomeQuery.andWhere('YEAR(project.startDate) = :year', {
+          year,
+        });
       }
 
       const totalIncome = await totalIncomeQuery.getRawOne();
@@ -608,17 +603,6 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     // ---------------------------------------------------------------
-    const totalProjectIncomeQuery = await this.projectRepository
-      .createQueryBuilder('project')
-      .where('project.organizationId = :organizationId', { organizationId });
-
-    if (search.date) {
-      const year = getYear(search.date);
-      totalProjectIncomeQuery.andWhere('YEAR(project.startDate) = :year', {
-        year,
-      });
-    }
-
     const totalProjectIncome = await totalProjectIncomeQuery.getMany();
 
     // Total income = Total invoice income + total project budget
