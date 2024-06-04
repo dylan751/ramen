@@ -68,6 +68,12 @@ export class InvoiceRepository extends Repository<Invoice> {
       });
     }
 
+    if (search.uid) {
+      query.andWhere('invoice.uid LIKE :uid', {
+        uid: `%${search.uid}%`,
+      });
+    }
+
     if (search.type) {
       query.andWhere('invoice.type = :type', {
         type: search.type,
@@ -135,6 +141,12 @@ export class InvoiceRepository extends Repository<Invoice> {
     if (search.categoryId) {
       query.andWhere('invoice.categoryId = :categoryId', {
         categoryId: search.categoryId,
+      });
+    }
+
+    if (search.uid) {
+      query.andWhere('invoice.uid LIKE :uid', {
+        uid: `%${search.uid}%`,
       });
     }
 

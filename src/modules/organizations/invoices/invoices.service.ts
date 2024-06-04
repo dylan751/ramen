@@ -40,6 +40,7 @@ export class InvoicesService {
       organizationId,
       invoiceId,
     );
+
     if (!invoice) {
       throw new NotFoundException(
         `Invoice ${invoiceId} does not belong to the organization ${organizationId}`,
