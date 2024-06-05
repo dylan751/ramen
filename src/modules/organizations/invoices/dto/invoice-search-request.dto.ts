@@ -13,6 +13,10 @@ export class InvoiceSearchRequestDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
+  uid?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsEnum(InvoiceType)
   type?: InvoiceType;
 

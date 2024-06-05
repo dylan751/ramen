@@ -84,6 +84,14 @@ export class CreateInvoiceRequestDto {
   readonly clientName: string;
 
   @ApiProperty({
+    type: String,
+    example: 'INV-F1A',
+    required: true,
+  })
+  @IsOptional()
+  readonly uid: string;
+
+  @ApiProperty({
     type: Number,
     example: 10,
     required: false,

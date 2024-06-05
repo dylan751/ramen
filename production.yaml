@@ -1,0 +1,45 @@
+name: Ramen Production CI/CD
+
+on:
+  push:
+    branches: ['develop']
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo DB_HOSTNAME=${{ secrets.DB_HOSTNAME }} >> .env
+          echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          echo DB_SYNCHRONIZE=${{ secrets.DB_SYNCHRONIZE }} >> .env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+          cat .env
+
+      - name: Install 🔧
+        run: yarn install
+
+      - name: Build 🏗️
+        run: yarn build
+
+      - name: Change Directory
+        run: cd /home/duongnh/ramen/actions-runner/_work/ramen/ramen
+
+      - run: pm2 restart ramen

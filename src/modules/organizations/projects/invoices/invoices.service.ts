@@ -14,11 +14,6 @@ import {
   InvoiceResponseDto,
   InvoiceResponseListDto,
 } from '../../invoices/dto/invoice-response.dto';
-import {
-  INVOICE_PREFIX,
-  INVOICE_SUFFIX_LENGTH,
-  generateInvoiceUID,
-} from 'src/modules/common/utils';
 
 @Injectable()
 export class ProjectInvoicesService {
@@ -38,20 +33,16 @@ export class ProjectInvoicesService {
       type,
       currency,
       clientName,
+      uid,
       tax,
       exchangeRate,
       items,
       categoryId,
     } = request;
 
-    const invoiceUID = generateInvoiceUID(
-      INVOICE_PREFIX,
-      INVOICE_SUFFIX_LENGTH,
-    );
-
     // Create invoice
     const invoice = new Invoice();
-    invoice.uid = invoiceUID;
+    invoice.uid = uid;
     invoice.date = date;
     invoice.organizationId = organizationId;
     invoice.projectId = projectId;
@@ -138,6 +129,7 @@ export class ProjectInvoicesService {
       type,
       currency,
       clientName,
+      uid,
       tax,
       exchangeRate,
       items,
@@ -160,6 +152,7 @@ export class ProjectInvoicesService {
         invoice.currency === CurrencyType.USD ? 1 : exchangeRate; // If USD, then the exchange rate is 1 (1 USD = 1 USD)
     }
     if (clientName) invoice.clientName = clientName;
+    if (uid) invoice.uid = uid;
     if (tax) invoice.tax = tax;
     if (exchangeRate)
       invoice.exchangeRate =

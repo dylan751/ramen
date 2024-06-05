@@ -64,6 +64,12 @@ export class InvoiceRepository extends Repository<Invoice> {
       });
     }
 
+    if (search.uid) {
+      query.andWhere('invoice.uid LIKE :uid', {
+        uid: `%${search.uid}%`,
+      });
+    }
+
     if (search.type) {
       query.andWhere('invoice.type = :type', {
         type: search.type,
@@ -131,6 +137,12 @@ export class InvoiceRepository extends Repository<Invoice> {
     if (search.categoryId) {
       query.andWhere('invoice.categoryId = :categoryId', {
         categoryId: search.categoryId,
+      });
+    }
+
+    if (search.uid) {
+      query.andWhere('invoice.uid LIKE :uid', {
+        uid: `%${search.uid}%`,
       });
     }
 
@@ -233,10 +245,10 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'invoiceTotal')
       .getRawOne();
 
-    return parseFloat(totalInvoiceValue.total) || 0;
+    return parseFloat(totalInvoiceValue.invoiceTotal ?? 0);
   }
 
   async calculateProjectTotalExpense(
@@ -258,7 +270,7 @@ export class InvoiceRepository extends Repository<Invoice> {
       .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
-    return parseFloat(totalInvoiceValue.total) || 0;
+    return parseFloat(totalInvoiceValue.total ?? 0);
   }
 
   async calculateProjectIncomesByMonth(
@@ -405,7 +417,7 @@ export class InvoiceRepository extends Repository<Invoice> {
       .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
-    return parseFloat(totalInvoiceValue.total) || 0;
+    return parseFloat(totalInvoiceValue.total ?? 0);
   }
 
   async calculateProjectTotalUncategorizedExpense(
@@ -428,7 +440,7 @@ export class InvoiceRepository extends Repository<Invoice> {
       .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
-    return parseFloat(totalInvoiceValue.total) || 0;
+    return parseFloat(totalInvoiceValue.total ?? 0);
   }
 
   async getProjectLastInvoices(
@@ -498,10 +510,10 @@ export class InvoiceRepository extends Repository<Invoice> {
     }
 
     const totalInvoiceValue = await totalInvoiceValueQuery
-      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'invoiceTotal')
       .getRawOne();
 
-    return parseFloat(totalInvoiceValue.total) || 0;
+    return parseFloat(totalInvoiceValue.invoiceTotal ?? 0);
   }
 
   async calculateOrgTotalExpense(
@@ -521,7 +533,7 @@ export class InvoiceRepository extends Repository<Invoice> {
       .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
-    return parseFloat(totalInvoiceValue.total) || 0;
+    return parseFloat(totalInvoiceValue.total ?? 0);
   }
 
   async calculateOrgIncomesByMonth(
@@ -594,7 +606,7 @@ export class InvoiceRepository extends Repository<Invoice> {
       .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
-    return parseFloat(totalInvoiceValue.total) || 0;
+    return parseFloat(totalInvoiceValue.total ?? 0);
   }
 
   async calculateOrgTotalUncategorizedExpense(
@@ -615,6 +627,6 @@ export class InvoiceRepository extends Repository<Invoice> {
       .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
       .getRawOne();
 
-    return parseFloat(totalInvoiceValue.total) || 0;
+    return parseFloat(totalInvoiceValue.total ?? 0);
   }
 }

@@ -80,6 +80,14 @@ export class UpdateInvoiceRequestDto {
   readonly clientName?: string;
 
   @ApiProperty({
+    type: String,
+    example: 'INV-F1A',
+    required: false,
+  })
+  @IsOptional()
+  readonly uid?: string;
+
+  @ApiProperty({
     type: Number,
     example: 10,
     required: false,
