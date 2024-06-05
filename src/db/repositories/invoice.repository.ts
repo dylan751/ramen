@@ -29,6 +29,7 @@ export class InvoiceRepository extends Repository<Invoice> {
       .andWhere('userOrganizationInvoices.organizationId = :organizationId', {
         organizationId,
       })
+      .orderBy('invoice.createdAt', 'DESC')
       .getMany();
   }
 
@@ -89,7 +90,9 @@ export class InvoiceRepository extends Repository<Invoice> {
       }
     }
 
-    const allInvoices = await query.getMany();
+    const allInvoices = await query
+      .orderBy('invoice.createdAt', 'DESC')
+      .getMany();
 
     let filteredInvoices = allInvoices;
 
@@ -165,7 +168,9 @@ export class InvoiceRepository extends Repository<Invoice> {
       }
     }
 
-    const allInvoices = await query.getMany();
+    const allInvoices = await query
+      .orderBy('invoice.createdAt', 'DESC')
+      .getMany();
 
     let filteredInvoices = allInvoices;
 

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProjectRequestDto } from './dto/create-project-request.dto';
 import { UpdateProjectRequestDto } from './dto/update-project-request.dto';
 import { InvoiceRepository, ProjectRepository } from 'src/db/repositories';
@@ -29,6 +33,14 @@ export class ProjectsService {
     userId: number,
   ): Promise<Project> {
     const { name, description, totalBudget, startDate, endDate } = request;
+
+    // Validate unique project name
+    const existedProject = await this.projectRepository.findByName(name);
+    if (existedProject) {
+      throw new BadRequestException(
+        'An project with that name already exists!',
+      );
+    }
 
     // Create project
     const project = new Project();

@@ -11,6 +11,10 @@ export class ProjectRepository extends Repository<Project> {
     super(Project, dataSource.createEntityManager());
   }
 
+  async findByName(name: string): Promise<Project> {
+    return await this.findOne({ where: { name: name } });
+  }
+
   async findProjectsForOrganization(
     organizationId: number,
     search: ProjectSearchRequestDto,
@@ -23,6 +27,7 @@ export class ProjectRepository extends Repository<Project> {
       .leftJoinAndSelect('project.budgets', 'budgets')
       .leftJoinAndSelect('project.categories', 'categories')
       .where('project.organizationId = :organizationId', { organizationId })
+      .orderBy('project.createdAt', 'DESC')
       .getMany();
 
     let filteredProjects = allProjects;
@@ -107,7 +112,9 @@ export class ProjectRepository extends Repository<Project> {
       projectsQuery.andWhere('YEAR(project.startDate) = :year', { year });
     }
 
-    const projects = await projectsQuery.getMany();
+    const projects = await projectsQuery
+      .orderBy('project.createdAt', 'DESC')
+      .getMany();
     return projects;
   }
 }
