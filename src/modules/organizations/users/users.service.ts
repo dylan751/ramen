@@ -281,12 +281,13 @@ export class UsersService {
     return await this.userRepository.findByIdWithOrganizations(id);
   }
 
-  async findByIdWithOrganizationsAndRoles(
+  async findByIdWithOrganizationsAndRolesAndProjects(
     id: number,
   ): Promise<ProfileResponseDto> {
-    const user = await this.userRepository.findByIdWithOrganizationsAndRoles(
-      id,
-    );
+    const user =
+      await this.userRepository.findByIdWithOrganizationsAndRolesAndProjects(
+        id,
+      );
     const profile = new ProfileResponseDto(user);
 
     return profile;
@@ -297,9 +298,10 @@ export class UsersService {
     request: UpdateProfileRequestDto,
   ): Promise<ProfileResponseDto> {
     const { name, phone, address, password } = request;
-    const user = await this.userRepository.findByIdWithOrganizationsAndRoles(
-      userId,
-    );
+    const user =
+      await this.userRepository.findByIdWithOrganizationsAndRolesAndProjects(
+        userId,
+      );
 
     if (name) user.name = name;
     if (phone) user.phone = phone;

@@ -23,11 +23,14 @@ export class UserRepository extends Repository<User> {
     return await this.findOne({ where: { email: email } });
   }
 
-  async findByEmailWithOrganizationsAndRoles(email: string): Promise<User> {
+  async findByEmailWithOrganizationsAndRolesAndProjects(
+    email: string,
+  ): Promise<User> {
     return await this.createQueryBuilder('user')
       .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
       .leftJoinAndSelect('userOrganization.organization', 'organization')
       .leftJoinAndSelect('userOrganization.roles', 'roles')
+      .leftJoinAndSelect('organization.projects', 'projects')
       .where('user.email = :userEmail')
       .setParameters({
         userEmail: email,
@@ -57,11 +60,14 @@ export class UserRepository extends Repository<User> {
     return user;
   }
 
-  async findByIdWithOrganizationsAndRoles(id: number): Promise<User> {
+  async findByIdWithOrganizationsAndRolesAndProjects(
+    id: number,
+  ): Promise<User> {
     return await this.createQueryBuilder('user')
       .leftJoinAndSelect('user.userOrganizations', 'userOrganization')
       .leftJoinAndSelect('userOrganization.organization', 'organization')
       .leftJoinAndSelect('userOrganization.roles', 'roles')
+      .leftJoinAndSelect('organization.projects', 'projects')
       .where('user.id = :userId')
       .setParameters({ userId: id })
       .getOne();
