@@ -1,6 +1,7 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
 import { Organization, Role } from 'src/db/entities';
 import { UserRole } from 'src/modules/common/dto/user-role.dto';
+import { ProjectResponseDto } from '../../projects/dto/project-response.dto';
 
 export class OrganizationProfileResponseDto {
   constructor(organization: Organization, roles: Role[]) {
@@ -9,6 +10,11 @@ export class OrganizationProfileResponseDto {
     this.uniqueName = organization.uniqueName;
     this.phone = organization.phone;
     this.address = organization.address;
+    if (organization.projects) {
+      this.projects = organization.projects.map(
+        (project) => new ProjectResponseDto(project),
+      );
+    }
     this.roles = roles.map((role) => new UserRole(role));
   }
 
@@ -41,6 +47,11 @@ export class OrganizationProfileResponseDto {
     example: '19A Bach Khoa, Ha Noi',
   })
   address: string;
+
+  @ApiResponseProperty({
+    type: [ProjectResponseDto],
+  })
+  projects: ProjectResponseDto[];
 
   @ApiResponseProperty({
     type: [UserRole],

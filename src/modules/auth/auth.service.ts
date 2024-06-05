@@ -27,9 +27,10 @@ export class AuthService {
   ) {}
 
   async login(loginRequest: LoginRequestDto): Promise<LoginResponse> {
-    const user = await this.userRepository.findByEmailWithOrganizationsAndRoles(
-      loginRequest.email,
-    );
+    const user =
+      await this.userRepository.findByEmailWithOrganizationsAndRolesAndProjects(
+        loginRequest.email,
+      );
 
     if (!user) {
       throw new NotFoundException(
@@ -54,9 +55,10 @@ export class AuthService {
   async loginWithGoogle(
     loginWithGoogleRequest: LoginWithGoogleRequestDto,
   ): Promise<LoginResponse> {
-    const user = await this.userRepository.findByEmailWithOrganizationsAndRoles(
-      loginWithGoogleRequest.email,
-    );
+    const user =
+      await this.userRepository.findByEmailWithOrganizationsAndRolesAndProjects(
+        loginWithGoogleRequest.email,
+      );
 
     // If that email not already exists
     if (!user) {
@@ -71,7 +73,7 @@ export class AuthService {
 
       // Log user in
       const newlyCreatedUser =
-        await this.userRepository.findByEmailWithOrganizationsAndRoles(
+        await this.userRepository.findByEmailWithOrganizationsAndRolesAndProjects(
           loginWithGoogleRequest.email,
         );
       const { accessToken } = this.generateToken(newlyCreatedUser);

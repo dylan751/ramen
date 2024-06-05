@@ -93,7 +93,7 @@ export class AuthController {
   async getProfile(
     @Request() req: AuthenticatedRequest,
   ): Promise<ProfileResponseDto> {
-    return await this.usersService.findByIdWithOrganizationsAndRoles(
+    return await this.usersService.findByIdWithOrganizationsAndRolesAndProjects(
       req.user.id,
     );
   }
