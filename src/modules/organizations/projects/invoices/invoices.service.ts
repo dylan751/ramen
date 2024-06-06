@@ -63,8 +63,9 @@ export class ProjectInvoicesService {
     }, 0);
     const invoiceTax = invoice.tax ? invoice.tax / 100 : 0; // tax can be null
 
+    total -= discount;
     total += total * invoiceTax;
-    invoice.total = total - discount;
+    invoice.total = total;
 
     await this.invoiceRepository.manager.transaction(async (manager) => {
       await manager.save(Invoice, invoice);
@@ -173,8 +174,9 @@ export class ProjectInvoicesService {
       }, 0);
       const invoiceTax = invoice.tax ? invoice.tax / 100 : 0; // tax can be null
 
+      total -= discount;
       total += total * invoiceTax;
-      invoice.total = total - discount;
+      invoice.total = total;
 
       await this.invoiceRepository.manager.transaction(async (manager) => {
         // Save invoice
