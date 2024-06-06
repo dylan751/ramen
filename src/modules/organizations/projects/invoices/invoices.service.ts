@@ -35,6 +35,8 @@ export class ProjectInvoicesService {
       clientName,
       uid,
       tax,
+      discount,
+      note,
       exchangeRate,
       items,
       categoryId,
@@ -51,6 +53,8 @@ export class ProjectInvoicesService {
     invoice.currency = currency;
     invoice.clientName = clientName;
     invoice.tax = tax;
+    invoice.discount = discount;
+    invoice.note = note;
     invoice.exchangeRate =
       invoice.currency === CurrencyType.USD ? 1 : exchangeRate; // If USD, then the exchange rate is 1 (1 USD = 1 USD)
 
@@ -60,7 +64,7 @@ export class ProjectInvoicesService {
     const invoiceTax = invoice.tax ? invoice.tax / 100 : 0; // tax can be null
 
     total += total * invoiceTax;
-    invoice.total = total;
+    invoice.total = total - discount;
 
     await this.invoiceRepository.manager.transaction(async (manager) => {
       await manager.save(Invoice, invoice);
@@ -131,6 +135,8 @@ export class ProjectInvoicesService {
       clientName,
       uid,
       tax,
+      discount,
+      note,
       exchangeRate,
       items,
       categoryId,
@@ -154,6 +160,8 @@ export class ProjectInvoicesService {
     if (clientName) invoice.clientName = clientName;
     if (uid) invoice.uid = uid;
     if (tax) invoice.tax = tax;
+    if (discount) invoice.discount = discount;
+    if (note) invoice.note = note;
     if (exchangeRate)
       invoice.exchangeRate =
         invoice.currency === CurrencyType.USD ? 1 : exchangeRate; // If USD, then the exchange rate is 1 (1 USD = 1 USD)
@@ -166,7 +174,7 @@ export class ProjectInvoicesService {
       const invoiceTax = invoice.tax ? invoice.tax / 100 : 0; // tax can be null
 
       total += total * invoiceTax;
-      invoice.total = total;
+      invoice.total = total - discount;
 
       await this.invoiceRepository.manager.transaction(async (manager) => {
         // Save invoice

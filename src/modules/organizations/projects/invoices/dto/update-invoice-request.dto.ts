@@ -97,6 +97,22 @@ export class UpdateInvoiceRequestDto {
 
   @ApiProperty({
     type: Number,
+    example: 10,
+    required: false,
+  })
+  @IsOptional()
+  readonly discount?: number;
+
+  @ApiProperty({
+    type: String,
+    example: 'Pay monthly internet bill',
+    required: false,
+  })
+  @IsOptional()
+  readonly note?: string;
+
+  @ApiProperty({
+    type: Number,
     example: 24.35,
     required: false,
   })

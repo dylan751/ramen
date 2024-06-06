@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import {
   BaseEntity,
   Column,
@@ -74,6 +74,14 @@ export class Invoice extends BaseEntity {
   @Column()
   @IsNumber()
   tax: number;
+
+  @Column()
+  @IsNumber()
+  discount: number;
+
+  @Column()
+  @IsOptional()
+  note?: string;
 
   @Column()
   @IsNumber()
