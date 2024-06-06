@@ -160,7 +160,7 @@ export class ProjectInvoicesService {
     }
     if (clientName) invoice.clientName = clientName;
     if (uid) invoice.uid = uid;
-    if (tax) invoice.tax = tax;
+    if (tax !== undefined) invoice.tax = tax;
     if (discount) invoice.discount = discount;
     if (note) invoice.note = note;
     if (exchangeRate)
