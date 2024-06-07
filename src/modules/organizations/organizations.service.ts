@@ -112,6 +112,10 @@ export class OrganizationsService {
       organization.address = updateRequest.address;
     }
 
+    if (updateRequest.dateFormat !== undefined) {
+      organization.dateFormat = updateRequest.dateFormat;
+    }
+
     await organization.save();
 
     const organizationDto = new OrganizationResponseDto(organization);

@@ -39,4 +39,12 @@ export class UpdateOrganizationRequestDto extends PartialType(
   })
   @IsOptional()
   readonly address?: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'dd/MM/yyyy',
+    required: false,
+  })
+  @IsOptional()
+  readonly dateFormat: string;
 }
