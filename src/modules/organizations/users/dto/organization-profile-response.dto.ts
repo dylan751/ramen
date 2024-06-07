@@ -10,6 +10,7 @@ export class OrganizationProfileResponseDto {
     this.uniqueName = organization.uniqueName;
     this.phone = organization.phone;
     this.address = organization.address;
+    this.dateFormat = organization.dateFormat;
     if (organization.projects) {
       this.projects = organization.projects.map(
         (project) => new ProjectResponseDto(project),
@@ -47,6 +48,12 @@ export class OrganizationProfileResponseDto {
     example: '19A Bach Khoa, Ha Noi',
   })
   address: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: 'dd/MM/yyyy',
+  })
+  dateFormat: string;
 
   @ApiResponseProperty({
     type: [ProjectResponseDto],

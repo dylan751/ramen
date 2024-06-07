@@ -34,6 +34,9 @@ export class Organization extends BaseEntity {
   @Column()
   address: string;
 
+  @Column()
+  dateFormat: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

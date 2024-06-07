@@ -8,6 +8,7 @@ export class OrganizationResponseDto {
     this.uniqueName = organization.uniqueName;
     this.phone = organization.phone;
     this.address = organization.address;
+    this.dateFormat = organization.dateFormat;
     this.createdAt = organization.createdAt;
   }
 
@@ -40,6 +41,12 @@ export class OrganizationResponseDto {
     example: '19A Bach Khoa, Ha Noi',
   })
   address: string;
+
+  @ApiResponseProperty({
+    type: String,
+    example: 'dd/MM/yyyy',
+  })
+  dateFormat: string;
 
   @ApiResponseProperty({
     type: Date,
