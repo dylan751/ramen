@@ -14,6 +14,7 @@ CREATE TABLE `organizations` (
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `phone` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
+  `dateFormat` varchar(255) NOT NULL DEFAULT 'dd/MM/yyyy',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_30955c69c151c28bc7c92e663f7` (`uniqueName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=[Redacted by tbls] DEFAULT CHARSET=utf8mb3
@@ -32,6 +33,7 @@ CREATE TABLE `organizations` (
 | updatedAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
 | phone | varchar(255) |  | true |  |  |  |  |
 | address | varchar(255) |  | true |  |  |  |  |
+| dateFormat | varchar(255) | dd/MM/yyyy | false |  |  |  |  |
 
 ## Constraints
 
