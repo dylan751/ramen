@@ -9,7 +9,6 @@
 CREATE TABLE `projects` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
   `totalBudget` int NOT NULL,
   `startDate` timestamp NOT NULL,
   `endDate` timestamp NOT NULL,
@@ -17,6 +16,7 @@ CREATE TABLE `projects` (
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `organizationId` int NOT NULL,
   `creatorId` int NOT NULL,
+  `description` varchar(2000) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=[Redacted by tbls] DEFAULT CHARSET=utf8mb3
 ```
@@ -29,7 +29,6 @@ CREATE TABLE `projects` (
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
 | id | int |  | false | auto_increment | [invoices](invoices.md) [budgets](budgets.md) |  |  |
 | name | varchar(255) |  | false |  |  |  |  |
-| description | varchar(255) |  | false |  |  |  |  |
 | totalBudget | int |  | false |  |  |  |  |
 | startDate | timestamp |  | false |  |  |  |  |
 | endDate | timestamp |  | false |  |  |  |  |
@@ -37,6 +36,7 @@ CREATE TABLE `projects` (
 | updatedAt | timestamp | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  |  |
 | organizationId | int |  | false |  |  | [organizations](organizations.md) |  |
 | creatorId | int |  | false |  |  | [users](users.md) |  |
+| description | varchar(2000) |  | false |  |  |  |  |
 
 ## Constraints
 

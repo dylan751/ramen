@@ -11,30 +11,34 @@ export class ProjectRepository extends Repository<Project> {
     super(Project, dataSource.createEntityManager());
   }
 
+  async findByName(name: string): Promise<Project> {
+    return await this.findOne({ where: { name: name } });
+  }
+
   async findProjectsForOrganization(
     organizationId: number,
     search: ProjectSearchRequestDto,
   ): Promise<Project[]> {
-    const allProjects = await this.createQueryBuilder('project')
+    const query = await this.createQueryBuilder('project')
       .leftJoinAndSelect('project.creator', 'creator')
       .leftJoinAndSelect('creator.userOrganizations', 'userOrganizations')
       .leftJoinAndSelect('userOrganizations.roles', 'roles')
       .leftJoinAndSelect('project.invoices', 'invoices')
       .leftJoinAndSelect('project.budgets', 'budgets')
       .leftJoinAndSelect('project.categories', 'categories')
-      .where('project.organizationId = :organizationId', { organizationId })
+      .where('project.organizationId = :organizationId', { organizationId });
+
+    if (search.query) {
+      query.andWhere('project.name LIKE :query', {
+        query: `%${search.query.toLowerCase()}%`,
+      });
+    }
+
+    const allProjects = await query
+      .orderBy('project.createdAt', 'DESC')
       .getMany();
 
     let filteredProjects = allProjects;
-
-    if (search.query) {
-      const queryLowered = search.query.toLowerCase();
-      filteredProjects = filteredProjects.filter(
-        (project) =>
-          project.name.toLowerCase().includes(queryLowered) ||
-          project.description.toLowerCase().includes(queryLowered),
-      );
-    }
 
     if (search.fromDate) {
       filteredProjects = filteredProjects.filter(
@@ -107,7 +111,9 @@ export class ProjectRepository extends Repository<Project> {
       projectsQuery.andWhere('YEAR(project.startDate) = :year', { year });
     }
 
-    const projects = await projectsQuery.getMany();
+    const projects = await projectsQuery
+      .orderBy('project.createdAt', 'DESC')
+      .getMany();
     return projects;
   }
 }

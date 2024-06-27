@@ -15,8 +15,10 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return "Welcome to the API Server for Cashbook - Multi-tenant Financial Management Platform!"', () => {
+      expect(appController.getHello()).toBe(
+        'Welcome to the API Server for Cashbook - Multi-tenant Financial Management Platform!',
+      );
     });
   });
 });

@@ -55,6 +55,8 @@ export class InvoiceResponseDto {
     this.currency = invoice.currency;
     this.clientName = invoice.clientName;
     this.tax = invoice.tax;
+    this.discount = invoice.discount;
+    this.note = invoice.note || null;
     this.total = invoice.total;
     this.exchangeRate = invoice.exchangeRate;
     if (invoice.items) {
@@ -121,6 +123,18 @@ export class InvoiceResponseDto {
     example: 10,
   })
   tax: number;
+
+  @ApiResponseProperty({
+    type: Number,
+    example: 10,
+  })
+  discount: number;
+
+  @ApiResponseProperty({
+    type: String,
+    example: 'Pay monthly internet bill',
+  })
+  note: string;
 
   @ApiResponseProperty({
     type: Number,

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCategoryRequestDto } from './dto/create-category-request.dto';
 import { UpdateCategoryRequestDto } from './dto/update-category-request.dto';
 import { CategoryRepository } from 'src/db/repositories';
@@ -19,6 +23,17 @@ export class CategoriesService {
     request: CreateCategoryRequestDto,
   ): Promise<Category> {
     const { name, color, icon, type } = request;
+
+    // Validate unique category name
+    const existedCategory = await this.categoryRepository.findByNameForProject(
+      name,
+      projectId,
+    );
+    if (existedCategory) {
+      throw new BadRequestException(
+        'A category with that name already exists!',
+      );
+    }
 
     // Create category
     const category = new Category();

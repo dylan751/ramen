@@ -9,6 +9,13 @@ export class CategoryRepository extends Repository<Category> {
     super(Category, dataSource.createEntityManager());
   }
 
+  async findByNameForProject(
+    name: string,
+    projectId: number,
+  ): Promise<Category> {
+    return await this.findOne({ where: { name, projectId } });
+  }
+
   async findCategoriesForOrganizationAndProject(
     organizationId: number,
     projectId: number,
@@ -19,7 +26,9 @@ export class CategoryRepository extends Repository<Category> {
       .where('category.organizationId = :organizationId', { organizationId })
       .andWhere('category.projectId = :projectId', { projectId });
 
-    const allCategories = await query.getMany();
+    const allCategories = await query
+      .orderBy('category.createdAt', 'DESC')
+      .getMany();
 
     let filteredCategories = allCategories;
 

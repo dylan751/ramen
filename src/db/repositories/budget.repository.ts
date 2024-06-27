@@ -26,7 +26,9 @@ export class BudgetRepository extends Repository<Budget> {
       });
     }
 
-    const allBudgets = await query.getMany();
+    const allBudgets = await query
+      .orderBy('budget.createdAt', 'DESC')
+      .getMany();
 
     let filteredBudgets = allBudgets;
 
