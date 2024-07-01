@@ -8,7 +8,7 @@
 | [categories](categories.md) | 9 |  | BASE TABLE |
 | [invoice_items](invoice_items.md) | 8 |  | BASE TABLE |
 | [invoices](invoices.md) | 16 |  | BASE TABLE |
-| [organizations](organizations.md) | 8 |  | BASE TABLE |
+| [organizations](organizations.md) | 11 |  | BASE TABLE |
 | [permissions](permissions.md) | 5 |  | BASE TABLE |
 | [projects](projects.md) | 10 |  | BASE TABLE |
 | [role_permissions](role_permissions.md) | 5 |  | BASE TABLE |
