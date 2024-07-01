@@ -3,6 +3,7 @@ import { CreateOrganizationRequestDto } from './create-organization-request.dto'
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, Validate } from 'class-validator';
 import { OrganizationUniqueNameValidator } from 'src/modules/common/validators/organization-unique-name.validator';
+import { BankType, CurrencyType } from 'src/db/entities';
 
 export class UpdateOrganizationRequestDto extends PartialType(
   CreateOrganizationRequestDto,
@@ -47,4 +48,32 @@ export class UpdateOrganizationRequestDto extends PartialType(
   })
   @IsOptional()
   readonly dateFormat: string;
+
+  @ApiProperty({
+    type: CurrencyType,
+    enum: CurrencyType,
+    enumName: 'CurrencyType',
+    example: CurrencyType.VND,
+    required: false,
+  })
+  @IsOptional()
+  readonly currency?: CurrencyType;
+
+  @ApiProperty({
+    type: BankType,
+    enum: BankType,
+    enumName: 'BankType',
+    example: BankType.BIDV,
+    required: false,
+  })
+  @IsOptional()
+  readonly bank?: BankType;
+
+  @ApiProperty({
+    type: Number,
+    example: 25464,
+    required: false,
+  })
+  @IsOptional()
+  readonly exchangeRate?: number;
 }

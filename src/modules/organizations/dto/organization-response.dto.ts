@@ -1,5 +1,5 @@
-import { ApiResponseProperty } from '@nestjs/swagger';
-import { Organization } from 'src/db/entities';
+import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
+import { BankType, CurrencyType, Organization } from 'src/db/entities';
 
 export class OrganizationResponseDto {
   constructor(organization: Organization) {
@@ -9,6 +9,9 @@ export class OrganizationResponseDto {
     this.phone = organization.phone;
     this.address = organization.address;
     this.dateFormat = organization.dateFormat;
+    this.currency = organization.currency;
+    this.bank = organization.bank;
+    this.exchangeRate = organization.exchangeRate;
     this.createdAt = organization.createdAt;
   }
 
@@ -47,6 +50,26 @@ export class OrganizationResponseDto {
     example: 'dd/MM/yyyy',
   })
   dateFormat: string;
+
+  @ApiResponseProperty({
+    enum: CurrencyType,
+    example: CurrencyType.VND,
+  })
+  @ApiProperty({ enumName: 'CurrencyType' })
+  currency: CurrencyType;
+
+  @ApiResponseProperty({
+    enum: BankType,
+    example: BankType.BIDV,
+  })
+  @ApiProperty({ enumName: 'BankType' })
+  bank: BankType;
+
+  @ApiResponseProperty({
+    type: Number,
+    example: 25464,
+  })
+  exchangeRate: number;
 
   @ApiResponseProperty({
     type: Date,

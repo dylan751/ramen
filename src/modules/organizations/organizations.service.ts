@@ -116,6 +116,18 @@ export class OrganizationsService {
       organization.dateFormat = updateRequest.dateFormat;
     }
 
+    if (updateRequest.currency !== undefined) {
+      organization.currency = updateRequest.currency;
+    }
+
+    if (updateRequest.bank !== undefined) {
+      organization.bank = updateRequest.bank;
+    }
+
+    if (updateRequest.exchangeRate !== undefined) {
+      organization.exchangeRate = updateRequest.exchangeRate;
+    }
+
     await organization.save();
 
     const organizationDto = new OrganizationResponseDto(organization);
