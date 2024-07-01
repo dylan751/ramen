@@ -15,6 +15,9 @@ CREATE TABLE `organizations` (
   `phone` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `dateFormat` varchar(255) NOT NULL DEFAULT 'dd/MM/yyyy',
+  `currency` enum('vnd','usd') NOT NULL DEFAULT 'usd',
+  `bank` enum('bidv','vcb') NOT NULL DEFAULT 'bidv',
+  `exchangeRate` int NOT NULL DEFAULT '25464',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_30955c69c151c28bc7c92e663f7` (`uniqueName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=[Redacted by tbls] DEFAULT CHARSET=utf8mb3
@@ -34,6 +37,9 @@ CREATE TABLE `organizations` (
 | phone | varchar(255) |  | true |  |  |  |  |
 | address | varchar(255) |  | true |  |  |  |  |
 | dateFormat | varchar(255) | dd/MM/yyyy | false |  |  |  |  |
+| currency | enum('vnd','usd') | usd | false |  |  |  |  |
+| bank | enum('bidv','vcb') | bidv | false |  |  |  |  |
+| exchangeRate | int | 25464 | false |  |  |  |  |
 
 ## Constraints
 
