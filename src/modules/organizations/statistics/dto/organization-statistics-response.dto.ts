@@ -1,5 +1,6 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
 import { ProjectResponseDto } from '../../projects/dto/project-response.dto';
+import { IncomesAndExpensesByCategoryResponseDto } from '../../projects/statistics/dto/project-statistics-response.dto';
 
 export class OrganizationStatisticsResponseDto {
   @ApiResponseProperty({
@@ -73,6 +74,16 @@ export class OrganizationStatisticsResponseDto {
     example: [280, 200, 220, 180, 270, 250, 70, 90, 200, 150, 160, 100],
   })
   expensesByMonth: number[];
+
+  @ApiResponseProperty({
+    type: [IncomesAndExpensesByCategoryResponseDto],
+  })
+  incomesByCategory: IncomesAndExpensesByCategoryResponseDto[];
+
+  @ApiResponseProperty({
+    type: [IncomesAndExpensesByCategoryResponseDto],
+  })
+  expensesByCategory: IncomesAndExpensesByCategoryResponseDto[];
 
   @ApiResponseProperty({
     type: [ProjectResponseDto],

@@ -593,6 +593,70 @@ export class InvoiceRepository extends Repository<Invoice> {
     return expensesByMonth;
   }
 
+  async calculateOrgIncomesByCategory(
+    organizationId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<IncomesAndExpensesByCategoryResponseDto[]> {
+    const incomesQuery = await this.createQueryBuilder('invoice')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
+      .leftJoinAndSelect('invoice.category', 'category')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.type = :type', { type: InvoiceType.INCOME })
+      .andWhere('invoice.categoryId IS NOT NULL');
+
+    if (search.date) {
+      const year = getYear(search.date);
+      incomesQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const incomes = await incomesQuery
+      .groupBy('invoice.categoryId')
+      .getRawMany();
+
+    // Format data response
+    const incomeArray: IncomesAndExpensesByCategoryResponseDto[] = [];
+    incomes.forEach((income) => {
+      incomeArray.push({
+        name: income.category_name,
+        color: income.category_color,
+        total: parseFloat(income.total),
+      });
+    });
+    return incomeArray;
+  }
+
+  async calculateOrgExpensesByCategory(
+    organizationId: number,
+    search: ProjectStatisticsSearchRequestDto,
+  ): Promise<IncomesAndExpensesByCategoryResponseDto[]> {
+    const expensesQuery = await this.createQueryBuilder('invoice')
+      .select('SUM(invoice.total / invoice.exchangeRate)', 'total')
+      .leftJoinAndSelect('invoice.category', 'category')
+      .where('invoice.organizationId = :organizationId', { organizationId })
+      .andWhere('invoice.type = :type', { type: InvoiceType.EXPENSE })
+      .andWhere('invoice.categoryId IS NOT NULL');
+
+    if (search.date) {
+      const year = getYear(search.date);
+      expensesQuery.andWhere('YEAR(invoice.date) = :year', { year });
+    }
+
+    const expenses = await expensesQuery
+      .groupBy('invoice.categoryId')
+      .getRawMany();
+
+    // Format data response
+    const expenseArray: IncomesAndExpensesByCategoryResponseDto[] = [];
+    expenses.forEach((expense) => {
+      expenseArray.push({
+        name: expense.category_name,
+        color: expense.category_color,
+        total: parseFloat(expense.total),
+      });
+    });
+    return expenseArray;
+  }
+
   async calculateOrgTotalUncategorizedIncome(
     organizationId: number,
     search: ProjectStatisticsSearchRequestDto,
