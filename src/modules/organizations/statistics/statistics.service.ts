@@ -43,6 +43,8 @@ export class StatisticsService {
       totalExpense,
       incomesByMonth,
       expensesByMonth,
+      incomesByCategory,
+      expensesByCategory,
       totalUncategorizedIncome,
       totalUncategorizedExpense,
       projects,
@@ -55,6 +57,14 @@ export class StatisticsService {
       this.invoiceRepository.calculateOrgTotalExpense(organizationId, search),
       this.invoiceRepository.calculateOrgIncomesByMonth(organizationId, search),
       this.invoiceRepository.calculateOrgExpensesByMonth(
+        organizationId,
+        search,
+      ),
+      this.invoiceRepository.calculateOrgIncomesByCategory(
+        organizationId,
+        search,
+      ),
+      this.invoiceRepository.calculateOrgExpensesByCategory(
         organizationId,
         search,
       ),
@@ -81,6 +91,8 @@ export class StatisticsService {
     organizationStatistics.totalExpense = totalExpense;
     organizationStatistics.incomesByMonth = incomesByMonth;
     organizationStatistics.expensesByMonth = expensesByMonth;
+    organizationStatistics.incomesByCategory = incomesByCategory;
+    organizationStatistics.expensesByCategory = expensesByCategory;
     organizationStatistics.totalUncategorizedIncome = totalUncategorizedIncome;
     organizationStatistics.totalUncategorizedExpense =
       totalUncategorizedExpense;
